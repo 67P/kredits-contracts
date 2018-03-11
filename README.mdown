@@ -1,0 +1,9 @@
+
+
+## Development
+
+For local development it is recommended to use [ganache-cli](https://github.com/trufflesuite/ganache-cli) to run a local development chain.
+
+We default to port 7545 for development to not get in conflict with the default Ethereum RPC port. 
+
+  $ ganache-cli -p 7545
