@@ -19,7 +19,7 @@ Truffle comes with a simple REPL to interact with the Smart Contracts. Have a lo
 
 NOTE: There are promisses, have a look at the examples: 
 
-``javascript
+```javascript
 Token.deployed().then(function(token) { 
   token.totalSupply.call().then(function(value) {
     console.log(value.toString());
