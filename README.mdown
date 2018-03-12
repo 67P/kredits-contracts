@@ -56,3 +56,23 @@ That means the Proxy contract holds the storage and the address of that one does
 
 To deploy a new version a new contract is deployed then the version is registered (`addVersion()`) in the Registry and on the Proxy contract is "upgraded" (`upgradeTo()`) to the new version. 
 
+
+### Example:
+
+Deployment is best done using the [truffle deployer]()
+
+1. Setup
+    1. deploy the Registry 
+    2. deploy the contract
+    3. register the contract at the Registry: 
+        `registry.addVersion('Token_1.0', Token.address)`
+    4. create the Proxy: 
+        `registry.createProxy('Token_1.0')`
+2. Update
+    1. deploy a new Version of the contract
+    2. register the new version at the Registry: 
+        `registry.addVersion('Token_2.0', NewToken.address)`
+    3. set the new implementation address on the Proxy contract:
+        `proxy.upgradeTo('Token_2.0')`
+
+
