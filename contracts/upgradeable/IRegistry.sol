@@ -21,6 +21,13 @@ interface IRegistry {
   event VersionAdded(bytes32 name, uint version, address implementation);
 
   /**
+  * @dev This event will be emitted every time a proxy is upgraded to a new version
+  * @param name of the contract, as specified in the registry
+  * @param version representing the version name of the registered implementation
+  */
+  event ProxyImplementationUpgraded(bytes32 name, uint version);
+
+  /**
   * @dev Registers a new version with its implementation address
   * @param name of the contract, as specified in the registry
   * @param implementation representing the address of the new implementation to be registered

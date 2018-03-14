@@ -49,6 +49,7 @@ contract Registry is IRegistry {
 
   function upgrade(bytes32 name, uint version) public {
     UpgradeabilityProxy(proxies[name]).upgradeTo(version);
+    ProxyImplementationUpgraded(name, version);
   }
 
   /**
