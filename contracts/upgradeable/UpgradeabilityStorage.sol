@@ -13,6 +13,9 @@ contract UpgradeabilityStorage {
   // Address of the current implementation
   address internal _implementation;
 
+  // contract name
+  bytes32 public _proxiedContractName;
+
   /**
   * @dev Tells the address of the current implementation
   * @return address of the current implementation

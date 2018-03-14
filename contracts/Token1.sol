@@ -4,13 +4,14 @@ import './upgradeable/Upgradeable.sol';
 
 contract Token1 is Upgradeable {
 
-  uint public value;
-  function Token() public {
-    value = 1;
-  }
+  uint public value = 0;
 
   function mint() public {
     value += 10;
+  }
+
+  function initialize(address sender) public payable {
+    value = 1;
   }
 
 }

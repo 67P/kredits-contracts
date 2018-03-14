@@ -8,7 +8,7 @@ module.exports = function(deployer) {
   }).then(function(token) {
     Registry.deployed().then(function(registry) {
       console.log('Token address: ', Token.address);
-      registry.addVersion('Token_2.0', Token.address);
+      registry.addVersion('Token', Token.address);
     });
   })
 };
