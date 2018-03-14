@@ -60,7 +60,9 @@ Some of the contracts use upgradability ideas from [zeppelinos](https://github.c
 The basic idea is to have a Registry contract that knows about the current implementations and a Proxy contract that uses `delegatecall` to call the current implementation.  
 That means the Proxy contract holds the storage and the address of that one does not change but the actuall implemenation is managed through the Registry. 
 
-To deploy a new version a new contract is deployed then the version is registered (`addVersion()`) in the Registry and on the Proxy contract is "upgraded" (`upgradeTo()`) to the new version. 
+To deploy a new version a new contract is deployed then the version is registered (`addVersion()`) in the Registry and on the Proxy contract is "upgraded" (`upgrade()`) to the new version. 
+
+The Registry knows about all the different contracts and implementations. Versions are stored as uint and automatically incremented for every added implementation.
 
 
 ### Example:
@@ -71,14 +73,14 @@ Deployment is best done using the [truffle deployer]()
     1. deploy the Registry 
     2. deploy the contract
     3. register the contract at the Registry: 
-        `registry.addVersion('Token_1.0', Token.address)`
+        `registry.addVersion('Token', Token.address)`
     4. create the Proxy: 
-        `registry.createProxy('Token_1.0')`
+        `registry.createProxy('Token', 1)`
 2. Update
     1. deploy a new Version of the contract
     2. register the new version at the Registry: 
-        `registry.addVersion('Token_2.0', NewToken.address)`
+        `registry.addVersion('Token', NewToken.address)`
     3. set the new implementation address on the Proxy contract:
-        `proxy.upgradeTo('Token_2.0')`
+        `registry.upgrade('Token', 2)`
 
 
