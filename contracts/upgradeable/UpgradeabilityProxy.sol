@@ -25,12 +25,4 @@ contract UpgradeabilityProxy is Proxy, UpgradeabilityStorage {
     _implementation = registry.getVersion(_proxiedContractName, _version);
   }
 
-  /**
-  * @dev Upgrades the implementation to the latest version
-  */
-  function upgradeToLatest() public {
-    require(msg.sender == address(registry));
-    _implementation = registry.getLatestVersion(_proxiedContractName);
-  }
-
 }

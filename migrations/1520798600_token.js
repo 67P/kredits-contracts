@@ -1,5 +1,5 @@
 var Registry = artifacts.require('./Registry.sol');
-var Token = artifacts.require('./Token1.sol');
+var Token = artifacts.require('./Token.sol');
 
 module.exports = function(deployer) {
   deployer.deploy(Token).then(function(token) {

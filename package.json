@@ -1,0 +1,25 @@
+{
+  "name": "kredits-contracts",
+  "version": "1.0.0",
+  "description": "Ethereum contracts and npm wrapper for Kredits",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/67P/truffle-kredits.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/67P/truffle-kredits/issues"
+  },
+  "homepage": "https://github.com/67P/truffle-kredits#readme",
+  "dependencies": {
+    "zeppelin-solidity": "^1.7.0"
+  }
+}

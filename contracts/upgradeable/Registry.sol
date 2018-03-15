@@ -52,6 +52,11 @@ contract Registry is IRegistry {
     ProxyImplementationUpgraded(name, version);
   }
 
+  function upgradeToLatest(bytes32 name) public {
+    uint current = currentVersions[name];
+    upgrade(name, current);
+  }
+
   /**
   * @dev Creates an upgradeable proxy
   * @param name of the contract
