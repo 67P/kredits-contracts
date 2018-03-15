@@ -4,11 +4,15 @@ This repository contains all the contracts for Kredits as a [truffle framework](
 
 ## Development
 
+### Installation
+
+    $ npm install
+
 ### Requirements
 
-  1. [truffle framework](http://truffleframework.com): `npm install -g truffle`
-  2. [ganache](http://truffleframework.com/ganache): `npm install -g ganache-cli`
-
+  * [truffle framework](http://truffleframework.com): `npm install -g truffle`
+  * [ganache](http://truffleframework.com/ganache): `npm install -g ganache-cli`
+  * [Open Zeppelin](https://github.com/OpenZeppelin/zeppelin-solidity)
 
 For local development it is recommended to use [ganache-cli](https://github.com/trufflesuite/ganache-cli) (or the [ganache GUI](http://truffleframework.com/ganache/) to run a local development chain.  
 Using the ganache simulator no full Ethereum node is required.
