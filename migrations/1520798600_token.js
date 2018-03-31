@@ -7,6 +7,7 @@ module.exports = function(deployer) {
     console.log('Token address: ', Token.address);
     Registry.deployed().then(function(registry) {
       registry.addVersion('Token', Token.address);
+      registry.createProxy('Token', 1);
     });
   });
 };

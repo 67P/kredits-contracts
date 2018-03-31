@@ -16,6 +16,17 @@ contract UpgradeabilityStorage {
   // contract name
   bytes32 public _proxiedContractName;
 
+
+  modifier requireRegistry() {
+    require(address(registry) != 0x0);
+    _;
+  }
+  modifier onlyRegistryContractFor(bytes32 name) {
+    require(address(registry) != 0x0);
+    require(msg.sender == registry.getProxyFor(name));
+    _;
+  }
+
   /**
   * @dev Tells the address of the current implementation
   * @return address of the current implementation

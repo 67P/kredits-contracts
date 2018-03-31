@@ -49,4 +49,5 @@ interface IRegistry {
   */
   function getLatestVersion(bytes32 name) public view returns (address);
 
+  function getProxyFor(bytes32 name) public view returns (address);
 }

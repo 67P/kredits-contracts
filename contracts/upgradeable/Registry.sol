@@ -47,6 +47,10 @@ contract Registry is IRegistry {
     return getVersion(name, current);
   }
 
+  function getProxyFor(bytes32 name) public view returns (address) {
+    return proxies[name];
+  }
+
   function upgrade(bytes32 name, uint version) public {
     UpgradeabilityProxy(proxies[name]).upgradeTo(version);
     ProxyImplementationUpgraded(name, version);
