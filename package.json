@@ -7,6 +7,7 @@
     "test": "test"
   },
   "scripts": {
+    "build-json": "truffle compile && node ./scripts/build-json.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
