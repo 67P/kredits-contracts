@@ -13,17 +13,19 @@ contract Operator is Upgradeable {
     uint votesNeeded;
     uint256 amount;
     bool executed;
-    string ipfsHash;
+    bytes32 ipfsHash;
+    uint8 hashFunction;
+    uint8 hashSize;
     mapping (address => bool) votes;
     bool exists;
   }
 
   Proposal[] public proposals;
 
-  event ProposalCreated(uint256 id, address creator, uint recipient, uint256 amount, string ipfsHash);
+  event ProposalCreated(uint256 id, address creator, uint recipient, uint256 amount);
   event ProposalVoted(uint256 id, address voter);
   event ProposalVoted(uint256 id, address voter, uint256 totalVotes);
-  event ProposalExecuted(uint256 id, uint recipient, uint256 amount, string ipfsHash);
+  event ProposalExecuted(uint256 id, uint recipient, uint256 amount);
 
   modifier coreOnly() { 
     require(contributorsContract().addressIsCore(msg.sender));
@@ -72,7 +74,7 @@ contract Operator is Upgradeable {
     return proposals.length;
   }
 
-  function addProposal(uint _recipient, uint256 _amount, string _ipfsHash) public returns (uint256 proposalId) {
+  function addProposal(uint _recipient, uint256 _amount, bytes32 _ipfsHash, uint8 _hashFunction, uint8 _hashSize) public returns (uint256 proposalId) {
     require(contributorsContract().exists(_recipient));
 
     proposalId = proposals.length;
@@ -83,13 +85,15 @@ contract Operator is Upgradeable {
       recipientId: _recipient,
       amount: _amount,
       ipfsHash: _ipfsHash,
+      hashFunction: _hashFunction,
+      hashSize: _hashSize,
       votesCount: 0,
       votesNeeded: _votesNeeded,
       executed: false,
       exists: true
     });
     proposals.push(p);
-    ProposalCreated(proposalId, msg.sender, p.recipientId, p.amount, p.ipfsHash);
+    ProposalCreated(proposalId, msg.sender, p.recipientId, p.amount);
   }
 
   function vote(uint256 _proposalId) public coreOnly returns (uint _pId, bool _executed) {
@@ -117,9 +121,9 @@ contract Operator is Upgradeable {
     if (p.executed) { throw; }
     if (p.votesCount < p.votesNeeded) { throw; }
     address recipientAddress = contributorsContract().getContributorAddressById(p.recipientId);
-    tokenContract().mintFor(recipientAddress, p.amount, p.ipfsHash);
+    tokenContract().mintFor(recipientAddress, p.amount, proposalId);
     p.executed = true;
-    ProposalExecuted(proposalId, p.recipientId, p.amount, p.ipfsHash);
+    ProposalExecuted(proposalId, p.recipientId, p.amount);
     return true;
   }
 
