@@ -9,6 +9,8 @@
   "scripts": {
     "build-json": "truffle compile && node ./scripts/build-json.js",
     "bootstrap": "truffle migrate --reset && truffle exec scripts/seeds.js && npm run build-json",
+    "ganache": "ganache-cli -p 7545 -i 100",
+    "dev": "truffle migrate && npm run build-json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
