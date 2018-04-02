@@ -7,7 +7,7 @@ let contractCalls = {
     ],
     addProposal: [
       [1, 23, 'QmQNA1hhVyL1Vm6HiRxXe9xmc6LUMBDyiNMVgsjThtyevs'],
-      [2, 42, 'QmQNA1hhVyL1Vm6HiRxXe9xmc6LUMBDyiNMVgsjThtyevs']
+      [2, 42, 'QmQNA1hhVyL1Vm6HiRxXe9xmc6LUMBDyiNMVgsjThtyevs'],
       [2, 100, 'QmQNA1hhVyL1Vm6HiRxXe9xmc6LUMBDyiNMVgsjThtyevs']
     ],
     vote: [
