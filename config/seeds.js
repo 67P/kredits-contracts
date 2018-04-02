@@ -6,9 +6,9 @@ let contractCalls = {
       ['0xa502eb4021f3b9ab62f75b57a94e1cfbf81fd827', '0x9569ed44826286597982e40bbdff919c6b7752e29d13250efca452644e6b4b25', 18, 32, true] // QmYPu8zvtfDy18ZqHCviVxnKtxycw5UTJLJyk9oAEjWfnL
     ],
     addProposal: [
-      [1, 23, 'QmQNA1hhVyL1Vm6HiRxXe9xmc6LUMBDyiNMVgsjThtyevs'],
-      [2, 42, 'QmQNA1hhVyL1Vm6HiRxXe9xmc6LUMBDyiNMVgsjThtyevs'],
-      [2, 100, 'QmQNA1hhVyL1Vm6HiRxXe9xmc6LUMBDyiNMVgsjThtyevs']
+      [1, 23, '0x1e1a168d736fc825213144973a8fd5b3cc9f37ad821a8b3d9c3488034bbf69d8', 18, 32], // QmQNA1hhVyL1Vm6HiRxXe9xmc6LUMBDyiNMVgsjThtyevs"
+      [2, 42, '0x1e1a168d736fc825213144973a8fd5b3cc9f37ad821a8b3d9c3488034bbf69d8', 18, 32], // QmQNA1hhVyL1Vm6HiRxXe9xmc6LUMBDyiNMVgsjThtyevs"
+      [2, 100, '0x1e1a168d736fc825213144973a8fd5b3cc9f37ad821a8b3d9c3488034bbf69d8', 18, 32] // QmQNA1hhVyL1Vm6HiRxXe9xmc6LUMBDyiNMVgsjThtyevs"
     ],
     vote: [
       [1]
