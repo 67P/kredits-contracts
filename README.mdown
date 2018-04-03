@@ -88,3 +88,9 @@ Deployment is best done using the [truffle deployer]()
         `registry.upgrade('Token', 2)`
 
 
+## Known Issues
+
+When resetting ganache Metamask might have an invalid transaction nonce and transactions get rejected. 
+Nonces in Ethereum must be incrementing and have no gap. 
+
+To solve this reset the metamask account (Account -> Settings -> Reset Account)
