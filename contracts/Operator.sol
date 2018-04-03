@@ -23,7 +23,6 @@ contract Operator is Upgradeable {
   Proposal[] public proposals;
 
   event ProposalCreated(uint256 id, address creator, uint recipient, uint256 amount);
-  event ProposalVoted(uint256 id, address voter);
   event ProposalVoted(uint256 id, address voter, uint256 totalVotes);
   event ProposalExecuted(uint256 id, uint recipient, uint256 amount);
 
@@ -40,10 +39,10 @@ contract Operator is Upgradeable {
     _;
   }
 
-  function contributorsContract() constant public returns (Contributors) {
+  function contributorsContract() view public returns (Contributors) {
     return Contributors(registry.getProxyFor('Contributors'));
   }
-  function tokenContract() constant public returns (Token) {
+  function tokenContract() view public returns (Token) {
     return Token(registry.getProxyFor('Token'));
   }
 

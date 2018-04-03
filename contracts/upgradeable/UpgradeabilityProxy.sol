@@ -10,7 +10,7 @@ import './UpgradeabilityStorage.sol';
  */
 contract UpgradeabilityProxy is Proxy, UpgradeabilityStorage {
 
-  function UpgradeabilityProxy(bytes32 _name, uint _version) public {
+  function UpgradeabilityProxy(string _name, uint _version) public {
     _proxiedContractName = _name;
     registry = IRegistry(msg.sender);
     upgradeTo(_version);

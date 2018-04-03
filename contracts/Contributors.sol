@@ -101,7 +101,7 @@ contract Contributors is Upgradeable {
     return contributors[_id].account;
   }
 
-  function getContributorByAddress(address _address) internal returns (Contributor) {
+  function getContributorByAddress(address _address) internal view returns (Contributor) {
     uint id = contributorIds[_address];
     return contributors[id];
   }

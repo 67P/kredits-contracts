@@ -24,11 +24,12 @@ contract Registry is IRegistry {
   * @param name of the contract
   * @param implementation representing the address of the new implementation to be registered
   */
-  function addVersion(bytes32 name, address implementation) public {
-    currentVersions[name] = currentVersions[name] + 1;
-    uint version = currentVersions[name];
-    require(versions[name][version] == 0x0);
-    versions[name][version] = implementation;
+  function addVersion(string name, address implementation) public {
+    bytes32 key = keccak256(name);
+    currentVersions[key] = currentVersions[key] + 1;
+    uint version = currentVersions[key];
+    require(versions[key][version] == 0x0);
+    versions[key][version] = implementation;
     VersionAdded(name, version, implementation);
   }
 
@@ -38,26 +39,31 @@ contract Registry is IRegistry {
   * @param version to query the implementation of
   * @return address of the implementation registered for the given version
   */
-  function getVersion(bytes32 name, uint version) public view returns (address) {
-    return versions[name][version];
+  function getVersion(string name, uint version) public view returns (address) {
+    bytes32 key = keccak256(name);
+    return versions[key][version];
   }
 
-  function getLatestVersion(bytes32 name) public view returns (address) {
-    uint current = currentVersions[name];
+  function getLatestVersion(string name) public view returns (address) {
+    bytes32 key = keccak256(name);
+    uint current = currentVersions[key];
     return getVersion(name, current);
   }
 
-  function getProxyFor(bytes32 name) public view returns (address) {
-    return proxies[name];
+  function getProxyFor(string name) public view returns (address) {
+    bytes32 key = keccak256(name);
+    return proxies[key];
   }
 
-  function upgrade(bytes32 name, uint version) public {
-    UpgradeabilityProxy(proxies[name]).upgradeTo(version);
+  function upgrade(string name, uint version) public {
+    bytes32 key = keccak256(name);
+    UpgradeabilityProxy(proxies[key]).upgradeTo(version);
     ProxyImplementationUpgraded(name, version);
   }
 
-  function upgradeToLatest(bytes32 name) public {
-    uint current = currentVersions[name];
+  function upgradeToLatest(string name) public {
+    bytes32 key = keccak256(name);
+    uint current = currentVersions[key];
     upgrade(name, current);
   }
 
@@ -67,12 +73,14 @@ contract Registry is IRegistry {
   * @param version representing the first version to be set for the proxy
   * @return address of the new proxy created
   */
-  function createProxy(bytes32 name, uint version) public payable returns (UpgradeabilityProxy) {
-    require(proxies[name] == 0x0);
+  function createProxy(string name, uint version) public payable returns (UpgradeabilityProxy) {
+    bytes32 key = keccak256(name);
+    require(proxies[key] == 0x0);
     UpgradeabilityProxy proxy = new UpgradeabilityProxy(name, version);
-    proxies[name] = address(proxy);
+    proxies[key] = address(proxy);
     Upgradeable(proxy).initialize.value(msg.value)(msg.sender);
     ProxyCreated(name, proxy);
     return proxy;
   }
+
 }
