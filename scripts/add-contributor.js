@@ -30,19 +30,18 @@ module.exports = function(callback) {
     let ipfsHash = process.argv[5] || 'QmQyZJT9uikzDYTZLhhyVZ5ReZVCoMucYzyvDokDJsijhj';
     let contributorMultihash = getBytes32FromMultiash(ipfsHash);
     let isCore = true;
-    operator.addContributor(contributorToAddAddress, contributorMultihash.digest, contributorMultihash.hashFunction, contributorMultihash.size, isCore).then((result) => {
-      console.log('Contributor added, tx: ', result.tx);
-    });
+    let contributorResult = await operator.addContributor(contributorToAddAddress, contributorMultihash.digest, contributorMultihash.hashFunction, contributorMultihash.size, isCore);
+    console.log('Contributor added, tx: ', contributorResult.tx);
 
-    var contributorId = await contributors.getContributorIdByAddress(contributorToAddAddress);
+    let contributorId = await contributors.getContributorIdByAddress(contributorToAddAddress);
     let proposalMultihash = getBytes32FromMultiash('QmQNA1hhVyL1Vm6HiRxXe9xmc6LUMBDyiNMVgsjThtyevs');
-    operator.addProposal(contributorId, 23, proposalMultihash.digest, proposalMultihash.hashFunction, proposalMultihash.size).then((result) => {
-      console.log('Proposal added, tx: ', result.tx);
-    });
+    let proposalResult = await operator.addProposal(contributorId, 23, proposalMultihash.digest, proposalMultihash.hashFunction, proposalMultihash.size);
+    console.log('Proposal added, tx: ', proposalResult.tx);
 
-    var proposalId = await operator.proposalsCount();
-    operator.vote(proposalId.toNumber()-1).then((result) => {
-      console.log('Voted for proposal', proposalId, result.tx);
-    })
+    let proposalId = await operator.proposalsCount();
+    let votingResult = operator.vote(proposalId.toNumber()-1);
+    console.log('Voted for proposal', proposalId.toString(), votingResult.tx);
+
+    callback();
   });
 }

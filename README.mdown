@@ -56,6 +56,40 @@ Truffle keeps track of already executed migration scripts. To reset the migratio
 
 Migration scripts can also be run from within `truffle console` or `truffle develop` 
 
+To initially bootstrap a local development chain in ganache you can use the bootstrap script:
+
+    $ npm run bootstrap (= `truffle migrate --reset && truffle exec scripts/seeds.js && npm run build-json`)
+
+
+## Helper scripts
+
+`scripts/` contains some helper scripts to interact with the contracts from the CLI. 
+At some point these should be moved into a real nice CLI. 
+
+To run these scripts use `truffle exec`. For example: `truffle exec scripts/add-proposal.js` 
+
+### add-contributor.js
+Adds a new core contributor, creates a proposal for the new contributor and votes for that one. 
+
+    $ truffle exec scripts/add-contributor.js <ethereum address> [<profile IPFS hash>]
+
+### add-proposal.js
+Adds a new proposal for an existing contributor
+
+    $ truffle exec scripts/add-proposal.js <ethereum address> [<proposal IPFS hash>]
+
+### send-funds.js
+Sends funds to an address. Helpful in development mode to for example fund a metamask account.
+
+    $ truffle exec scripts/send-funds.js <ethereum address>
+
+### seeds.js
+Run seeds defined in `config/seeds.js`.  
+
+    $ truffle exec scripts/seeds.js 
+    or 
+    $ npm run seeds
+
 
 ## Upgradeable contracts
 

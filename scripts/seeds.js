@@ -29,4 +29,6 @@ module.exports = function(callback) {
   seeds.ipfsContent.forEach((content) => {
     ipfs.add(new ipfs.Buffer(JSON.stringify(content))).then((result) => { console.log(`[IPFS] added ${result[0].hash}`) });
   });
+
+  callback();
 }

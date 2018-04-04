@@ -32,9 +32,9 @@ module.exports = function(callback) {
 
     let contributorId = await contributors.getContributorIdByAddress(recipientAddress);
 
-    operator.addProposal(contributorId.toNumber(), 23, multihash.digest, multihash.hashFunction, multihash.size).then((result) => {
-      console.log('Proposal added, tx: ', result.tx);
-    });
+    let result = await operator.addProposal(contributorId.toNumber(), 23, multihash.digest, multihash.hashFunction, multihash.size);
+    console.log('Proposal added, tx: ', result.tx);
 
+    callback();
   });
 }
