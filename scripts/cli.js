@@ -16,6 +16,10 @@ module.exports = function(callback) {
     console.log(`Using ${contractName} at ${contractAddress}`);
     let contract = await artifacts.require(`./${contractName}`).at(contractAddress);
 
+    if(!contract[method]) {
+      callback(new Error(`Method ${method} is not defined on ${contractName}`));
+      return;
+    }
     console.log(`Calling ${method} with ${JSON.stringify(args)}`);
 
     contract[method](...args).then((result) => {
