@@ -95,18 +95,12 @@ contract Operator is Upgradeable {
     ProposalCreated(proposalId, msg.sender, p.recipientId, p.amount);
   }
 
-  function vote(uint256 _proposalId) public coreOnly returns (uint _pId, bool _executed) {
+  function vote(uint256 _proposalId) public coreOnly returns (uint _pId) {
     var p = proposals[_proposalId];
-    if (p.executed) { throw; }
-    if (p.votes[msg.sender] == true) { throw; }
+    require(!p.executed);
+    require(!p.votes[msg.sender]);
     p.votes[msg.sender] = true;
     p.votesCount++;
-    _executed = false;
-    _pId = _proposalId;
-    if (p.votesCount >= p.votesNeeded) {
-      executeProposal(_proposalId);
-      _executed = true;
-    }
     ProposalVoted(_pId, msg.sender, p.votesCount);
   }
 
@@ -117,11 +111,11 @@ contract Operator is Upgradeable {
 
   function executeProposal(uint proposalId) private returns (bool) {
     var p = proposals[proposalId];
-    if (p.executed) { throw; }
-    if (p.votesCount < p.votesNeeded) { throw; }
+    require(!p.executed);
+    require(p.votesCount >= p.votesNeeded);
+    p.executed = true;
     address recipientAddress = contributorsContract().getContributorAddressById(p.recipientId);
     tokenContract().mintFor(recipientAddress, p.amount, proposalId);
-    p.executed = true;
     ProposalExecuted(proposalId, p.recipientId, p.amount);
     return true;
   }
