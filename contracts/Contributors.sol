@@ -24,7 +24,7 @@ contract Contributors is Upgradeable {
   function initialize(address sender) public payable {
     require(msg.sender == address(registry));
     uint _id = 1;
-    Contributor c = contributors[_id];
+    Contributor storage c = contributors[_id];
     c.exists = true;
     c.isCore = true;
     c.account = sender;
@@ -32,7 +32,7 @@ contract Contributors is Upgradeable {
     contributorsCount += 1;
   }
 
-  function coreContributorsCount() constant public returns (uint) {
+  function coreContributorsCount() view public returns (uint) {
     uint count = 0;
     for (uint256 i = 1; i <= contributorsCount; i++) {
       if (contributors[i].isCore) {
@@ -50,7 +50,7 @@ contract Contributors is Upgradeable {
   }
 
   function updateContributorProfileHash(uint _id, uint8 _hashFunction, uint8 _hashSize, bytes32 _profileHash) public onlyRegistryContractFor('Operator') {
-    Contributor c = contributors[_id];
+    Contributor storage c = contributors[_id];
     bytes32 _oldProfileHash = c.profileHash;
     c.profileHash = _profileHash;
     c.hashFunction = _hashFunction;
@@ -62,7 +62,7 @@ contract Contributors is Upgradeable {
   function addContributor(address _address, uint8 _hashFunction, uint8 _hashSize, bytes32 _profileHash, bool isCore) public onlyRegistryContractFor('Operator') {
     uint _id = contributorsCount + 1;
     if (contributors[_id].exists != true) {
-      Contributor c = contributors[_id];
+      Contributor storage c = contributors[_id];
       c.exists = true;
       c.isCore = isCore;
       c.hashFunction = _hashFunction;
@@ -77,27 +77,27 @@ contract Contributors is Upgradeable {
     }
   }
 
-  function isCore(uint _id) constant public returns (bool) {
+  function isCore(uint _id) view public returns (bool) {
     return contributors[_id].isCore;
   }
 
-  function exists(uint _id) constant public returns (bool) {
+  function exists(uint _id) view public returns (bool) {
     return contributors[_id].exists;
   }
 
-  function addressIsCore(address _address) constant public returns (bool) {
+  function addressIsCore(address _address) view public returns (bool) {
     return getContributorByAddress(_address).isCore;
   }
 
-  function addressExists(address _address) constant public returns (bool) {
+  function addressExists(address _address) view public returns (bool) {
     return getContributorByAddress(_address).exists;
   }
 
-  function getContributorIdByAddress(address _address) constant public returns (uint) {
+  function getContributorIdByAddress(address _address) view public returns (uint) {
     return contributorIds[_address];
   }
 
-  function getContributorAddressById(uint _id) constant public returns (address) {
+  function getContributorAddressById(uint _id) view public returns (address) {
     return contributors[_id].account;
   }
 
