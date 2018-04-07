@@ -5,8 +5,8 @@ module.exports = function(callback) {
     let method = process.argv[5];
     let args = process.argv.slice(6);
 
-    if(!contractName) {
-      console.log("Usage:")
+    if (!contractName) {
+      console.log("Usage:");
       console.log("  truffle exec scripts/cli.js <Contract name> <method to call> [<optional> <arguments>]");
       callback();
       return;
@@ -16,14 +16,14 @@ module.exports = function(callback) {
     console.log(`Using ${contractName} at ${contractAddress}`);
     let contract = await artifacts.require(`./${contractName}`).at(contractAddress);
 
-    if(!contract[method]) {
+    if (!contract[method]) {
       callback(new Error(`Method ${method} is not defined on ${contractName}`));
       return;
     }
     console.log(`Calling ${method} with ${JSON.stringify(args)}`);
 
     contract[method](...args).then((result) => {
-      console.log('Result:');
+      console.log("\nResult:");
       console.log(result);
 
       callback();
