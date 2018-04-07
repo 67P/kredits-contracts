@@ -46,10 +46,10 @@ contract Operator is Upgradeable {
     return Token(registry.getProxyFor('Token'));
   }
 
-  function contributorsCount() constant public returns (uint) {
+  function contributorsCount() view public returns (uint) {
     return contributorsContract().contributorsCount();
   }
-  function coreContributorsCount() constant public returns (uint) {
+  function coreContributorsCount() view public returns (uint) {
     return contributorsContract().coreContributorsCount();
   }
 
@@ -61,15 +61,15 @@ contract Operator is Upgradeable {
     contributorsContract().updateContributorProfileHash(_id, _hashFunction, _hashSize, _profileHash);
   }
 
-  function getContributor(uint _id) constant public returns (address account, uint8 hashFunction, uint8 hashSize, bytes32 profileHash, bool isCore) {
+  function getContributor(uint _id) view public returns (address account, uint8 hashFunction, uint8 hashSize, bytes32 profileHash, bool isCore) {
     bool exists;
 
     (account, profileHash, hashFunction, hashSize, isCore, exists) = contributorsContract().contributors(_id);
 
-    if (!exists) { throw; }
+    require(exists);
   }
 
-  function proposalsCount() constant public returns (uint) {
+  function proposalsCount() view public returns (uint) {
     return proposals.length;
   }
 
@@ -97,8 +97,8 @@ contract Operator is Upgradeable {
 
   function vote(uint256 _proposalId) public coreOnly returns (uint _pId, bool _executed) {
     var p = proposals[_proposalId];
-    if (p.executed) { throw; }
-    if (p.votes[msg.sender] == true) { throw; }
+    require(!p.executed);
+    require(p.votes[msg.sender] != true);
     p.votes[msg.sender] = true;
     p.votesCount++;
     _executed = false;
@@ -110,15 +110,15 @@ contract Operator is Upgradeable {
     ProposalVoted(_pId, msg.sender, p.votesCount);
   }
 
-  function hasVotedFor(address _sender, uint256 _proposalId) public constant returns (bool) {
-    Proposal p = proposals[_proposalId];
+  function hasVotedFor(address _sender, uint256 _proposalId) public view returns (bool) {
+    Proposal storage p = proposals[_proposalId];
     return p.exists && p.votes[_sender];
   }
 
   function executeProposal(uint proposalId) private returns (bool) {
     var p = proposals[proposalId];
-    if (p.executed) { throw; }
-    if (p.votesCount < p.votesNeeded) { throw; }
+    require(!p.executed);
+    require(p.votesCount >= p.votesNeeded);
     address recipientAddress = contributorsContract().getContributorAddressById(p.recipientId);
     tokenContract().mintFor(recipientAddress, p.amount, proposalId);
     p.executed = true;
