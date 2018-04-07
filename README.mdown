@@ -68,6 +68,17 @@ At some point these should be moved into a real nice CLI.
 
 To run these scripts use `truffle exec`. For example: `truffle exec scripts/add-proposal.js` 
 
+### cli.js
+
+Call any function on any contract:
+
+    $ truffle exec scripts/cli.js <Contract Name> <Function> [<optional> <arguments>]
+    
+    For example: 
+    $ truffle exec scripts/cli.js Operator proposalsCount
+
+Please note that the contract name and the function are case sensitive. 
+
 ### add-contributor.js
 Adds a new core contributor, creates a proposal for the new contributor and votes for that one. 
 
