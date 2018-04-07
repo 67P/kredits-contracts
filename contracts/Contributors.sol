@@ -1,5 +1,7 @@
 pragma solidity ^0.4.18;
 
+// import basic ERC20 details to be able to call balanceOf
+import 'zeppelin-solidity/contracts/token/ERC20/ERC20Basic.sol';
 import './upgradeable/Upgradeable.sol';
 
 contract Contributors is Upgradeable {
@@ -104,5 +106,18 @@ contract Contributors is Upgradeable {
   function getContributorByAddress(address _address) internal view returns (Contributor) {
     uint id = contributorIds[_address];
     return contributors[id];
+  }
+
+  function getContributorById(uint _id) view returns (address account, bytes32 profileHash, uint8 hashFunction, uint8 hashSize, bool isCore, bool exists, uint balance ) {
+    Contributor c = contributors[_id];
+    account = c.account;
+    profileHash = c.profileHash;
+    hashFunction = c.hashFunction;
+    hashSize = c.hashSize;
+    isCore = c.isCore;
+    exists = c.exists;
+    
+    ERC20Basic token = ERC20Basic(registry.getProxyFor('Token'));
+    balance = token.balanceOf(account);
   }
 }
