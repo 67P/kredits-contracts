@@ -53,18 +53,18 @@ contract Operator is Upgradeable {
     return contributorsContract().coreContributorsCount();
   }
 
-  function addContributor(address _address, bytes32 _profileHash, uint8 _hashFunction, uint8 _hashSize, bool _isCore) public coreOnly {
-    contributorsContract().addContributor(_address, _hashFunction, _hashSize, _profileHash, _isCore);
+  function addContributor(address _address, bytes32 _ipfsHash, uint8 _hashFunction, uint8 _hashSize, bool _isCore) public coreOnly {
+    contributorsContract().addContributor(_address, _ipfsHash, _hashFunction, _hashSize, _isCore);
   }
 
-  function updateContributorProfileHash(uint _id, bytes32 _profileHash, uint8 _hashFunction, uint8 _hashSize) public coreOnly {
-    contributorsContract().updateContributorProfileHash(_id, _hashFunction, _hashSize, _profileHash);
+  function updateContributorIpfsHash(uint _id, bytes32 _ipfsHash, uint8 _hashFunction, uint8 _hashSize) public coreOnly {
+    contributorsContract().updateContributorIpfsHash(_id, _ipfsHash, _hashFunction, _hashSize);
   }
 
-  function getContributor(uint _id) view public returns (address account, uint8 hashFunction, uint8 hashSize, bytes32 profileHash, bool isCore) {
+  function getContributor(uint _id) view public returns (address account, bytes32 ipfsHash, uint8 hashFunction, uint8 hashSize, bool isCore) {
     bool exists;
 
-    (account, profileHash, hashFunction, hashSize, isCore, exists) = contributorsContract().contributors(_id);
+    (account, ipfsHash, hashFunction, hashSize, isCore, exists) = contributorsContract().contributors(_id);
 
     require(exists);
   }

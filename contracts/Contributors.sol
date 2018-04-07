@@ -8,7 +8,7 @@ contract Contributors is Upgradeable {
 
   struct Contributor {
     address account;
-    bytes32 profileHash;
+    bytes32 ipfsHash;
     uint8 hashFunction;
     uint8 hashSize;
     bool isCore;
@@ -19,7 +19,7 @@ contract Contributors is Upgradeable {
   mapping (uint => Contributor) public contributors;
   uint256 public contributorsCount;
 
-  event ContributorProfileUpdated(uint id, bytes32 oldProfileHash, bytes32 newProfileHash);
+  event ContributorProfileUpdated(uint id, bytes32 oldIpfsHash, bytes32 newIpfsHash);
   event ContributorAddressUpdated(uint id, address oldAddress, address newAddress);
   event ContributorAdded(uint id, address _address);
 
@@ -51,17 +51,17 @@ contract Contributors is Upgradeable {
     ContributorAddressUpdated(_id, _oldAddress, _newAddress);
   }
 
-  function updateContributorProfileHash(uint _id, uint8 _hashFunction, uint8 _hashSize, bytes32 _profileHash) public onlyRegistryContractFor('Operator') {
+  function updateContributorIpfsHash(uint _id, bytes32 _ipfsHash, uint8 _hashFunction, uint8 _hashSize) public onlyRegistryContractFor('Operator') {
     Contributor storage c = contributors[_id];
-    bytes32 _oldProfileHash = c.profileHash;
-    c.profileHash = _profileHash;
+    bytes32 _oldIpfsHash = c.ipfsHash;
+    c.ipfsHash = _ipfsHash;
     c.hashFunction = _hashFunction;
     c.hashSize = _hashSize;
 
-    ContributorProfileUpdated(_id, _oldProfileHash, c.profileHash);
+    ContributorProfileUpdated(_id, _oldIpfsHash, c.ipfsHash);
   }
 
-  function addContributor(address _address, uint8 _hashFunction, uint8 _hashSize, bytes32 _profileHash, bool isCore) public onlyRegistryContractFor('Operator') {
+  function addContributor(address _address, bytes32 _ipfsHash, uint8 _hashFunction, uint8 _hashSize, bool isCore) public onlyRegistryContractFor('Operator') {
     uint _id = contributorsCount + 1;
     if (contributors[_id].exists != true) {
       Contributor storage c = contributors[_id];
@@ -69,7 +69,7 @@ contract Contributors is Upgradeable {
       c.isCore = isCore;
       c.hashFunction = _hashFunction;
       c.hashSize = _hashSize;
-      c.profileHash = _profileHash;
+      c.ipfsHash = _ipfsHash;
       c.account = _address;
       contributorIds[_address] = _id;
 
@@ -108,10 +108,10 @@ contract Contributors is Upgradeable {
     return contributors[id];
   }
 
-  function getContributorById(uint _id) view returns (address account, bytes32 profileHash, uint8 hashFunction, uint8 hashSize, bool isCore, bool exists, uint balance ) {
+  function getContributorById(uint _id) view returns (address account, bytes32 ipfsHash, uint8 hashFunction, uint8 hashSize, bool isCore, uint balance, bool exists ) {
     Contributor c = contributors[_id];
     account = c.account;
-    profileHash = c.profileHash;
+    ipfsHash = c.ipfsHash;
     hashFunction = c.hashFunction;
     hashSize = c.hashSize;
     isCore = c.isCore;
