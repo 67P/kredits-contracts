@@ -95,6 +95,12 @@ contract Operator is Upgradeable {
     ProposalCreated(proposalId, msg.sender, p.recipientId, p.amount);
   }
 
+  function batchVote(uint256[] _proposalIds) public coreOnly {
+    for (uint256 i = 0; i < _proposalIds.length; i++) {
+      vote(_proposalIds[i]);
+    }
+  }
+
   function vote(uint256 _proposalId) public coreOnly returns (uint _pId, bool _executed) {
     var p = proposals[_proposalId];
     require(!p.executed);
