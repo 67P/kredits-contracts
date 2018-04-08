@@ -10,8 +10,13 @@ This repository contains all the contracts for Kredits as a [truffle framework](
 
 ### Requirements
 
+All requirements are defined in `package.json`.
+
+Those can be installed globally for convenience: 
   * [truffle framework](http://truffleframework.com): `npm install -g truffle`
   * [ganache](http://truffleframework.com/ganache): `npm install -g ganache-cli`
+
+We use following solidity contract libraries:
   * [Open Zeppelin](https://github.com/OpenZeppelin/zeppelin-solidity)
 
 For local development it is recommended to use [ganache-cli](https://github.com/trufflesuite/ganache-cli) (or the [ganache GUI](http://truffleframework.com/ganache/) to run a local development chain.  
