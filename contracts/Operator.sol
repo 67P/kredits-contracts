@@ -16,11 +16,13 @@ contract Operator is Upgradeable {
     bytes32 ipfsHash;
     uint8 hashFunction;
     uint8 hashSize;
-    mapping (address => bool) votes;
+    uint256[] voterIds;
+    mapping (uint256 => bool) votes;
     bool exists;
   }
 
-  Proposal[] public proposals;
+  mapping(uint256 => Proposal) public proposals;
+  uint256 public proposalsCount;
 
   event ProposalCreated(uint256 id, address creator, uint recipient, uint256 amount);
   event ProposalVoted(uint256 id, address voter, uint256 totalVotes);
@@ -69,37 +71,52 @@ contract Operator is Upgradeable {
     require(exists);
   }
 
-  function proposalsCount() view public returns (uint) {
-    return proposals.length;
-  }
-
   function addProposal(uint _recipient, uint256 _amount, bytes32 _ipfsHash, uint8 _hashFunction, uint8 _hashSize) public returns (uint256 proposalId) {
     require(contributorsContract().exists(_recipient));
 
-    proposalId = proposals.length;
+    proposalId = proposalsCount + 1;
     uint _votesNeeded = contributorsContract().coreContributorsCount() / 100 * 75;
 
-    var p = Proposal({
-      creator: msg.sender,
-      recipientId: _recipient,
-      amount: _amount,
-      ipfsHash: _ipfsHash,
-      hashFunction: _hashFunction,
-      hashSize: _hashSize,
-      votesCount: 0,
-      votesNeeded: _votesNeeded,
-      executed: false,
-      exists: true
-    });
-    proposals.push(p);
+    var p = proposals[proposalId];
+    p.creator = msg.sender;
+    p.recipientId = _recipient;
+    p.amount = _amount;
+    p.ipfsHash  = _ipfsHash;
+    p.hashFunction = _hashFunction;
+    p.hashSize =  _hashSize;
+    p.votesCount =  0;
+    p.votesNeeded = _votesNeeded;
+    p.exists = true;
+   
+    proposalsCount++;
     ProposalCreated(proposalId, msg.sender, p.recipientId, p.amount);
+  }
+
+  function getProposal(uint _proposalId) public view returns (address creator, uint256 recipientId, uint256 votesCount, uint256 votesNeeded, uint256 amount, bool executed, bytes32 ipfsHash, uint8 hashFunction, uint8 hashSize, uint256[] voterIds, bool exists) {
+    Proposal storage p = proposals[_proposalId];
+    return (
+      p.creator,
+      p.recipientId, 
+      p.votesCount, 
+      p.votesNeeded,
+      p.amount,
+      p.executed, 
+      p.ipfsHash, 
+      p.hashFunction,
+      p.hashSize,
+      p.voterIds,
+      p.exists
+    );
   }
 
   function vote(uint256 _proposalId) public coreOnly returns (uint _pId, bool _executed) {
     var p = proposals[_proposalId];
     require(!p.executed);
-    require(p.votes[msg.sender] != true);
-    p.votes[msg.sender] = true;
+    uint256 contributorId = contributorsContract().getContributorIdByAddress(msg.sender);
+    require(p.votes[contributorId] != true);
+    p.voterIds.push(contributorId);
+    p.votes[contributorId] = true;
+
     p.votesCount++;
     _executed = false;
     _pId = _proposalId;
@@ -108,11 +125,6 @@ contract Operator is Upgradeable {
       _executed = true;
     }
     ProposalVoted(_pId, msg.sender, p.votesCount);
-  }
-
-  function hasVotedFor(address _sender, uint256 _proposalId) public view returns (bool) {
-    Proposal storage p = proposals[_proposalId];
-    return p.exists && p.votes[_sender];
   }
 
   function executeProposal(uint proposalId) private returns (bool) {
