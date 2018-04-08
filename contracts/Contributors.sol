@@ -23,6 +23,11 @@ contract Contributors is Upgradeable {
   event ContributorAddressUpdated(uint id, address oldAddress, address newAddress);
   event ContributorAdded(uint id, address _address);
 
+  modifier onlyCoreOrOperator() {
+    require(msg.sender == registry.getProxyFor('Operator') || addressIsCore(msg.sender));
+    _;
+  }
+
   function initialize(address sender) public payable {
     require(msg.sender == address(registry));
     uint _id = 1;
@@ -44,14 +49,14 @@ contract Contributors is Upgradeable {
     return count;
   }
 
-  function updateContributorAddress(uint _id, address _oldAddress, address _newAddress) public onlyRegistryContractFor('Operator') {
+  function updateContributorAddress(uint _id, address _oldAddress, address _newAddress) public onlyCoreOrOperator {
     contributorIds[_oldAddress] = 0;
     contributorIds[_newAddress] = _id;
     contributors[_id].account = _newAddress;
     ContributorAddressUpdated(_id, _oldAddress, _newAddress);
   }
 
-  function updateContributorIpfsHash(uint _id, bytes32 _ipfsHash, uint8 _hashFunction, uint8 _hashSize) public onlyRegistryContractFor('Operator') {
+  function updateContributorIpfsHash(uint _id, bytes32 _ipfsHash, uint8 _hashFunction, uint8 _hashSize) public onlyCoreOrOperator {
     Contributor storage c = contributors[_id];
     bytes32 _oldIpfsHash = c.ipfsHash;
     c.ipfsHash = _ipfsHash;
@@ -61,22 +66,21 @@ contract Contributors is Upgradeable {
     ContributorProfileUpdated(_id, _oldIpfsHash, c.ipfsHash);
   }
 
-  function addContributor(address _address, bytes32 _ipfsHash, uint8 _hashFunction, uint8 _hashSize, bool isCore) public onlyRegistryContractFor('Operator') {
+  function addContributor(address _address, bytes32 _ipfsHash, uint8 _hashFunction, uint8 _hashSize, bool _isCore) public onlyCoreOrOperator {
+    require(!addressExists(_address));
     uint _id = contributorsCount + 1;
-    if (contributors[_id].exists != true) {
-      Contributor storage c = contributors[_id];
-      c.exists = true;
-      c.isCore = isCore;
-      c.hashFunction = _hashFunction;
-      c.hashSize = _hashSize;
-      c.ipfsHash = _ipfsHash;
-      c.account = _address;
-      contributorIds[_address] = _id;
+    assert(!contributors[_id].exists); // this can not be acually
+    Contributor storage c = contributors[_id];
+    c.exists = true;
+    c.isCore = _isCore;
+    c.hashFunction = _hashFunction;
+    c.hashSize = _hashSize;
+    c.ipfsHash = _ipfsHash;
+    c.account = _address;
+    contributorIds[_address] = _id;
 
-      contributorsCount += 1;
-
-      ContributorAdded(_id, _address);
-    }
+    contributorsCount += 1;
+    ContributorAdded(_id, _address);
   }
 
   function isCore(uint _id) view public returns (bool) {
