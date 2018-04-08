@@ -30,7 +30,7 @@ module.exports = function(callback) {
     let ipfsHash = process.argv[5] || 'QmQyZJT9uikzDYTZLhhyVZ5ReZVCoMucYzyvDokDJsijhj';
     let contributorMultihash = getBytes32FromMultiash(ipfsHash);
     let isCore = true;
-    let contributorResult = await operator.addContributor(contributorToAddAddress, contributorMultihash.digest, contributorMultihash.hashFunction, contributorMultihash.size, isCore);
+    let contributorResult = await contributors.addContributor(contributorToAddAddress, contributorMultihash.digest, contributorMultihash.hashFunction, contributorMultihash.size, isCore);
     console.log('Contributor added, tx: ', contributorResult.tx);
 
     let contributorId = await contributors.getContributorIdByAddress(contributorToAddAddress);
@@ -39,7 +39,7 @@ module.exports = function(callback) {
     console.log('Proposal added, tx: ', proposalResult.tx);
 
     let proposalId = await operator.proposalsCount();
-    let votingResult = operator.vote(proposalId.toNumber()-1);
+    let votingResult = await operator.vote(proposalId.toNumber()-1);
     console.log('Voted for proposal', proposalId.toString(), votingResult.tx);
 
     callback();
