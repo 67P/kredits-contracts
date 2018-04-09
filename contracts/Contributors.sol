@@ -20,8 +20,8 @@ contract Contributors is Upgradeable {
   uint256 public contributorsCount;
 
   event ContributorProfileUpdated(uint id, bytes32 oldIpfsHash, bytes32 newIpfsHash);
-  event ContributorAddressUpdated(uint id, address oldAddress, address newAddress);
-  event ContributorAdded(uint id, address _address);
+  event ContributorAccountUpdated(uint id, address oldAccount, address newAccount);
+  event ContributorAdded(uint id, address account);
 
   modifier onlyCoreOrOperator() {
     require(msg.sender == registry.getProxyFor('Operator') || addressIsCore(msg.sender));
@@ -49,71 +49,72 @@ contract Contributors is Upgradeable {
     return count;
   }
 
-  function updateContributorAddress(uint _id, address _oldAddress, address _newAddress) public onlyCoreOrOperator {
-    contributorIds[_oldAddress] = 0;
-    contributorIds[_newAddress] = _id;
-    contributors[_id].account = _newAddress;
-    ContributorAddressUpdated(_id, _oldAddress, _newAddress);
+  function updateContributorAddress(uint id, address oldAccount, address newAccount) public onlyCoreOrOperator {
+    contributorIds[oldAccount] = 0;
+    contributorIds[newAccount] = id;
+    contributors[id].account = newAccount;
+    ContributorAccountUpdated(id, oldAccount, newAccount);
   }
 
-  function updateContributorIpfsHash(uint _id, bytes32 _ipfsHash, uint8 _hashFunction, uint8 _hashSize) public onlyCoreOrOperator {
-    Contributor storage c = contributors[_id];
-    bytes32 _oldIpfsHash = c.ipfsHash;
-    c.ipfsHash = _ipfsHash;
-    c.hashFunction = _hashFunction;
-    c.hashSize = _hashSize;
+  function updateContributorIpfsHash(uint id, bytes32 ipfsHash, uint8 hashFunction, uint8 hashSize) public onlyCoreOrOperator {
+    Contributor storage c = contributors[id];
+    bytes32 oldIpfsHash = c.ipfsHash;
+    c.ipfsHash = ipfsHash;
+    c.hashFunction = hashFunction;
+    c.hashSize = hashSize;
 
-    ContributorProfileUpdated(_id, _oldIpfsHash, c.ipfsHash);
+    ContributorProfileUpdated(id, oldIpfsHash, c.ipfsHash);
   }
 
-  function addContributor(address _address, bytes32 _ipfsHash, uint8 _hashFunction, uint8 _hashSize, bool _isCore) public onlyCoreOrOperator {
-    require(!addressExists(_address));
+  function addContributor(address account, bytes32 ipfsHash, uint8 hashFunction, uint8 hashSize, bool isCore) public onlyCoreOrOperator {
+    require(!addressExists(account));
     uint _id = contributorsCount + 1;
     assert(!contributors[_id].exists); // this can not be acually
     Contributor storage c = contributors[_id];
     c.exists = true;
-    c.isCore = _isCore;
-    c.hashFunction = _hashFunction;
-    c.hashSize = _hashSize;
-    c.ipfsHash = _ipfsHash;
-    c.account = _address;
-    contributorIds[_address] = _id;
+    c.isCore = isCore;
+    c.ipfsHash = ipfsHash;
+    c.hashFunction = hashFunction;
+    c.hashSize = hashSize;
+    c.account = account;
+    contributorIds[account] = _id;
 
     contributorsCount += 1;
-    ContributorAdded(_id, _address);
+    ContributorAdded(_id, account);
   }
 
-  function isCore(uint _id) view public returns (bool) {
-    return contributors[_id].isCore;
+  function isCore(uint id) view public returns (bool) {
+    return contributors[id].isCore;
   }
 
-  function exists(uint _id) view public returns (bool) {
-    return contributors[_id].exists;
+  function exists(uint id) view public returns (bool) {
+    return contributors[id].exists;
   }
 
-  function addressIsCore(address _address) view public returns (bool) {
-    return getContributorByAddress(_address).isCore;
+  function addressIsCore(address account) view public returns (bool) {
+    return getContributorByAddress(account).isCore;
   }
 
-  function addressExists(address _address) view public returns (bool) {
-    return getContributorByAddress(_address).exists;
+  function addressExists(address account) view public returns (bool) {
+    return getContributorByAddress(account).exists;
   }
 
-  function getContributorIdByAddress(address _address) view public returns (uint) {
-    return contributorIds[_address];
+  function getContributorIdByAddress(address account) view public returns (uint) {
+    return contributorIds[account];
   }
 
-  function getContributorAddressById(uint _id) view public returns (address) {
-    return contributors[_id].account;
+  function getContributorAddressById(uint id) view public returns (address) {
+    return contributors[id].account;
   }
 
-  function getContributorByAddress(address _address) internal view returns (Contributor) {
-    uint id = contributorIds[_address];
+  function getContributorByAddress(address account) internal view returns (Contributor) {
+    uint id = contributorIds[account];
     return contributors[id];
   }
 
-  function getContributorById(uint _id) view returns (address account, bytes32 ipfsHash, uint8 hashFunction, uint8 hashSize, bool isCore, uint balance, bool exists ) {
-    Contributor c = contributors[_id];
+  function getContributorById(uint _id) public view returns (uint id, address account, bytes32 ipfsHash, uint8 hashFunction, uint8 hashSize, bool isCore, uint balance, bool exists ) {
+    id = _id;
+    Contributor storage c = contributors[_id];
     account = c.account;
     ipfsHash = c.ipfsHash;
     hashFunction = c.hashFunction;
