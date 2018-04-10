@@ -76,7 +76,8 @@ contract Operator is Upgradeable {
     ProposalCreated(proposalId, msg.sender, p.recipientId, p.amount);
   }
 
-  function getProposal(uint id) public view returns (address creator, uint256 recipientId, uint256 votesCount, uint256 votesNeeded, uint256 amount, bool executed, bytes32 ipfsHash, uint8 hashFunction, uint8 hashSize, uint256[] voterIds, bool exists) {
+  function getProposal(uint proposalId) public view returns (uint256 id, address creator, uint256 recipientId, uint256 votesCount, uint256 votesNeeded, uint256 amount, bool executed, bytes32 ipfsHash, uint8 hashFunction, uint8 hashSize, uint256[] voterIds, bool exists) {
+    id = proposalId;
     Proposal storage p = proposals[id];
     return (
       p.creator,
