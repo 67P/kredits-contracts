@@ -49,7 +49,7 @@ contract Contributors is Upgradeable {
     return count;
   }
 
-  function updateContributorAddress(uint id, address oldAccount, address newAccount) public onlyCoreOrOperator {
+  function updateContributorAccount(uint id, address oldAccount, address newAccount) public onlyCoreOrOperator {
     contributorIds[oldAccount] = 0;
     contributorIds[newAccount] = id;
     contributors[id].account = newAccount;
