@@ -7,7 +7,7 @@ import './Contributors.sol';
 contract Operator is Upgradeable {
 
   struct Proposal {
-    address creator;
+    address creatorAccount;
     uint recipientId;
     uint votesCount;
     uint votesNeeded;
@@ -24,9 +24,9 @@ contract Operator is Upgradeable {
   mapping(uint256 => Proposal) public proposals;
   uint256 public proposalsCount;
 
-  event ProposalCreated(uint256 id, address creator, uint recipientId, uint256 amount);
-  event ProposalVoted(uint256 id, address voter, uint256 totalVotes);
-  event ProposalExecuted(uint256 id, uint recipientId, uint256 amount);
+  event ProposalCreated(uint256 id, address creatorAccount, uint256 recipientId, uint256 amount);
+  event ProposalVoted(uint256 id, uint256 contributorId, uint256 totalVotes);
+  event ProposalExecuted(uint256 id, uint256 recipientId, uint256 amount);
 
   modifier coreOnly() { 
     require(contributorsContract().addressIsCore(msg.sender));
@@ -62,7 +62,7 @@ contract Operator is Upgradeable {
     uint _votesNeeded = contributorsContract().coreContributorsCount() / 100 * 75;
 
     var p = proposals[proposalId];
-    p.creator = msg.sender;
+    p.creatorAccount = msg.sender;
     p.recipientId = recipientId;
     p.amount = amount;
     p.ipfsHash  = ipfsHash;
@@ -106,7 +106,7 @@ contract Operator is Upgradeable {
     if (p.votesCount >= p.votesNeeded) {
       executeProposal(proposalId);
     }
-    ProposalVoted(proposalId, msg.sender, p.votesCount);
+    ProposalVoted(proposalId, voterId, p.votesCount);
   }
 
   function executeProposal(uint proposalId) private {
