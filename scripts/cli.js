@@ -1,3 +1,5 @@
+const REPL = require('repl');
+
 module.exports = function(callback) {
   const Registry = artifacts.require('./Registry.sol');
   Registry.deployed().then(async (registry) => {
@@ -26,7 +28,17 @@ module.exports = function(callback) {
       console.log("\nResult:");
       console.log(result);
 
-      callback();
+      console.log("\nStartig a REPL. (type .exit to exit)");
+      console.log(`defined variables: result, ${contractName}, web3`);
+      let r = REPL.start();
+      r.context.result = result;
+      r.context[contractName] = contract;
+      r.context.web3 = web3;
+
+      r.on('exit', () => {
+        console.log('Bye');
+        callback();
+      })
     }).catch((error) => {
       console.log("Call failed. Probably the contract raised an error?\n");
       console.log("...");
