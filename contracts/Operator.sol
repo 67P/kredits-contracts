@@ -127,6 +127,12 @@ contract Operator is Upgradeable {
     ProposalVoted(_pId, msg.sender, p.votesCount);
   }
 
+  function batchVote(uint256[] _proposalIds) public coreOnly {
+    for (uint256 i = 0; i < _proposalIds.length; i++) {
+      vote(_proposalIds[i]);
+    }
+  }
+
   function executeProposal(uint proposalId) private returns (bool) {
     var p = proposals[proposalId];
     require(!p.executed);
