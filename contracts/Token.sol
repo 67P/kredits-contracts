@@ -17,11 +17,11 @@ contract Token is Upgradeable, BasicToken {
     decimals = 18;
   }
 
-  function mintFor(address recipientAddress, uint256 amount, uint proposalId) onlyRegistryContractFor('Operator') public {
+  function mintFor(address contributorAccount, uint256 amount, uint proposalId) onlyRegistryContractFor('Operator') public {
     totalSupply_ = totalSupply_.add(amount);
-    balances[recipientAddress] = balances[recipientAddress].add(amount); 
+    balances[contributorAccount] = balances[contributorAccount].add(amount); 
 
-    LogMint(recipientAddress, amount, proposalId);
+    LogMint(contributorAccount, amount, proposalId);
   }
 
 }
