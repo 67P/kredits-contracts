@@ -8,9 +8,9 @@ let contractCalls = {
   },
   Operator: {
     addProposal: [
-      [1, 23, '0x1e1a168d736fc825213144973a8fd5b3cc9f37ad821a8b3d9c3488034bbf69d8', 18, 32], // QmQNA1hhVyL1Vm6HiRxXe9xmc6LUMBDyiNMVgsjThtyevs"
-      [2, 42, '0x1e1a168d736fc825213144973a8fd5b3cc9f37ad821a8b3d9c3488034bbf69d8', 18, 32], // QmQNA1hhVyL1Vm6HiRxXe9xmc6LUMBDyiNMVgsjThtyevs"
-      [2, 100, '0x1e1a168d736fc825213144973a8fd5b3cc9f37ad821a8b3d9c3488034bbf69d8', 18, 32] // QmQNA1hhVyL1Vm6HiRxXe9xmc6LUMBDyiNMVgsjThtyevs"
+      [2, 23, '0x1e1a168d736fc825213144973a8fd5b3cc9f37ad821a8b3d9c3488034bbf69d8', 18, 32], // QmQNA1hhVyL1Vm6HiRxXe9xmc6LUMBDyiNMVgsjThtyevs"
+      [3, 42, '0x1e1a168d736fc825213144973a8fd5b3cc9f37ad821a8b3d9c3488034bbf69d8', 18, 32], // QmQNA1hhVyL1Vm6HiRxXe9xmc6LUMBDyiNMVgsjThtyevs"
+      [3, 100, '0x1e1a168d736fc825213144973a8fd5b3cc9f37ad821a8b3d9c3488034bbf69d8', 18, 32] // QmQNA1hhVyL1Vm6HiRxXe9xmc6LUMBDyiNMVgsjThtyevs"
     ],
     vote: [
       [1]
