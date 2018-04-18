@@ -26,6 +26,6 @@ files.forEach((fileName) => {
     }, {});
   fs.writeFileSync(addresseFile, JSON.stringify(addresses));
 
-  let indexFile = path.join(libPath, 'index.js');
-  fs.writeFileSync(indexFile, `module.exports = ${JSON.stringify(files)};`);
 });
+
+console.log("Don't forget to reaload the JSON files from your application; i.e. restart kredits-web");
