@@ -18,14 +18,15 @@ files.forEach((fileName) => {
   let abiFile = path.join(abisPath, `${fileName}.json`);
   fs.writeFileSync(abiFile, JSON.stringify(file.abi));
 
-  let addresseFile = path.join(addressesPath, `${fileName}.json`);
-  let addresses = Object.keys(file.networks)
-    .reduce((addresses, key) => {
-      addresses[key] = file.networks[key].address;
-      return addresses;
-    }, {});
-  fs.writeFileSync(addresseFile, JSON.stringify(addresses));
-
+  if (fileName === 'Registry') {
+    let addresseFile = path.join(addressesPath, `${fileName}.json`);
+    let addresses = Object.keys(file.networks)
+      .reduce((addresses, key) => {
+        addresses[key] = file.networks[key].address;
+        return addresses;
+      }, {});
+    fs.writeFileSync(addresseFile, JSON.stringify(addresses));
+  }
 });
 
 console.log("Don't forget to reaload the JSON files from your application; i.e. restart kredits-web");
