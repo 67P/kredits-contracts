@@ -1,12 +1,12 @@
+const promptly = require('promptly');
 
-module.exports = function(callback) {
-  let recipient = process.argv[4];
-  if (!recipient) {
-    console.log('Please provide a recipient address');
-    process.exit();
-  }
-  let amount = parseInt(process.argv[5]) || 1;
-  console.log(recipient);
+module.exports = async function(callback) {
+  let recipient = await promptly.prompt('Recipient address: ');
+  let amount = await promptly.prompt('Amount: ', {default: '1'});
+  amount = parseInt(amount);
+
+  console.log(`sending ${amount} ETH from ${web3.eth.accounts[0]} to ${recipient}`);
+
   web3.eth.sendTransaction({to: recipient, value: web3.toWei(amount), from: web3.eth.accounts[0]}, console.log);
 
   callback();
