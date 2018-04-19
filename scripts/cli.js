@@ -1,17 +1,15 @@
 const REPL = require('repl');
+const promptly = require('promptly');
 
 module.exports = function(callback) {
   const Registry = artifacts.require('./Registry.sol');
   Registry.deployed().then(async (registry) => {
-    let contractName = process.argv[4];
-    let method = process.argv[5];
-    let args = process.argv.slice(6);
-
-    if (!contractName) {
-      console.log("Usage:");
-      console.log("  truffle exec scripts/cli.js <Contract name> <method to call> [<optional> <arguments>]");
-      callback();
-      return;
+    let contractName = await promptly.prompt('Contract Name: ');
+    let method = await promptly.prompt('Function: ');
+    let argumentInput = await promptly.prompt('Arguments (comma separated): ', { default: '' });
+    let args = [];
+    if (argumentInput !== '') {
+      args = argumentInput.split(',').map(a => a.trim());
     }
 
     let contractAddress = await registry.getProxyFor(contractName);

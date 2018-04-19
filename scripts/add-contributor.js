@@ -1,8 +1,9 @@
 const Registry = artifacts.require('./Registry.sol');
 const Operator = artifacts.require('./Operator.sol');
 const Contributors = artifacts.require('./Contributors.sol');
+const promptly = require('promptly');
 
-var bs58 = require('bs58');
+const bs58 = require('bs58');
 
 function getBytes32FromMultiash(multihash) {
   const decoded = bs58.decode(multihash);
@@ -22,12 +23,9 @@ module.exports = function(callback) {
     var operator = await Operator.at(operatorAddress);
     var contributors = await Contributors.at(contributorsAddress);
 
-    let contributorToAddAddress = process.argv[4];
-    if(!contributorToAddAddress) {
-      console.log('please provide an address');
-      proxess.exit();
-    }
-    let ipfsHash = process.argv[5] || 'QmQyZJT9uikzDYTZLhhyVZ5ReZVCoMucYzyvDokDJsijhj';
+    let contributorToAddAddress = await promptly.prompt('Contributor address: ');
+    let ipfsHash = await promptly.prompt('IPFS hash (blank for default): ', { default: 'QmQNA1hhVyL1Vm6HiRxXe9xmc6LUMBDyiNMVgsjThtyevs' });
+
     let contributorMultihash = getBytes32FromMultiash(ipfsHash);
     let isCore = true;
     let contributorResult = await contributors.addContributor(contributorToAddAddress, contributorMultihash.digest, contributorMultihash.hashFunction, contributorMultihash.size, isCore);

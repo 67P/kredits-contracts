@@ -1,4 +1,4 @@
-var bs58 = require('bs58');
+const bs58 = require('bs58');
 
 function getBytes32FromMultiash(multihash) {
   const decoded = bs58.decode(multihash);
