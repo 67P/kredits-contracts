@@ -25,6 +25,7 @@
   "homepage": "https://github.com/67P/truffle-kredits#readme",
   "devDependencies": {
     "ganache-cli": "^6.0.3",
+    "promptly": "^3.0.3",
     "truffle": "^4.1.3",
     "zeppelin-solidity": "^1.7.0"
   },
