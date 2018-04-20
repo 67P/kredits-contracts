@@ -1,45 +1,50 @@
 const Registry = artifacts.require('./Registry.sol');
-const Operator = artifacts.require('./Operator.sol');
-const Contributors = artifacts.require('./Contributors.sol');
 const promptly = require('promptly');
-
 const bs58 = require('bs58');
 
-function getBytes32FromMultiash(multihash) {
-  const decoded = bs58.decode(multihash);
+const ethers = require('ethers');
+const Kredits = require('../lib/kredits');
 
-  return {
-    digest: `0x${decoded.slice(2).toString('hex')}`,
-    hashFunction: decoded[0],
-    size: decoded[1],
-  };
+async function prompt(message, options) {
+  if (!options) {
+    options = {default: ''}
+  }
+  return await promptly.prompt(message, options);
 }
 
 module.exports = function(callback) {
   Registry.deployed().then(async (registry) => {
-    var operatorAddress = await registry.getProxyFor('Operator');
-    var contributorsAddress = await registry.getProxyFor('Contributors');
 
-    var operator = await Operator.at(operatorAddress);
-    var contributors = await Contributors.at(contributorsAddress);
+    const networkId = parseInt(web3.version.network);
+    const provider = new ethers.providers.Web3Provider(
+      web3.currentProvider, { chainId: networkId }
+    );
+    const kredits = await Kredits.setup(provider, provider.getSigner());
 
-    let contributorToAddAddress = await promptly.prompt('Contributor address: ');
-    let ipfsHash = await promptly.prompt('IPFS hash (blank for default): ', { default: 'QmQNA1hhVyL1Vm6HiRxXe9xmc6LUMBDyiNMVgsjThtyevs' });
+    console.log(`Using contributors at: ${kredits.Contributor.contract.address}`);
 
-    let contributorMultihash = getBytes32FromMultiash(ipfsHash);
-    let isCore = true;
-    let contributorResult = await contributors.addContributor(contributorToAddAddress, contributorMultihash.digest, contributorMultihash.hashFunction, contributorMultihash.size, isCore);
-    console.log('Contributor added, tx: ', contributorResult.tx);
+    let contributorAttributes = {
+      account: await prompt('Contributor address: ', {}),
+      name: await prompt('Name: '),
+      isCore: await prompt('core? y/n') === 'y',
+      kind: await prompt('Kind (default person): ', {default: 'person'}),
+      url: await prompt('URL: '),
+      github_username: await prompt('GitHub username: '),
+      github_uid: await prompt('GitHub UID: '),
+      wiki_username: await prompt('Wiki username: '),
+    };
 
-    let contributorId = await contributors.getContributorIdByAddress(contributorToAddAddress);
-    let proposalMultihash = getBytes32FromMultiash('QmQNA1hhVyL1Vm6HiRxXe9xmc6LUMBDyiNMVgsjThtyevs');
-    let proposalResult = await operator.addProposal(contributorId, 23, proposalMultihash.digest, proposalMultihash.hashFunction, proposalMultihash.size);
-    console.log('Proposal added, tx: ', proposalResult.tx);
+    console.log("\nAdding contributor:");
+    console.log(contributorAttributes);
 
-    let proposalId = await operator.proposalsCount();
-    let votingResult = await operator.vote(proposalId.toNumber()-1);
-    console.log('Voted for proposal', proposalId.toString(), votingResult.tx);
+    kredits.Contributor.add(contributorAttributes, {gasLimit: 250000}).then((result) => {
+      console.log("\n\nResult:");
+      console.log(result);
+      callback();
+    }).catch((error) => {
+      console.log('Failed to create contributor');
+      callback(error);
+    });
 
-    callback();
   });
 }
