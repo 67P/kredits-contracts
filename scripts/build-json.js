@@ -20,11 +20,12 @@ files.forEach((fileName) => {
 
   if (fileName === 'Registry') {
     let addresseFile = path.join(addressesPath, `${fileName}.json`);
+    let content = fs.readFileSync(addresseFile);
     let addresses = Object.keys(file.networks)
       .reduce((addresses, key) => {
         addresses[key] = file.networks[key].address;
         return addresses;
-      }, {});
+      }, JSON.parse(content));
     fs.writeFileSync(addresseFile, JSON.stringify(addresses));
   }
 });
