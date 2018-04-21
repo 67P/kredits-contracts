@@ -31,7 +31,7 @@
     "zeppelin-solidity": "^1.7.0"
   },
   "dependencies": {
-    "ethers": "^3.0.15",
+    "ethers": "3.0.15",
     "ipfs-api": "^19.0.0",
     "rsvp": "^4.8.2"
   }
