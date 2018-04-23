@@ -6,4 +6,8 @@ let contractCalls = [
   ['Operator', 'addProposal', [{contributorId: 3, amount: 100, kind: 'code', description: 'hacks on kredits', url: '' }, {gasLimit: 350000}]],
   ['Operator', 'vote', ['1', {gasLimit: 250000}]]
 ];
-module.exports = { contractCalls };
+let funds = [
+  '0x7e8f313c56f809188313aa274fa67ee58c31515d',
+  '0xa502eb4021f3b9ab62f75b57a94e1cfbf81fd827'
+];
+module.exports = { contractCalls, funds };
