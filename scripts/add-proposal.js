@@ -1,38 +1,46 @@
 const Registry = artifacts.require('./Registry.sol');
-const Operator = artifacts.require('./Operator.sol');
-const Contributors = artifacts.require('./Contributors.sol');
 const promptly = require('promptly');
 
-const bs58 = require('bs58');
-
-function getBytes32FromMultiash(multihash) {
-  const decoded = bs58.decode(multihash);
-
-  return {
-    digest: `0x${decoded.slice(2).toString('hex')}`,
-    hashFunction: decoded[0],
-    size: decoded[1],
-  };
-}
+const ethers = require('ethers');
+const Kredits = require('../lib/kredits');
 
 module.exports = function(callback) {
   Registry.deployed().then(async (registry) => {
-    var operatorAddress = await registry.getProxyFor('Operator');
-    var contributorsAddress = await registry.getProxyFor('Contributors');
+    const networkId = parseInt(web3.version.network);
+    const provider = new ethers.providers.Web3Provider(
+      web3.currentProvider, { chainId: networkId }
+    );
+    const kredits = await Kredits.setup(provider, provider.getSigner());
 
-    var operator = await Operator.at(operatorAddress);
-    var contributors = await Contributors.at(contributorsAddress);
+    console.log(`Using operator at: ${kredits.Operator.contract.address}`);
 
-    let recipientAddress = await promptly.prompt('Contributor address: ');
-    let ipfsHash = await promptly.prompt('IPFS hash (blank for default): ', { default: 'QmQNA1hhVyL1Vm6HiRxXe9xmc6LUMBDyiNMVgsjThtyevs' });
+    let contributor = await promptly.prompt('Contributor (address or id): ');
+    let contributorId;
+    if (contributor.length < 5) {
+      contributorId = contributor;
+    } else {
+      contributorId = await contributors.getContributorIdByAddress(contributor);
+    }
+    console.log(`Creating a proposal for contributor ID #${contributorId}`);
 
-    let multihash = getBytes32FromMultiash(ipfsHash);
+    let contributionAttributes = {
+      contributorId,
+      amount: await promptly.prompt('Amount: '),
+      description: await promptly.prompt('Description: '),
+      kind: await promptly.prompt('Kind: ', { default: 'dev' }),
+      url: await promptly.prompt('URL: ', { default: '' })
+    }
 
-    let contributorId = await contributors.getContributorIdByAddress(recipientAddress);
+    console.log("\nAdding proposal:");
+    console.log(contributionAttributes);
 
-    let result = await operator.addProposal(contributorId.toNumber(), 23, multihash.digest, multihash.hashFunction, multihash.size);
-    console.log('Proposal added, tx: ', result.tx);
-
-    callback();
+    kredits.Operator.addProposal(contributionAttributes, { gasLimit: 300000 }).then((result) => {
+      console.log("\n\nResult:");
+      console.log(result);
+      callback();
+    }).catch((error) => {
+      console.log('Failed to create proposal');
+      console.log(error);
+    });
   });
 }
