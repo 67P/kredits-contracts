@@ -84,27 +84,22 @@ To run these scripts use `truffle exec`. For example: `truffle exec scripts/add-
 
 Call any function on any contract:
 
-    $ truffle exec scripts/cli.js <Contract Name> <Function> [<optional> <arguments>]
-    
-    For example: 
-    $ truffle exec scripts/cli.js Operator proposalsCount
-
-Please note that the contract name and the function are case sensitive. 
+    $ truffle exec scripts/cli.js
 
 ### add-contributor.js
 Adds a new core contributor, creates a proposal for the new contributor and votes for that one. 
 
-    $ truffle exec scripts/add-contributor.js <ethereum address> [<profile IPFS hash>]
+    $ truffle exec scripts/add-contributor.js 
 
 ### add-proposal.js
 Adds a new proposal for an existing contributor
 
-    $ truffle exec scripts/add-proposal.js <ethereum address> [<proposal IPFS hash>]
+    $ truffle exec scripts/add-proposal.js
 
 ### send-funds.js
 Sends funds to an address. Helpful in development mode to for example fund a metamask account.
 
-    $ truffle exec scripts/send-funds.js <ethereum address>
+    $ truffle exec scripts/send-funds.js 
 
 ### seeds.js
 Run seeds defined in `config/seeds.js`.  
