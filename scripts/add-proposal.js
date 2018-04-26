@@ -19,7 +19,7 @@ module.exports = function(callback) {
     if (contributor.length < 5) {
       contributorId = contributor;
     } else {
-      contributorId = await contributors.getContributorIdByAddress(contributor);
+      contributorId = await kredits.Contributor.functions.getContributorIdByAddress(contributor);
     }
     console.log(`Creating a proposal for contributor ID #${contributorId}`);
 
