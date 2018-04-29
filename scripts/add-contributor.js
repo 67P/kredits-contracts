@@ -1,6 +1,5 @@
 const Registry = artifacts.require('./Registry.sol');
 const promptly = require('promptly');
-const bs58 = require('bs58');
 
 const ethers = require('ethers');
 const Kredits = require('../lib/kredits');
@@ -37,7 +36,7 @@ module.exports = function(callback) {
     console.log("\nAdding contributor:");
     console.log(contributorAttributes);
 
-    kredits.Contributor.add(contributorAttributes, {gasLimit: 250000}).then((result) => {
+    kredits.Contributor.add(contributorAttributes, { gasLimit: 250000 }).then((result) => {
       console.log("\n\nResult:");
       console.log(result);
       callback();
