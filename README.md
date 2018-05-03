@@ -1,3 +1,5 @@
+[![npm](https://img.shields.io/npm/v/kredits-contracts.svg)](https://www.npmjs.com/package/kredits-contracts)
+
 # Kredits Contracts
 
 This repository contains the Solidity smart contracts and JavaScript API
