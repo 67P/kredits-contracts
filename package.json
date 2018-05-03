@@ -1,6 +1,6 @@
 {
   "name": "kredits-contracts",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Ethereum contracts and npm wrapper for Kredits",
   "main": "./lib/kredits.js",
   "directories": {
