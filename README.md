@@ -1,6 +1,9 @@
-# Kredits
+# Kredits Contracts
 
-This repository contains all the contracts for Kredits as a [truffle framework](http://truffleframework.com/) project.
+This repository contains the Solidity smart contracts and JavaScript API
+wrapper for [Kosmos Kredits](https://wiki.kosmos.org/Kredits).
+
+It uses the [Truffle framework](http://truffleframework.com/) for some things.
 
 ## Development
 
