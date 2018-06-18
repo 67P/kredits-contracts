@@ -6,7 +6,7 @@ import './upgradeable/Upgradeable.sol';
 // ToDo: only load interfaces
 import './Token.sol';
 
-contract Contribution is Upgradeable, ERC721Token { 
+contract Contribution is Upgradeable, ERC721Token {
 
   struct Contribution {
     address contributor;
@@ -19,9 +19,9 @@ contract Contribution is Upgradeable, ERC721Token {
   }
   string internal name_;
   string internal symbol_;
-  
+
   mapping(uint256 => string) contributionURIs;
-  
+
   mapping(uint256 => address) contributionOwner;
   mapping(address => uint256[]) ownedContributions;
 
@@ -68,7 +68,7 @@ contract Contribution is Upgradeable, ERC721Token {
     c.claimAfterBlock = block.number + blocksToWait;
 
     contributionsCount++;
-   
+
     contributionOwner[contributionId] = contributor;
     ownedContributions[contributor].push(contributionId);
 
@@ -85,7 +85,7 @@ contract Contribution is Upgradeable, ERC721Token {
   }
 
   function exists(uint256 contributionId) view public returns (bool) {
-    return contributions[contributionId].exists; 
+    return contributions[contributionId].exists;
   }
 
 
