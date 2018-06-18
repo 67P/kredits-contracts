@@ -3,6 +3,7 @@ pragma solidity ^0.4.18;
 // ToDo: only load interfaces
 import './Token.sol';
 import './Contributors.sol';
+import './Contribution.sol';
 
 contract Operator is Upgradeable {
 
@@ -46,6 +47,9 @@ contract Operator is Upgradeable {
   }
   function tokenContract() view public returns (Token) {
     return Token(registry.getProxyFor('Token'));
+  }
+  function contributionContract() view public returns (Contribution) {
+    return Contribution(registry.getProxyFor('Contribution'));
   }
 
   function contributorsCount() view public returns (uint) {
@@ -122,7 +126,7 @@ contract Operator is Upgradeable {
     require(!p.executed);
     require(p.votesCount >= p.votesNeeded);
     address recipientAddress = contributorsContract().getContributorAddressById(p.contributorId);
-    tokenContract().mintFor(recipientAddress, p.amount, proposalId);
+    contributionContract().add(p.amount, proposalId, recipientAddress,  0, '');
     p.executed = true;
     ProposalExecuted(proposalId, p.contributorId, p.amount);
   }
