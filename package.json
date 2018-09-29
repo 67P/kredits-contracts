@@ -8,7 +8,8 @@
   },
   "scripts": {
     "build-json": "truffle compile && node ./scripts/build-json.js",
-    "bootstrap": "truffle migrate --reset && npm run build-json && truffle exec scripts/seeds.js",
+    "reset": "truffle migrate --reset && npm run build-json",
+    "bootstrap": "npm run reset && truffle exec scripts/seeds.js",
     "ganache": "ganache-cli -p 7545 -i 100 --db=./.ganache-db -m kredits",
     "dev": "truffle migrate && npm run build-json",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -25,9 +26,9 @@
   "homepage": "https://github.com/67P/truffle-kredits#readme",
   "devDependencies": {
     "async-each-series": "^1.1.0",
-    "ganache-cli": "^6.0.3",
+    "ganache-cli": "^6.1.8",
     "promptly": "^3.0.3",
-    "truffle": "^4.1.3",
+    "truffle": "^4.1.14",
     "zeppelin-solidity": "^1.7.0"
   },
   "dependencies": {
