@@ -8,6 +8,7 @@ const addressesPath = path.join(libPath, 'addresses');
 
 const files = [
   'Contributors',
+  'Contribution',
   'Operator',
   'Registry',
   'Token'

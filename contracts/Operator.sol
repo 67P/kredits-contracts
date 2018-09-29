@@ -121,12 +121,11 @@ contract Operator is Upgradeable {
   }
 
   function executeProposal(uint proposalId) private {
-
     var p = proposals[proposalId];
     require(!p.executed);
     require(p.votesCount >= p.votesNeeded);
     address recipientAddress = contributorsContract().getContributorAddressById(p.contributorId);
-    contributionContract().add(p.amount, proposalId, recipientAddress,  0, '');
+    contributionContract().add(p.amount, recipientAddress, 0);
     p.executed = true;
     ProposalExecuted(proposalId, p.contributorId, p.amount);
   }
