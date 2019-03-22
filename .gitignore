@@ -1,4 +1,6 @@
 build
+flattened_contracts
 node_modules
+**/node_modules
 .ganache-db
 .tm_properties

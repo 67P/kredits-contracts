@@ -1,0 +1,28 @@
+{
+  "name": "kredits-proposal",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {
+    "@aragon/os": "^4.1.0",
+    "@aragon/cli": "^5.5.0"
+  },
+  "devDependencies": {
+  },
+  "scripts": {
+    "start": "npm run start:aragon:ipfs",
+    "start:aragon:ipfs": "aragon run",
+    "start:aragon:http": "aragon run --http localhost:8001 --http-served-from ./dist",
+    "start:app": "",
+    "test": "aragon contracts test",
+    "compile": "aragon contracts compile",
+    "sync-assets": "",
+    "build:app": "",
+    "build:script": "",
+    "build": "",
+    "publish:patch": "aragon apm publish patch",
+    "publish:minor": "aragon apm publish minor",
+    "publish:major": "aragon apm publish major",
+    "versions": "aragon apm versions"
+  },
+  "keywords": []
+}

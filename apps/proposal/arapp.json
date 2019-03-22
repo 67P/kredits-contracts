@@ -1,0 +1,43 @@
+{
+  "roles": [
+    {
+      "name": "Add proposal",
+      "id": "ADD_PROPOSAL_ROLE",
+      "params": []
+    },
+    {
+      "name": "Vote proposals",
+      "id": "VOTE_PROPOSAL_ROLE",
+      "params": []
+    }, 
+    {
+      "name": "Add contribution",
+      "id": "ADD_CONTRIBUTION_ROLE",
+      "params": []
+    },
+    {
+      "name": "Manage contributors",
+      "id": "MANAGE_CONTRIBUTORS_ROLE",
+      "params": []
+    }
+  ],
+  "environments": {
+    "default": {
+      "network": "development",
+      "appName": "proposal.aragonpm.eth"
+    },
+    "staging": {
+      "registry": "0x98df287b6c145399aaa709692c8d308357bc085d",
+      "appName": "proposal.open.aragonpm.eth",
+      "wsRPC": "wss://rinkeby.eth.aragon.network/ws",
+      "network": "rinkeby"
+    },
+    "production": {
+      "registry": "0x314159265dd8dbb310642f98f50c066173c1259b",
+      "appName": "proposal.open.aragonpm.eth",
+      "wsRPC": "wss://mainnet.eth.aragon.network/ws",
+      "network": "mainnet"
+    }
+  },
+  "path": "contracts/Proposal.sol"
+}

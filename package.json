@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "build-json": "truffle compile && node ./scripts/build-json.js",
+    "build-json": "aragon contracts compile --all && node ./scripts/build-json.js",
     "reset": "truffle migrate --reset && npm run build-json",
     "bootstrap": "npm run reset && truffle exec scripts/seeds.js",
     "ganache": "ganache-cli -p 7545 -i 100 --db=./.ganache-db -m kredits",
@@ -25,11 +25,13 @@
   },
   "homepage": "https://github.com/67P/truffle-kredits#readme",
   "devDependencies": {
+    "@aragon/cli": "^5.5.0",
+    "@aragon/kits-base": "^1.0.0",
+    "@aragon/os": "^4.1.0",
     "async-each-series": "^1.1.0",
-    "ganache-cli": "^6.1.8",
+    "openzeppelin-solidity": "^2.2.0",
     "promptly": "^3.0.3",
-    "truffle": "^4.1.14",
-    "zeppelin-solidity": "^1.7.0"
+    "solc": "^0.4.25"
   },
   "dependencies": {
     "ethers": "3.0.15",
