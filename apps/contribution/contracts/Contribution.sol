@@ -127,10 +127,9 @@ contract Contribution is AragonApp {
   }
 
   function getTokenContract() public view returns (address) {
-    return 0x8779fc70eeea01d00efa9044c29d3c930fdb874a;
-    //IKernel k = IKernel(kernel());
+    IKernel k = IKernel(kernel());
 
-    //return k.getApp(KERNEL_APP_ADDR_NAMESPACE, TOKEN_APP_ID);
+    return k.getApp(KERNEL_APP_ADDR_NAMESPACE, TOKEN_APP_ID);
   }
   
   function exists(uint256 contributionId) view public returns (bool) {

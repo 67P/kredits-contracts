@@ -14,12 +14,15 @@ module.exports = async function(callback) {
 
   let contributor = await promptly.prompt('Contributor (address or id): ');
   let contributorId;
+  let contributorAccount;
   if (contributor.length < 5) {
     contributorId = contributor;
+    contributorAccount = await kredits.Contributor.functions.getContributorAddressById(contributor);
   } else {
+    contributorAccount = contributor;
     contributorId = await kredits.Contributor.functions.getContributorIdByAddress(contributor);
   }
-  console.log(`Creating a proposal for contributor ID #${contributorId}`);
+  console.log(`Creating a proposal for contributor ID #${contributorId} account: ${contributorAccount}`);
 
   let contributionAttributes = {
     contributorId,
