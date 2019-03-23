@@ -4,7 +4,6 @@ import "@aragon/os/contracts/apps/AragonApp.sol";
 import "@aragon/os/contracts/kernel/IKernel.sol";
 
 interface IToken {
-  //function mintFor(address contributorAccount, uint256 amount, uint256 proposalId) external;
   function mintFor(address contributorAccount, uint256 amount, uint256 contributionId) public;
 }
 
@@ -113,17 +112,10 @@ contract Contribution is AragonApp {
     require(c.exists, 'NOT_FOUND');
     require(!c.claimed, 'ALREADY_CLAIMED');
     require(block.number > c.claimAfterBlock, 'NOT_CLAIMABLE');
-    //c.claimed = true;
-    //IToken(getTokenContract()).mintFor(c.contributor, c.amount, contributionId); // somehow this does not work
-    bytes4 sig = bytes4(keccak256("mintFor()"));
     address token = getTokenContract();
-    //IToken token = IToken(getTokenContract());
-
-    //token.call(sig);
-    //IToken(token).mintFor(c.contributor, c.amount, contributionId);
     IToken(token).mintFor(c.contributor, c.amount, contributionId);
     
-    //emit ContributionClaimed(contributionId, c.contributor, c.amount);
+    emit ContributionClaimed(contributionId, c.contributor, c.amount);
   }
 
   function getTokenContract() public view returns (address) {
