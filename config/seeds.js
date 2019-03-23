@@ -4,7 +4,7 @@ let contractCalls = [
   ['Proposal', 'addProposal', [{ contributorId: 2, amount: 42, kind: 'code', description: 'runs the seeds', url: '' }, {gasLimit: 350000}]],
   ['Proposal', 'addProposal', [{ contributorId: 3, amount: 23, kind: 'code', description: 'runs the seeds', url: '' }, {gasLimit: 350000}]],
   ['Proposal', 'addProposal', [{contributorId: 3, amount: 100, kind: 'code', description: 'hacks on kredits', url: '' }, {gasLimit: 350000}]],
-  ['Proposal', 'vote', ['1', {gasLimit: 250000}]],
+  ['Proposal', 'vote', [1, {gasLimit: 550000}]],
   ['Contribution', 'addContribution', [{contributorAccount: '0xa502eb4021f3b9ab62f75b57a94e1cfbf81fd827', amount: 100, kind: 'code', description: 'hacks on kredits', url: '' }, {gasLimit: 350000}]],
 ];
 let funds = [

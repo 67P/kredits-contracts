@@ -8,10 +8,11 @@
   },
   "scripts": {
     "build-json": "aragon contracts compile --all && node ./scripts/build-json.js",
-    "reset": "truffle migrate --reset && npm run build-json",
-    "bootstrap": "npm run reset && truffle exec scripts/seeds.js",
-    "ganache": "ganache-cli -p 7545 -i 100 --db=./.ganache-db -m kredits",
-    "dev": "truffle migrate && npm run build-json",
+    "repl": "truffle exec scripts/repl/js",
+    "compile-contracts": "aragon contracts compile --all",
+    "bootstrap": "npm run compile-contracts && npm run deploy-dev && truffle exec scripts/seeds.js",
+    "deploy-dev": "ENS=0x5f6f7e8cc7346a11ca2def8f827b7a0b612c56a1 aragon contracts exec scripts/deploy-kit.js",
+    "devchain": "aragon devchain",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
