@@ -53,15 +53,16 @@ Ethereum RPC port.
 
         $ npm run deploy:apps
 
-3. Deploy a new DAO with the latest app versions
+3. Deploy a new KreditsKit and create a new DAO with the latest app versions
 
+        $ npm run deploy:kit
         $ npm run deploy:dao
 
 4. Execute seeds to create demo contributors, contributons, etc. (optional) 
 
         $ npm run seeds
 
-Step 2-4 is also summarized in `npm run bootstrap`
+**Step 2-4 is also summarized in `npm run bootstrap`**
 
 ## Contract architecture
 
@@ -169,7 +170,7 @@ Runs `npm install` for each app and publishes a new version.
 
     $ ./scripts/deploy-apps.sh
     or
-    $ nppm run deploy:apps
+    $ npm run deploy:apps
 
 
 ## ACL / Permissions
