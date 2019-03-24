@@ -25,7 +25,7 @@ contract KreditsKit is KitBase, APMNamehashOpen, ACLSyntaxSugar  {
 
     constructor (DAOFactory _fac, ENS _ens) public KitBase(_fac, _ens) {}
 
-    function newInstance() public returns (Kernel dao, ERCProxy proxy) {
+    function newInstance() public returns (Kernel dao) {
         address root = msg.sender;
         dao = fac.newDAO(this);
         ACL acl = ACL(dao.acl());
@@ -71,7 +71,7 @@ contract KreditsKit is KitBase, APMNamehashOpen, ACLSyntaxSugar  {
         cleanupDAOPermissions(dao, acl, root);
 
         emit DeployInstance(dao);
-        //return dao;
+        return dao;
     }
 
     function _installApp(Kernel _dao, bytes32 _appId) internal returns (AragonApp) {

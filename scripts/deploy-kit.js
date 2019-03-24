@@ -1,49 +1,39 @@
 const deployDAOFactory = require('@aragon/os/scripts/deploy-daofactory.js')
-const KreditsKit = artifacts.require('KreditsKit')
 
 const fs = require('fs');
 const path = require('path');
 const libPath = path.join(__dirname, '..', 'lib');
 const addressesPath = path.join(libPath, 'addresses');
 
-const ensAddr = process.env.ENS
+const KreditsKit = artifacts.require('KreditsKit')
 
-module.exports = async (callback) => {
+const ensAddr = process.env.ENS
+const daoFactoryAddress = process.env.DAO_FACTORY
+
+module.exports = async function(callback) {
   if (!ensAddr) {
     callback(new Error("ENS address not found in environment variable ENS"))
   }
+  console.log(`Using ENS at: ${ensAddr}`);
 
-  deployDAOFactory(null, { artifacts, verbose: false })
-    .catch(console.log)
-    .then((result) => {
-      const daoFactory = result.daoFactory
+  let daoFactory
+  if (daoFactoryAddress) {
+    daoFactory = DAOFactory.at(daoFactoryAddress)
+  } else {
+    daoFactory = (await deployDAOFactory(null, { artifacts, verbose: false })).daoFactory
+  }
+  console.log(`Using DAOFactory at: ${daoFactory.address}`)
 
-      KreditsKit.new(daoFactory.address, ensAddr)
-        .catch(console.log)
-        .then((kreditsKit) => {
-          console.log(kreditsKit.address)
+  let kreditsKit = await KreditsKit.new(daoFactory.address, ensAddr)
 
-          kreditsKit.newInstance().then((ret) => {
-          console.log(ret.logs);
-          const installedEvents = ret.logs.filter(log => log.event === 'InstalledApp').map(log => log.args)
-          const deployEvents = ret.logs.filter(log => log.event === 'DeployInstance').map(log => log.args)
+  const networkId = parseInt(web3.version.network);
 
-          if (deployEvents.length > 1) {
-            callback(new Error("More than one DAO was deployed. Something is wrong"))
-          }
-          const daoAddress = deployEvents[0].dao;
-          const networkId = parseInt(web3.version.network);
+  let addresseFile = path.join(addressesPath, `KreditsKit.json`);
+  let addresses = JSON.parse(fs.readFileSync(addresseFile));
 
-          let addresseFile = path.join(addressesPath, `dao.json`);
-          let addresses = JSON.parse(fs.readFileSync(addresseFile));
+  addresses[networkId] = kreditsKit.address;
+  fs.writeFileSync(addresseFile, JSON.stringify(addresses));
 
-          addresses[networkId] = daoAddress;
-          fs.writeFileSync(addresseFile, JSON.stringify(addresses));
-
-          callback();
-        }).catch((e) => {
-          console.log(e);
-        })
-      })
-    })
+  console.log(`Deployed KreditsKit at: ${kreditsKit.address}`);
+  callback();
 }

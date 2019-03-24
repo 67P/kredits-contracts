@@ -37,8 +37,12 @@
       "network": "development",
       "appName": "dummy.aragonpm.eth"
     },
+    "kovan": {
+      "network": "kovan",
+      "appName": "dummy.aragonpm.eth"
+    },
     "default": {
-      "network": "rpc",
+      "network": "development",
       "appName": "dummy.aragonpm.eth"
     }
   },

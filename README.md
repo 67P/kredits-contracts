@@ -141,6 +141,36 @@ Prints all known DAO addresses and the DAO address for the current network
     or
     $ npm run dao:address
 
+### deploy-kit.js
+
+Deploys a new KreditsKit that allows to create a new DAO
+
+    $ truffle exec script/deploy-kit.js
+    or
+    $ npm run deploy:kit
+
+`ENS` address is required as environment variable.  
+`DAO_FACTORY` can optionally be set as environment variable. (see aragon)
+
+### new-dao.js
+
+Creates and configures a new DAO instance.
+
+    $ truffle exec script/new-dao.js
+    or
+    $ npm run deploy:dao
+
+KreditsKit address is load from `lib/addresses/KreditsKit.json` or can be 
+configured through the `KREDITS_KIT` environment variable.
+
+### deploy-apps.sh
+
+Runs `npm install` for each app and publishes a new version.
+
+    $ ./scripts/deploy-apps.sh
+    or
+    $ nppm run deploy:apps
+
 
 ## ACL / Permissions
 
