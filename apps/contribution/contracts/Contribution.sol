@@ -27,8 +27,6 @@ contract Contribution is AragonApp {
   string internal name_;
   string internal symbol_;
 
-  address public tokenContract;
-
   mapping(uint256 => address) contributionOwner;
   mapping(address => uint256[]) ownedContributions;
 
@@ -112,9 +110,10 @@ contract Contribution is AragonApp {
     require(c.exists, 'NOT_FOUND');
     require(!c.claimed, 'ALREADY_CLAIMED');
     require(block.number > c.claimAfterBlock, 'NOT_CLAIMABLE');
+
+    c.claimed = true;
     address token = getTokenContract();
     IToken(token).mintFor(c.contributor, c.amount, contributionId);
-    
     emit ContributionClaimed(contributionId, c.contributor, c.amount);
   }
 

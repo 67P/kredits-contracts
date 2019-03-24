@@ -123,9 +123,9 @@ contract Proposal is AragonApp {
     require(!p.executed, 'ALREADY_EXECUTED');
     require(p.votesCount >= p.votesNeeded, 'MISSING_VOTES');
     
+    p.executed = true;
     address contributorAccount = IContributor(getContributorContract()).getContributorAddressById(p.contributorId);
     IContribution(getContributionContract()).add(p.amount, contributorAccount, p.hashDigest, p.hashFunction, p.hashSize);
-    p.executed = true;
     emit ProposalExecuted(proposalId, p.contributorId, p.amount);
   }
 
