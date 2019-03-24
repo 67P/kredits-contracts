@@ -57,8 +57,13 @@ Ethereum RPC port.
 
         $ npm run deploy:dao
 
+4. Execute seeds to create demo contributors, contributons, etc. (optional) 
 
-## Contract Deployment
+        $ npm run seeds
+
+Step 2-4 is also summarized in `npm run bootstrap`
+
+## Contract architecture
 
 Contracts are organized in independent apps (see `/apps`) and are developed 
 and deployed independently. Each app has a version and can be "installed" 
@@ -121,11 +126,20 @@ metamask account.
     $ truffle exec scripts/send-funds.js
 
 ### seeds.js
+
 Run seeds defined in `config/seeds.js`.
 
     $ truffle exec scripts/seeds.js
     or
     $ npm run seeds
+
+### current-address.js
+
+Prints all known DAO addresses and the DAO address for the current network
+
+    $ truffle exec scripts/current-address.js
+    or
+    $ npm run dao:address
 
 
 ## ACL / Permissions
@@ -139,7 +153,7 @@ for more details.
 
 ### Example
 
-1. Setup
+1. Setup (see #Bootstrap)
     1. Deploy each contract/apps (see `/apps/*`)
     2. Create a new DAO (see scripts/deploy-kit.js)
 2. Update
