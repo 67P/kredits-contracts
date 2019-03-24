@@ -46,16 +46,16 @@ Ethereum RPC port.
 
 1. Run an Ethereum node and ipfs
     
-    $ npm run devchain
-    $ ipfs daemon
+        $ npm run devchain
+        $ ipfs daemon
 
 2. Deploy each app to the devchain
 
-    $ npm run deploy:apps
+        $ npm run deploy:apps
 
 3. Deploy a new DAO with the latest app versions
 
-    $ npm run deploy:dao
+        $ npm run deploy:dao
 
 
 ## Contract Deployment
