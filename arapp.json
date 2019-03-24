@@ -33,8 +33,8 @@
       "appName": "dummy.open.aragonpm.eth",
       "network": "rinkeby"
     },
-    "rpc": {
-      "network": "rpc",
+    "development": {
+      "network": "development",
       "appName": "dummy.aragonpm.eth"
     },
     "default": {

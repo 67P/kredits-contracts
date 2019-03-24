@@ -13,11 +13,16 @@ Aragon itself uses the [Truffle framework](http://truffleframework.com/) for som
 
 ### Installation
 
+All requirements are defined in `package.json`.
+
     $ npm install
 
-### Requirements
+Each of the aragon apps are separate packages:
 
-All requirements are defined in `package.json`.
+    $ cd apps/[app]
+    $ npm install
+
+or use the bootstrap command (see below)
 
 ### Local development chain
 
@@ -28,14 +33,29 @@ chain. Using the ganache simulator no full Ethereum node is required.
 We use the default aragon-cli devchain command to confgure and run a local 
 development ganache.
 
-`npm run devchain` (or `aragon devchain --port 7545)
+    $ npm run devchain (or aragon devchain --port 7545)
 
 To clear/reset the chain use: 
 
-`npm run devchain -- --reset` (or `aragon devchain --port 7545 --reset`)
+    $ npm run devchain -- --reset (or aragon devchain --port 7545 --reset)
 
 We default to port 7545 for development to not get in conflict with the default 
 Ethereum RPC port.
+
+### Bootstrap
+
+1. Run an Ethereum node and ipfs
+    
+    $ npm run devchain
+    $ ipfs daemon
+
+2. Deploy each app to the devchain
+
+    $ npm run deploy:apps
+
+3. Deploy a new DAO with the latest app versions
+
+    $ npm run deploy:dao
 
 
 ## Contract Deployment
@@ -47,12 +67,11 @@ on the Kredits DAO independently.
 ![](docs/kredits-diagram.png)
 
 A DAO can be deployed using the `scripts/deploy-kit.js` script or with the 
-`npm run deploy:dao:dev` command. This deploys a new Kredits DAO, installs
+`npm run deploy:dao` command. This deploys a new Kredits DAO, installs
 the latest app versions and sets the required permissions.
 
 See each app in `/apps/*` for details.
 
-## ACL / Permissions
 
 ## Helper scripts
 
@@ -107,6 +126,10 @@ Run seeds defined in `config/seeds.js`.
     $ truffle exec scripts/seeds.js
     or
     $ npm run seeds
+
+
+## ACL / Permissions
+
 
 ## Upgradeable contracts
 

@@ -46,14 +46,9 @@ const providerForNetwork = (network) => (
 )
 module.exports = {
   networks: {
-    rpc: {
-      host: 'localhost',
-      port: 8545,
-      network_id: '*'
-    },
     development: {
       host: 'localhost',
-      port: 8545,
+      port: 7545,
       network_id: '*'
     },
     mainnet: {
@@ -63,6 +58,14 @@ module.exports = {
     rinkeby: {
       network_id: 4,
       provider: providerForNetwork('rinkeby')
+    },
+    kovan: {
+      network_id: 42,
+      provider: providerForNetwork('kovan')
+    },
+    goerli: {
+      network_id: 5,
+      provider: providerForNetwork('goerli')
     }
   },
   compilers: {

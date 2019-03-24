@@ -1,13 +1,12 @@
 {
-  "name": "app-name",
+  "name": "kredits-contribution",
   "version": "1.0.0",
   "description": "",
   "dependencies": {
     "@aragon/os": "^4.1.0",
     "@aragon/cli": "^5.5.0"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "scripts": {
     "start": "npm run start:aragon:ipfs",
     "start:aragon:ipfs": "aragon run",
