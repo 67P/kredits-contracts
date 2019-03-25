@@ -14,7 +14,7 @@ for dir in ./apps/*/; do
   set -x
   cd $dir
   npm install
-  aragon apm publish major
+  aragon apm publish major 
   cd $rootDir
   set +x
 done

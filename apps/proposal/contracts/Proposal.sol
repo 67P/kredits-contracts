@@ -19,8 +19,8 @@ contract Proposal is AragonApp {
   bytes32 public constant VOTE_PROPOSAL_ROLE = keccak256("VOTE_PROPOSAL_ROLE");
 
   bytes32 public constant KERNEL_APP_ADDR_NAMESPACE = 0xd6f028ca0e8edb4a8c9757ca4fdccab25fa1e0317da1188108f7d2dee14902fb;
-  bytes32 public constant CONTRIBUTOR_APP_ID = 0xe9140f1e39c8a1d04167c3b710688a3eecea2976f34735c8eb98956f4764635b;
-  bytes32 public constant CONTRIBUTION_APP_ID = 0x7fcf91283b719b30c2fa954ff0da021e1b91aed09d7aa13df5e8078a4a1007eb;
+  bytes32 public constant CONTRIBUTOR_APP_ID = 0x8e50972b062e83b48dbb2a68d8a058f2a07227ca183c144dc974e6da3186d7e9;
+  bytes32 public constant CONTRIBUTION_APP_ID = 0x09f5274cba299b46c5be722ef672d10eef7a2ef980b612aef529d74fb9da7643;
 
   struct Proposal {
     address creatorAccount;

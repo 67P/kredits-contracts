@@ -3,27 +3,26 @@ pragma solidity 0.4.24;
 import "@aragon/os/contracts/apps/AragonApp.sol";
 import "@aragon/os/contracts/kernel/Kernel.sol";
 import "@aragon/os/contracts/acl/ACL.sol";
-import "@aragon/os/contracts/acl/ACLSyntaxSugar.sol";
 
 import "@aragon/kits-base/contracts/KitBase.sol";
-import "./misc/APMNamehashOpen.sol";
 
 import "../apps/contribution/contracts/Contribution.sol";
 import "../apps/contributor/contracts/Contributor.sol";
 import "../apps/token/contracts/Token.sol";
 import "../apps/proposal/contracts/Proposal.sol";
 
-contract KreditsKit is KitBase, APMNamehashOpen, ACLSyntaxSugar  {
-    bytes32 public contributorAppId = apmNamehash("contributor"); // 0xe9140f1e39c8a1d04167c3b710688a3eecea2976f34735c8eb98956f4764635b
-    bytes32 public contributionAppId = apmNamehash("contribution"); // 0x7fcf91283b719b30c2fa954ff0da021e1b91aed09d7aa13df5e8078a4a1007eb 
-    bytes32 public tokenAppId = apmNamehash("token"); // 0xe04a882e7a6adf5603207d545ea49aec17e6b936c4d9eae3d74dbe482264991a 
-    bytes32 public proposalAppId = apmNamehash("proposal"); // 0xaf5fe5c3b0d9581ee88974bbc8699e6fa71efd1b321e44b2227103c9ef21dbdb 
+contract KreditsKit is KitBase  {
 
+    // ensure alphabetic order
+    enum Apps { Contribution, Contributor, Proposal, Token }
+    bytes32[4] public appIds;
 
     event DeployInstance(address dao);
     event InstalledApp(address dao, address appProxy, bytes32 appId);
 
-    constructor (DAOFactory _fac, ENS _ens) public KitBase(_fac, _ens) {}
+    constructor (DAOFactory _fac, ENS _ens, bytes32[4] _appIds) public KitBase(_fac, _ens) {
+      appIds = _appIds;
+    }
 
     function newInstance() public returns (Kernel dao) {
         address root = msg.sender;
@@ -32,17 +31,17 @@ contract KreditsKit is KitBase, APMNamehashOpen, ACLSyntaxSugar  {
 
         acl.createPermission(this, dao, dao.APP_MANAGER_ROLE(), this);
 
-        Contributor contributor = Contributor(_installApp(dao, contributorAppId));
+        Contributor contributor = Contributor(_installApp(dao, appIds[uint8(Apps.Contributor)]));
         contributor.initialize(root);
         acl.createPermission(root, contributor, contributor.MANAGE_CONTRIBUTORS_ROLE(), root);
         
-        Token token = Token(_installApp(dao, tokenAppId));
+        Token token = Token(_installApp(dao, appIds[uint8(Apps.Token)]));
         token.initialize();
         
-        Contribution contribution = Contribution(_installApp(dao, contributionAppId));
+        Contribution contribution = Contribution(_installApp(dao, appIds[uint8(Apps.Contribution)]));
         contribution.initialize();
         
-        Proposal proposal = Proposal(_installApp(dao, proposalAppId));
+        Proposal proposal = Proposal(_installApp(dao, appIds[uint8(Apps.Proposal)]));
         proposal.initialize();
 
         acl.createPermission(root, contribution, contribution.ADD_CONTRIBUTION_ROLE(), this);

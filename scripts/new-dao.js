@@ -6,7 +6,18 @@ const addressesPath = path.join(libPath, 'addresses');
 const KreditsKit = artifacts.require('KreditsKit')
 
 module.exports = async function(callback) {
-  const networkId = parseInt(web3.version.network);
+  // load networkId; will change with updated truffle
+  const networkPromise = new Promise((resolve, reject) => {
+    web3.version.getNetwork((err, network) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(network);
+      }
+    })
+  })
+  const networkId = await networkPromise;
+  console.log(`Deploying to networkId: ${networkId}`)
 
   let kitAddresseFile = path.join(addressesPath, 'KreditsKit.json');
   let kitAddresses = JSON.parse(fs.readFileSync(kitAddresseFile));

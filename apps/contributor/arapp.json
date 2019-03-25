@@ -9,11 +9,11 @@
   "environments": {
     "default": {
       "network": "development",
-      "appName": "contributor.aragonpm.eth"
+      "appName": "kredits-contributor.open.aragonpm.eth"
     },
-    "staging": {
+    "rinkeby": {
       "registry": "0x98df287b6c145399aaa709692c8d308357bc085d",
-      "appName": "contributor.open.aragonpm.eth",
+      "appName": "kredits-contributor.open.aragonpm.eth",
       "wsRPC": "wss://rinkeby.eth.aragon.network/ws",
       "network": "rinkeby"
     },

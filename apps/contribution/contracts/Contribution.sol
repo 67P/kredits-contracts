@@ -11,7 +11,7 @@ contract Contribution is AragonApp {
   bytes32 public constant ADD_CONTRIBUTION_ROLE = keccak256("ADD_CONTRIBUTION_ROLE");
 
   bytes32 public constant KERNEL_APP_ADDR_NAMESPACE = 0xd6f028ca0e8edb4a8c9757ca4fdccab25fa1e0317da1188108f7d2dee14902fb;
-  bytes32 public constant TOKEN_APP_ID = 0xe04a882e7a6adf5603207d545ea49aec17e6b936c4d9eae3d74dbe482264991a;
+  bytes32 public constant TOKEN_APP_ID = 0x82c0e483537d703bb6f0fc799d2cc60d8f62edcb0f6d26d5571a92be8485b112;
 
   struct ContributionData {
     address contributor;
