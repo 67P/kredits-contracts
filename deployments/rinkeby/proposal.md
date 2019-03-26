@@ -1,5 +1,15 @@
 # Proposal deployments
 
+## 2019-03-26
+
+### v3.0.0 appids
+from account: 0x18f6d06de7e6d556b1bbb5875f8cfafb5eaef9c5
+ ✔ Successfully published kredits-proposal.open.aragonpm.eth v3.0.0: 
+ ℹ Contract address: 0x9f47c31aBB6F53ff2fec09C0bF79c3337C20f5AA
+ ℹ Content (ipfs): Qmdxg33FxAQSH7U8oTApaM5SgUUC9btiA6tu5Hystzp5tV
+ ℹ Transaction hash: 0xceb572f3fff368b9f07fc835577529a113e2de8ff7972a51ffaf4c63acbda9eb
+
+
 ## 2019-03-25
 
 ### v2.0.0 updated appid hashes

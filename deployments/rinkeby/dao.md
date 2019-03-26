@@ -1,6 +1,17 @@
 # Kredits deployment
 
-### 2010-03-25
+### 2019-03-26
+
+kredits/truffle-kredits@aragonos  » truffle exec scripts/new-dao.js --network=rinkeby
+Using network 'rinkeby'.
+
+Deploying to networkId: 4
+Using KreditsKit at: 0x1d6a9c2146a330575ee860eef9a012b5ff7caa68
+
+Created new DAO at: 0x95a7ce185efc2d1f13efd2a00ee9247c51ea7009"
+
+
+### 2019-03-25
 
 kredits/truffle-kredits@aragonos  » aragon contracts exec scripts/new-dao.js --network=rinkeby               
  ℹ Use of `--network` is deprecated and has been replaced with `--environment`. You may need to update your arapp.json
