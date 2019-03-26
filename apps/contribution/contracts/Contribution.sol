@@ -11,7 +11,9 @@ contract Contribution is AragonApp {
   bytes32 public constant ADD_CONTRIBUTION_ROLE = keccak256("ADD_CONTRIBUTION_ROLE");
 
   bytes32 public constant KERNEL_APP_ADDR_NAMESPACE = 0xd6f028ca0e8edb4a8c9757ca4fdccab25fa1e0317da1188108f7d2dee14902fb;
-  bytes32 public constant TOKEN_APP_ID = 0x82c0e483537d703bb6f0fc799d2cc60d8f62edcb0f6d26d5571a92be8485b112;
+  // ensure alphabetic order
+  enum Apps { Contribution, Contributor, Proposal, Token }
+  bytes32[4] public appIds;
 
   struct ContributionData {
     address contributor;
@@ -38,8 +40,15 @@ contract Contribution is AragonApp {
   event ContributionAdded(uint256 id, address indexed contributor, uint256 amount);
   event ContributionClaimed(uint256 id, address indexed contributor, uint256 amount);
 
-  function initialize() public onlyInit {
+  function initialize(bytes32[4] _appIds) public onlyInit {
+    appIds = _appIds;
     initialized();
+  }
+
+  function getTokenContract() public view returns (address) {
+    IKernel k = IKernel(kernel());
+
+    return k.getApp(KERNEL_APP_ADDR_NAMESPACE, appIds[uint8(Apps.Token)]);
   }
 
   function name() external view returns (string) {
@@ -115,12 +124,6 @@ contract Contribution is AragonApp {
     address token = getTokenContract();
     IToken(token).mintFor(c.contributor, c.amount, contributionId);
     emit ContributionClaimed(contributionId, c.contributor, c.amount);
-  }
-
-  function getTokenContract() public view returns (address) {
-    IKernel k = IKernel(kernel());
-
-    return k.getApp(KERNEL_APP_ADDR_NAMESPACE, TOKEN_APP_ID);
   }
   
   function exists(uint256 contributionId) view public returns (bool) {

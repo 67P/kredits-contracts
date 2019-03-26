@@ -19,8 +19,9 @@ contract Proposal is AragonApp {
   bytes32 public constant VOTE_PROPOSAL_ROLE = keccak256("VOTE_PROPOSAL_ROLE");
 
   bytes32 public constant KERNEL_APP_ADDR_NAMESPACE = 0xd6f028ca0e8edb4a8c9757ca4fdccab25fa1e0317da1188108f7d2dee14902fb;
-  bytes32 public constant CONTRIBUTOR_APP_ID = 0x8e50972b062e83b48dbb2a68d8a058f2a07227ca183c144dc974e6da3186d7e9;
-  bytes32 public constant CONTRIBUTION_APP_ID = 0x09f5274cba299b46c5be722ef672d10eef7a2ef980b612aef529d74fb9da7643;
+  // ensure alphabetic order
+  enum Apps { Contribution, Contributor, Proposal, Token }
+  bytes32[4] public appIds;
 
   struct Proposal {
     address creatorAccount;
@@ -45,16 +46,17 @@ contract Proposal is AragonApp {
   event ProposalVoted(uint256 id, uint256 voterId, uint256 totalVotes);
   event ProposalExecuted(uint256 id, uint256 contributorId, uint256 amount);
 
-  function initialize() public onlyInit {
+  function initialize(bytes32[4] _appIds) public onlyInit {
+    appIds = _appIds;
     initialized();
   }
 
   function getContributorContract() public view returns (address) {
-    return IKernel(kernel()).getApp(KERNEL_APP_ADDR_NAMESPACE, CONTRIBUTOR_APP_ID);
+    return IKernel(kernel()).getApp(KERNEL_APP_ADDR_NAMESPACE, appIds[uint8(Apps.Contributor)]);
   }
 
   function getContributionContract() public view returns (address) {
-    return IKernel(kernel()).getApp(KERNEL_APP_ADDR_NAMESPACE, CONTRIBUTION_APP_ID);
+    return IKernel(kernel()).getApp(KERNEL_APP_ADDR_NAMESPACE, appIds[uint8(Apps.Contribution)]);
   }
 
   function addProposal(uint contributorId, uint256 amount, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public isInitialized auth(ADD_PROPOSAL_ROLE) {

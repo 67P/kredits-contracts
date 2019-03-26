@@ -32,17 +32,17 @@ contract KreditsKit is KitBase  {
         acl.createPermission(this, dao, dao.APP_MANAGER_ROLE(), this);
 
         Contributor contributor = Contributor(_installApp(dao, appIds[uint8(Apps.Contributor)]));
-        contributor.initialize(root);
+        contributor.initialize(root, appIds);
         acl.createPermission(root, contributor, contributor.MANAGE_CONTRIBUTORS_ROLE(), root);
         
         Token token = Token(_installApp(dao, appIds[uint8(Apps.Token)]));
-        token.initialize();
+        token.initialize(appIds);
         
         Contribution contribution = Contribution(_installApp(dao, appIds[uint8(Apps.Contribution)]));
-        contribution.initialize();
+        contribution.initialize(appIds);
         
         Proposal proposal = Proposal(_installApp(dao, appIds[uint8(Apps.Proposal)]));
-        proposal.initialize();
+        proposal.initialize(appIds);
 
         acl.createPermission(root, contribution, contribution.ADD_CONTRIBUTION_ROLE(), this);
         acl.grantPermission(proposal, contribution, contribution.ADD_CONTRIBUTION_ROLE());

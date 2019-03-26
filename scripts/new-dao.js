@@ -1,7 +1,9 @@
 const fs = require('fs');
 const path = require('path');
-const libPath = path.join(__dirname, '..', 'lib');
-const addressesPath = path.join(libPath, 'addresses');
+
+const fileInject = require('./helpers/file_inject.js');
+
+const addressesPath = path.join(__dirname, '..', 'lib/addresses');
 
 const KreditsKit = artifacts.require('KreditsKit')
 
@@ -39,11 +41,7 @@ module.exports = async function(callback) {
     }
     const daoAddress = deployEvents[0].dao;
 
-    let addresseFile = path.join(addressesPath, `dao.json`);
-    let addresses = JSON.parse(fs.readFileSync(addresseFile));
-
-    addresses[networkId] = daoAddress;
-    fs.writeFileSync(addresseFile, JSON.stringify(addresses));
+    fileInject(path.join(addressesPath, 'dao.json'), networkId, daoAddress)
 
     console.log(`\n\nCreated new DAO at: ${daoAddress}`)
 

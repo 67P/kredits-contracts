@@ -5,8 +5,7 @@ const path = require('path');
 const argv = require('yargs').argv
 const namehash = require('eth-ens-namehash').hash
 
-const libPath = path.join(__dirname, '..', 'lib');
-const addressesPath = path.join(libPath, 'addresses');
+const fileInject = require('./helpers/file_inject.js')
 
 const DAOFactory = artifacts.require('DAOFactory')
 const KreditsKit = artifacts.require('KreditsKit')
@@ -48,16 +47,18 @@ module.exports = async function(callback) {
 
   const apps = fs.readdirSync('./apps')
   console.log(`Found apps: [${apps}].${apm}`)
-  const appIds = apps.map(app => namehash(`kredits-${app}.${apm}`))
+  let appIds = {}
+  apps.sort().forEach((app) => {
+    let [first, ...rest] = app;
+    let contractName = `${first.toUpperCase()}${rest.join('')}`
+    appIds[contractName] = namehash(`kredits-${app}.${apm}`)
+  })
 
-  KreditsKit.new(daoFactory.address, ensAddr, appIds).then((kreditsKit) => {
+  KreditsKit.new(daoFactory.address, ensAddr, Object.values(appIds)).then((kreditsKit) => {
     console.log(`Deployed KreditsKit at: ${kreditsKit.address}`);
 
-    let addresseFile = path.join(addressesPath, `KreditsKit.json`);
-    let addresses = JSON.parse(fs.readFileSync(addresseFile));
-
-    addresses[networkId] = kreditsKit.address;
-    fs.writeFileSync(addresseFile, JSON.stringify(addresses));
+    fileInject(path.join(__dirname, '..', 'lib/addresses/KreditsKit.json'), networkId, kreditsKit.address);
+    fileInject(path.join(__dirname, '..', 'lib/app_ids.json'), networkId, appIds);
 
     callback();
   }).catch((e) => {

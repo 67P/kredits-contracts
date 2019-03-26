@@ -18,11 +18,15 @@ contract Contributor is AragonApp {
   mapping (uint => Contributor) public contributors;
   uint256 public contributorsCount;
 
+  // ensure alphabetic order
+  enum Apps { Contribution, Contributor, Proposal, Token }
+  bytes32[4] public appIds;
+
   event ContributorProfileUpdated(uint id, bytes32 oldIpfsHash, bytes32 newIpfsHash);
   event ContributorAccountUpdated(uint id, address oldAccount, address newAccount);
   event ContributorAdded(uint id, address account);
 
-  function initialize(address root) public onlyInit {
+  function initialize(address root,bytes32[4] _appIds) public onlyInit {
     uint _id = contributorsCount + 1;
     Contributor storage c = contributors[_id];
     c.exists = true;
@@ -30,6 +34,8 @@ contract Contributor is AragonApp {
     c.account = root;
     contributorIds[root] = _id;
     contributorsCount += 1;
+
+    appIds = _appIds;
 
     initialized();
   }
