@@ -1,22 +1,27 @@
-const knownAddresses = require('../lib/addresses/dao.json');
+const knownDAOAddresses = require('../lib/addresses/dao.json');
+const knownKreditsKitAddresses = require('../lib/addresses/KreditsKit.json');
+const getNetworkId = require('./helpers/networkid.js')
 
-module.exports = function(callback) {
+module.exports = async function(callback) {
+  const networkId = await getNetworkId(web3)
 
-  console.log('# All known addresses');
-  Object.keys(knownAddresses).forEach((networkId) => {
-    console.log(`  Network ID: ${networkId} => ${knownAddresses[networkId]}`);
-  })
+  console.log('# All known DAO addresses');
+  Object.keys(knownDAOAddresses).forEach((networkId) => {
+    console.log(`  Network ID: ${networkId} => ${knownDAOAddresses[networkId]}`);
+  });
+  console.log('# All known KreditsKit addresses');
+  Object.keys(knownKreditsKitAddresses).forEach((networkId) => {
+    console.log(`  Network ID: ${networkId} => ${knownKreditsKitAddresses[networkId]}`);
+  });
+  console.log('-----------------');
 
-  const networkId = web3.version.network;
   console.log(`# Current network ID: ${networkId}`);
 
-  let currentAddress = knownAddresses[networkId];
+  let currentDAOAddress = knownDAOAddresses[networkId];
+  let currentKreditsKitAddress = knownKreditsKitAddresses[networkId];
 
-  if (currentAddress) {
-    console.log(`# Current address: ${currentAddress}`);
-  } else {
-    console.log(`No deployment found for network ID ${networkId}`);
-  }
+  console.log(`# Current KreditsKit address: ${currentKreditsKitAddress}`);
+  console.log(`# Current DAO address: ${currentDAOAddress}`);
 
   callback();
 };
