@@ -6,6 +6,7 @@ const argv = require('yargs').argv
 const namehash = require('eth-ens-namehash').hash
 
 const fileInject = require('./helpers/file_inject.js')
+const getNetworkId = require('./helpers/networkid.js')
 
 const DAOFactory = artifacts.require('DAOFactory')
 const KreditsKit = artifacts.require('KreditsKit')
@@ -18,18 +19,7 @@ const daoFactoryAddress = arapp.environments[environment].daoFactory || process.
 
 
 module.exports = async function(callback) {
-
-  // load networkId; will change with updated truffle
-  const networkPromise = new Promise((resolve, reject) => {
-    web3.version.getNetwork((err, network) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(network);
-      }
-    })
-  })
-  const networkId = await networkPromise;
+  const networkId = await getNetworkId(web3)
   console.log(`Deploying to networkId: ${networkId}`)
 
   if (!ensAddr) {
