@@ -10,7 +10,8 @@ const files = [
   'Contribution',
   'Kernel',
   'Proposal',
-  'Token'
+  'Token',
+  'ACL'
 ];
 
 files.forEach((fileName) => {
