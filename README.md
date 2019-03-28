@@ -100,24 +100,17 @@ instance.
 
     $ truffle exec scripts/repl.js
 
-### add-contributor.js
+### add-{contributor, contribution, proposal}.js
 
-Adds a new core contributor, creates a proposal for the new contributor and
-votes for that one.
+Script to add a new entries to the contracts using the JS wrapper
 
-    $ truffle exec scripts/add-contributor.js
+    $ truffle exec scripts/add-{contributor, contribution, proposal}.js
 
-### add-proposal.js
+### list-{contributor, contribution, proposal}.js
 
-Adds a new proposal for an existing contributor
+List contract entries
 
-    $ truffle exec scripts/add-proposal.js
-
-### add-contribution.js
-
-Adds a new contribution for an existing contributor
-
-    $ truffle exec scripts/add-contribution.js
+    $ truffle exec scripts/list-{contributor, contribution, proposal}.js
 
 ### send-funds.js
 
