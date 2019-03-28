@@ -6,6 +6,11 @@
       "params": []
     },
     {
+      "name": "Veto contributions",
+      "id": "VETO_CONTRIBUTION_ROLE",
+      "params": []
+    },
+    {
       "name": "Manage contributors",
       "id": "MANAGE_CONTRIBUTORS_ROLE",
       "params": []

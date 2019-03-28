@@ -9,6 +9,7 @@ interface IToken {
 
 contract Contribution is AragonApp {
   bytes32 public constant ADD_CONTRIBUTION_ROLE = keccak256("ADD_CONTRIBUTION_ROLE");
+  bytes32 public constant VETO_CONTRIBUTION_ROLE = keccak256("VETO_CONTRIBUTION_ROLE");
 
   bytes32 public constant KERNEL_APP_ADDR_NAMESPACE = 0xd6f028ca0e8edb4a8c9757ca4fdccab25fa1e0317da1188108f7d2dee14902fb;
   // ensure alphabetic order
@@ -24,6 +25,7 @@ contract Contribution is AragonApp {
     uint8 hashSize;
     string tokenMetadataURL;
     uint claimAfterBlock;
+    bool vetoed;
     bool exists;
   }
   string internal name_;
@@ -39,6 +41,7 @@ contract Contribution is AragonApp {
 
   event ContributionAdded(uint256 id, address indexed contributor, uint256 amount);
   event ContributionClaimed(uint256 id, address indexed contributor, uint256 amount);
+  event ContributionVetoed(uint256 id, address vetoedByAccount);
 
   function initialize(bytes32[4] _appIds) public onlyInit {
     appIds = _appIds;
@@ -77,7 +80,7 @@ contract Contribution is AragonApp {
     return contributions[contributionId].tokenMetadataURL;
   }
 
-  function getContribution(uint256 contributionId) public view returns (uint256 id, address contributor, uint256 amount, bool claimed, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize, uint claimAfterBlock, bool exists) {
+  function getContribution(uint256 contributionId) public view returns (uint256 id, address contributor, uint256 amount, bool claimed, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize, uint claimAfterBlock, bool exists, bool vetoed) {
     id = contributionId;
     ContributionData storage c = contributions[id];
     return (
@@ -89,7 +92,8 @@ contract Contribution is AragonApp {
       c.hashFunction,
       c.hashSize,
       c.claimAfterBlock,
-      c.exists
+      c.exists,
+      c.vetoed
     );
   }
 
@@ -114,10 +118,20 @@ contract Contribution is AragonApp {
     emit ContributionAdded(contributionId, contributorAccount, amount);
   }
 
+  function veto(uint256 contributionId) public isInitialized auth(VETO_CONTRIBUTION_ROLE) {
+    ContributionData storage c = contributions[contributionId];
+    require(c.exists, 'NOT_FOUND');
+    require(!c.claimed, 'ALREADY_CLAIMED');
+    c.vetoed = true;
+
+    emit ContributionVetoed(contributionId, msg.sender);
+  }
+
   function claim(uint256 contributionId) public isInitialized {
     ContributionData storage c = contributions[contributionId];
     require(c.exists, 'NOT_FOUND');
     require(!c.claimed, 'ALREADY_CLAIMED');
+    require(!c.vetoed, 'VETOED');
     require(block.number > c.claimAfterBlock, 'NOT_CLAIMABLE');
 
     c.claimed = true;

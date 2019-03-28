@@ -45,11 +45,13 @@ contract KreditsKit is KitBase  {
         proposal.initialize(appIds);
 
         acl.createPermission(root, contribution, contribution.ADD_CONTRIBUTION_ROLE(), this);
+        acl.createPermission(root, contribution, contribution.VETO_CONTRIBUTION_ROLE(), this);
         acl.grantPermission(proposal, contribution, contribution.ADD_CONTRIBUTION_ROLE());
         
         uint256[] memory params = new uint256[](1);
         params[0] = uint256(203) << 248 | uint256(1) << 240 | uint240(contributor);
         acl.grantPermissionP(root, contribution, contribution.ADD_CONTRIBUTION_ROLE(), params);
+        acl.grantPermissionP(root, contribution, contribution.VETO_CONTRIBUTION_ROLE(), params);
 
         //acl.setPermissionManager(this, proposal, proposal.VOTE_PROPOSAL_ROLE();
         acl.createPermission(root, proposal, proposal.VOTE_PROPOSAL_ROLE(), this);
@@ -61,6 +63,7 @@ contract KreditsKit is KitBase  {
         acl.setPermissionManager(root, proposal, proposal.VOTE_PROPOSAL_ROLE());
         acl.setPermissionManager(root, proposal, proposal.ADD_PROPOSAL_ROLE());
         acl.setPermissionManager(root, contribution, contribution.ADD_CONTRIBUTION_ROLE());
+        acl.setPermissionManager(root, contribution, contribution.VETO_CONTRIBUTION_ROLE());
         
         acl.createPermission(root, token, token.MINT_TOKEN_ROLE(), this);
         acl.grantPermission(contribution, token, token.MINT_TOKEN_ROLE());        

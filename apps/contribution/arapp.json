@@ -9,6 +9,11 @@
       "name": "Manage token contract",
       "id": "MANAGE_TOKEN_CONTRACT_ROLE",
       "params": []
+    },
+    {
+      "name": "Veto contributions",
+      "id": "VETO_CONTRIBUTION_ROLE",
+      "params": []
     }
   ],
   "environments": {
