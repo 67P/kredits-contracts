@@ -35,7 +35,7 @@
     "@aragon/kits-base": "^1.0.0",
     "@aragon/os": "^4.1.0",
     "async-each-series": "^1.1.0",
-    "eth-provider": "^0.2.1",
+    "eth-provider": "^0.2.2",
     "openzeppelin-solidity": "^2.2.0",
     "promptly": "^3.0.3",
     "solc": "^0.4.25"

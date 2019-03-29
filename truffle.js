@@ -21,7 +21,14 @@ const providerForNetwork = (network) => (
     if (settings) {
       return new HDWalletProviderPrivkey(settings.keys, settings.rpc)
     } else {
-      return provider('frame');
+      let preset;
+      if (network === 'mainnet') {
+        preset = 'infura';
+      } else {
+        let [first, ...rest] = network;
+        preset = `infura${first.toUpperCase()}${rest.join('')}`;
+      }
+      return provider('frame', 'local', preset);
     }
   }
 )
