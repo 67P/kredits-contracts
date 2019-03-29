@@ -1,18 +1,10 @@
 const REPL = require('repl');
 const promptly = require('promptly');
 
-const ethers = require('ethers');
-const Kredits = require('../lib/kredits');
-
-const getNetworkId = require('./helpers/networkid.js')
+const initKredits = require('./helpers/init_kredits.js');
 
 module.exports = async function(callback) {
-  const networkId = await getNetworkId(web3)
-  const provider = new ethers.providers.Web3Provider(
-    web3.currentProvider, { chainId: parseInt(networkId) }
-  );
-
-  new Kredits(provider, provider.getSigner()).init().then(async function(kredits) {
+  initKredits(web3).then(async function(kredits) {
     let contractName = await promptly.prompt('Contract Name: ');
     const contractWrapper = kredits[contractName];
 

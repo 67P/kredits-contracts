@@ -1,17 +1,16 @@
 const promptly = require('promptly');
 const Table = require('cli-table');
 
-const ethers = require('ethers');
-const Kredits = require('../lib/kredits');
-
-const getNetworkId = require('./helpers/networkid.js')
+const initKredits = require('./helpers/init_kredits.js');
 
 module.exports = async function(callback) {
-  const networkId = await getNetworkId(web3)
-  const provider = new ethers.providers.Web3Provider(
-    web3.currentProvider, { chainId: parseInt(networkId) }
-  );
-  const kredits = await new Kredits(provider, provider.getSigner()).init();
+  let kredits;
+  try {
+    kredits = await initKredits(web3);
+  } catch(e) {
+    callback(e);
+    return;
+  }
 
   console.log(`Using Contribution at: ${kredits.Contribution.contract.address}`);
 

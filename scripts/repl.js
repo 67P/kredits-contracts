@@ -1,9 +1,6 @@
 const REPL = require('repl');
 
-const ethers = require('ethers');
-const Kredits = require('../lib/kredits');
-
-const getNetworkId = require('./helpers/networkid.js')
+const initKredits = require('./helpers/init_kredits.js');
 
 function promiseEval (repl) {
   const currentEval = repl.eval;
@@ -21,21 +18,22 @@ function promiseEval (repl) {
 }
 
 module.exports = async function(callback) {
-  const networkId = await getNetworkId(web3)
-  const provider = new ethers.providers.Web3Provider(
-    web3.currentProvider, { chainId: parseInt(networkId) }
-  );
+  let kredits;
+  try {
+    kredits = await initKredits(web3);
+  } catch(e) {
+    callback(e);
+    return;
+  }
 
-  new Kredits(provider, provider.getSigner()).init().then((kredits) => {
-    console.log(`Defined variables: kredits, web3`);
-    let r = REPL.start();
-    r.context.kredits = kredits;
-    r.context.web3 = web3;
-    r.eval = promiseEval(r);
+  console.log(`Defined variables: kredits, web3`);
+  let r = REPL.start();
+  r.context.kredits = kredits;
+  r.context.web3 = web3;
+  r.eval = promiseEval(r);
 
-    r.on('exit', () => {
-      console.log('Bye');
-      callback();
-    });
+  r.on('exit', () => {
+    console.log('Bye');
+    callback();
   });
 }

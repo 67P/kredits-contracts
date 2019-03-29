@@ -1,9 +1,6 @@
 const promptly = require('promptly');
 
-const ethers = require('ethers');
-const Kredits = require('../lib/kredits');
-
-const getNetworkId = require('./helpers/networkid.js')
+const initKredits = require('./helpers/init_kredits.js');
 
 async function prompt(message, options) {
   if (!options) {
@@ -13,11 +10,13 @@ async function prompt(message, options) {
 }
 
 module.exports = async function(callback) {
-  const networkId = await getNetworkId(web3)
-  const provider = new ethers.providers.Web3Provider(
-    web3.currentProvider, { chainId: parseInt(networkId) }
-  );
-  const kredits = await new Kredits(provider, provider.getSigner()).init();
+  let kredits;
+  try {
+    kredits = await initKredits(web3);
+  } catch(e) {
+    callback(e);
+    return;
+  }
 
   console.log(`Using contributors at: ${kredits.Contributor.contract.address}`);
 
