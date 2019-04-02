@@ -1,0 +1,60 @@
+{
+  "roles": [
+    {
+      "name": "Add contributions",
+      "id": "ADD_CONTRIBUTION_ROLE",
+      "params": []
+    },
+    {
+      "name": "Veto contributions",
+      "id": "VETO_CONTRIBUTION_ROLE",
+      "params": []
+    },
+    {
+      "name": "Manage contributors",
+      "id": "MANAGE_CONTRIBUTORS_ROLE",
+      "params": []
+    },
+    {
+      "name": "Mint token",
+      "id": "MINT_TOKEN_ROLE",
+      "params": []
+    },
+    {
+      "name": "Add proposal", 
+      "id": "ADD_PROPOSAL_ROLE",
+      "params": []
+    },
+    {
+      "name": "Vote proposal",
+      "id": "VOTE_PROPOSAL_ROLE",
+      "params": []
+    }
+ ],
+  "environments": {
+    "development": {
+      "network": "development",
+      "apm": "aragonpm.eth",
+      "registry": "0x5f6f7e8cc7346a11ca2def8f827b7a0b612c56a1",
+      "appName": "dummy.aragonpm.eth"
+    },
+    "rinkeby": {
+      "network": "rinkeby",
+      "registry": "0x98Df287B6C145399Aaa709692c8D308357bC085D",
+      "wsRPC": "wss://rinkeby.eth.aragon.network/ws",
+      "daoFactory": "0x2298d27a9b847c681d2b2c2828ab9d79013f5f1d", 
+      "appName": "dummy.open.aragonpm.eth",
+      "apm": "open.aragonpm.eth"
+    },
+    "kovan": {
+      "network": "kovan",
+      "appName": "dummy.aragonpm.eth"
+    },
+    "default": {
+      "network": "development",
+      "appName": "dummy.aragonpm.eth",
+      "apm": "open.aragonpm.eth"
+    }
+  },
+  "path": "contracts/misc/DummyApp.sol"
+}

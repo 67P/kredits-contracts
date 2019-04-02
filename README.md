@@ -2,92 +2,82 @@
 
 # Kredits Contracts
 
-This repository contains the Solidity smart contracts and JavaScript API
-wrapper for [Kosmos Kredits](https://wiki.kosmos.org/Kredits).
+This repository contains the Solidity smart contracts organized as [Aragon](https://hack.aragon.org/) 
+apps and JavaScript API wrapper for [Kosmos Kredits](https://wiki.kosmos.org/Kredits).
 
-It uses the [Truffle framework](http://truffleframework.com/) for some things.
+It is based on [aragonOS](https://hack.aragon.org/docs/aragonos-intro.html) and 
+follows the aragonOS conventions.
+Aragon itself uses the [Truffle framework](http://truffleframework.com/) for some things.
 
 ## Development
 
 ### Installation
 
-    $ npm install
-
-### Requirements
-
 All requirements are defined in `package.json`.
 
-Those can be installed globally for convenience:
+    $ npm install
 
-  * [truffle framework](http://truffleframework.com): `npm install -g truffle`
-  * [ganache](http://truffleframework.com/ganache): `npm install -g ganache-cli`
+Each of the aragon apps are separate packages:
 
-We use following solidity contract libraries:
+    $ cd apps/[app]
+    $ npm install
 
-  * [Open Zeppelin](https://github.com/OpenZeppelin/zeppelin-solidity)
+or use the bootstrap command (see below)
 
-For local development it is recommended to use
-[ganache-cli](https://github.com/trufflesuite/ganache-cli) (or the [ganache
-GUI](http://truffleframework.com/ganache/) to run a local development chain.
-Using the ganache simulator no full Ethereum node is required.
+### Local development chain
 
-We default to:
+For local development it is recommended to use 
+[ganache](http://truffleframework.com/ganache/) to run a local development 
+chain. Using the ganache simulator no full Ethereum node is required.
 
-* port 7545 for development to not get in conflict with the default Ethereum
-  RPC port.
-* network ID 100 to stay on the same network id
-* store ganache data in .ganache-db to presist the chain data across restarts
-* use a fixed Mnemonic code to get the same accounts across restarts
+We use the default aragon-cli devchain command to confgure and run a local 
+development ganache.
 
-Have a look at `ganache-cli` for more configuration options.
+    $ npm run devchain (or aragon devchain --port 7545)
 
-Run your ganache simulator before using Kredits locally:
+To clear/reset the chain use: 
 
-    $ npm run ganache (which is: ganache-cli -p 7545 -i 100 --db=./.ganache-db -m kredits)
+    $ npm run devchain -- --reset (or aragon devchain --port 7545 --reset)
 
-### Truffle console
+We default to port 7545 for development to not get in conflict with the default 
+Ethereum RPC port.
 
-Truffle comes with a simple REPL to interact with the Smart Contracts. Have a
-look at the [documentation
-here](http://truffleframework.com/docs/getting_started/console)
+### Bootstrap
 
-NOTE: There are promisses, have a look at the examples:
+1. Run an Ethereum node and ipfs
+    
+        $ npm run devchain
+        $ ipfs daemon
 
-```javascript
-Token.deployed().then(function(token) {
-  token.totalSupply.call().then(function(value) {
-    console.log(value.toString());
-  })
-});
-```
+2. Deploy each app to the devchain
 
-Also please be aware of the differences between web3.js 0.2x.x and
-[1.x.x](https://web3js.readthedocs.io/en/1.0/) - [web3
-repo](https://github.com/ethereum/web3.js/)
+        $ npm run deploy:apps
 
-## Contract Deployment
+3. Deploy a new KreditsKit and create a new DAO with the latest app versions
 
-Truffle uses migration scripts to deploy contract to various networks. Have a
-look at the `migrations` folder for those.  The Ethereum nodes for the
-different networks need to be configured in `truffle.js`.
+        $ npm run deploy:kit
+        $ npm run deploy:dao
 
-Run the truffle migration scripts:
+4. Execute seeds to create demo contributors, contributons, etc. (optional) 
 
-    $ truffle deploy
-    $ truffle deploy --network=<network config from truffle.js>
+        $ npm run seeds
 
-Truffle keeps track of already executed migration scripts. To reset the
-migration use the `--reset` option
+**Step 2-4 is also summarized in `npm run bootstrap`**
 
-    $ truffle migrate --reset
+## Contract architecture
 
-Migration scripts can also be run from within `truffle console` or `truffle
-develop`
+Contracts are organized in independent apps (see `/apps`) and are developed 
+and deployed independently. Each app has a version and can be "installed" 
+on the Kredits DAO independently.
 
-To initially bootstrap a local development chain in ganache you can use the
-bootstrap script:
+![](docs/kredits-diagram.png)
 
-    $ npm run bootstrap
+A DAO can be deployed using the `scripts/deploy-kit.js` script or with the 
+`npm run deploy:dao` command. This deploys a new Kredits DAO, installs
+the latest app versions and sets the required permissions.
+
+See each app in `/apps/*` for details.
+
 
 ## Helper scripts
 
@@ -110,18 +100,17 @@ instance.
 
     $ truffle exec scripts/repl.js
 
-### add-contributor.js
+### add-{contributor, contribution, proposal}.js
 
-Adds a new core contributor, creates a proposal for the new contributor and
-votes for that one.
+Script to add a new entries to the contracts using the JS wrapper
 
-    $ truffle exec scripts/add-contributor.js
+    $ truffle exec scripts/add-{contributor, contribution, proposal}.js
 
-### add-proposal.js
+### list-{contributor, contribution, proposal}.js
 
-Adds a new proposal for an existing contributor
+List contract entries
 
-    $ truffle exec scripts/add-proposal.js
+    $ truffle exec scripts/list-{contributor, contribution, proposal}.js
 
 ### send-funds.js
 
@@ -131,48 +120,70 @@ metamask account.
     $ truffle exec scripts/send-funds.js
 
 ### seeds.js
+
 Run seeds defined in `config/seeds.js`.
 
     $ truffle exec scripts/seeds.js
     or
     $ npm run seeds
 
+### current-address.js
+
+Prints all known DAO addresses and the DAO address for the current network
+
+    $ truffle exec scripts/current-address.js
+    or
+    $ npm run dao:address
+
+### deploy-kit.js
+
+Deploys a new KreditsKit that allows to create a new DAO
+
+    $ truffle exec script/deploy-kit.js
+    or
+    $ npm run deploy:kit
+
+`ENS` address is required as environment variable.  
+`DAO_FACTORY` can optionally be set as environment variable. (see aragon)
+
+### new-dao.js
+
+Creates and configures a new DAO instance.
+
+    $ truffle exec script/new-dao.js
+    or
+    $ npm run deploy:dao
+
+KreditsKit address is load from `lib/addresses/KreditsKit.json` or can be 
+configured through the `KREDITS_KIT` environment variable.
+
+### deploy-apps.sh
+
+Runs `npm install` for each app and publishes a new version.
+
+    $ ./scripts/deploy-apps.sh
+    or
+    $ npm run deploy:apps
+
+
+## ACL / Permissions
+
+
 ## Upgradeable contracts
 
-Some of the contracts use upgradability ideas from
-[zeppelinos](https://github.com/zeppelinos/labs) (see `contracts/upgradable`).
-
-The basic idea is to have a Registry contract that knows about the current
-implementations and a Proxy contract that uses `delegatecall` to call the
-current implementation.  That means the Proxy contract holds the storage and
-the address of that one does not change but the actuall implemenation is
-managed through the Registry.
-
-To deploy a new version a new contract is deployed then the version is
-registered (`addVersion()`) in the Registry and on the Proxy contract is
-"upgraded" (`upgrade()`) to the new version.
-
-The Registry knows about all the different contracts and implementations.
-Versions are stored as uint and automatically incremented for every added
-implementation.
+We use aragonOS for upgradeablity of the different contracts.
+Refer to the [aragonOS upgradeablity documentation](https://hack.aragon.org/docs/upgradeability-intro) 
+for more details.
 
 ### Example
 
-Deployment is best done using the truffle deployer.
-
-1. Setup
-    1. Deploy the Registry
-    2. Deploy the contract
-    3. Register the contract at the Registry:
-        `registry.addVersion('Token', Token.address)`
-    4. Create the Proxy:
-        `registry.createProxy('Token', 1)`
+1. Setup (see #Bootstrap)
+    1. Deploy each contract/apps (see `/apps/*`)
+    2. Create a new DAO (see scripts/deploy-kit.js)
 2. Update
-    1. Deploy a new Version of the contract
-    2. Register the new version at the Registry:
-        `registry.addVersion('Token', NewToken.address)`
-    3. Set the new implementation address on the Proxy contract:
-        `registry.upgrade('Token', 2)`
+    1. Deploy a new Version of the contract/app (see `/apps/*`)
+    2. Use the `aragon dao upgrade` command to "install" the new version for the DAO
+      (`aragon dao upgrade <DAO address> <app name>`)
 
 ## Known Issues
 

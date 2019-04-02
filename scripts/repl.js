@@ -1,25 +1,39 @@
 const REPL = require('repl');
-const promptly = require('promptly');
 
-const ethers = require('ethers');
-const Kredits = require('../lib/kredits');
+const initKredits = require('./helpers/init_kredits.js');
 
-module.exports = function(callback) {
-  const Registry = artifacts.require('./Registry.sol');
-  Registry.deployed().then(async (registry) => {
-    const networkId = parseInt(web3.version.network);
-    const provider = new ethers.providers.Web3Provider(
-      web3.currentProvider, { chainId: networkId }
-    );
-    const kredits = await Kredits.setup(provider, provider.getSigner());
-    console.log(`defined variables: kredits, web3`);
-    let r = REPL.start();
-    r.context.kredits = kredits;
-    r.context.web3 = web3;
+function promiseEval (repl) {
+  const currentEval = repl.eval;
+  return function (cmd, context, filename, callback) {
+    currentEval(cmd, context, filename, (err, result) => {
+      if (result && typeof result.then === 'function') {
+        console.log('...waiting for promise to resolve');
+        return result
+          .then(response => callback(null, response))
+          .catch(err => callback(err, null));
+      }
+      return callback(err, result);
+    })
+  }
+}
 
-    r.on('exit', () => {
-      console.log('Bye');
-      callback();
-    });
+module.exports = async function(callback) {
+  let kredits;
+  try {
+    kredits = await initKredits(web3);
+  } catch(e) {
+    callback(e);
+    return;
+  }
+
+  console.log(`Defined variables: kredits, web3`);
+  let r = REPL.start();
+  r.context.kredits = kredits;
+  r.context.web3 = web3;
+  r.eval = promiseEval(r);
+
+  r.on('exit', () => {
+    console.log('Bye');
+    callback();
   });
 }

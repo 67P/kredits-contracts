@@ -1,18 +1,10 @@
 const REPL = require('repl');
 const promptly = require('promptly');
 
-const ethers = require('ethers');
-const Kredits = require('../lib/kredits');
+const initKredits = require('./helpers/init_kredits.js');
 
-module.exports = function(callback) {
-  const Registry = artifacts.require('./Registry.sol');
-  Registry.deployed().then(async (registry) => {
-    const networkId = parseInt(web3.version.network);
-    const provider = new ethers.providers.Web3Provider(
-      web3.currentProvider, { chainId: networkId }
-    );
-    const kredits = await Kredits.setup(provider, provider.getSigner());
-
+module.exports = async function(callback) {
+  initKredits(web3).then(async function(kredits) {
     let contractName = await promptly.prompt('Contract Name: ');
     const contractWrapper = kredits[contractName];
 
