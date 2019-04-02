@@ -48,7 +48,6 @@ module.exports = async function(callback) {
     console.log(`Deployed KreditsKit at: ${kreditsKit.address}`);
 
     fileInject(path.join(__dirname, '..', 'lib/addresses/KreditsKit.json'), networkId, kreditsKit.address);
-    fileInject(path.join(__dirname, '..', 'lib/app_ids.json'), networkId, appIds);
 
     callback();
   }).catch((e) => {
