@@ -39,8 +39,8 @@ module.exports = async function(callback) {
       console.log(`[OK] kredits.${contractName}.${method}(${JSON.stringify(args)}) => ${result.hash}`);
       next();
     }).catch((error) => {
-      console.log(`[FAILD] kredits.${contractName}.${method}(${JSON.stringify(args)})`);
-      callback(error)
+      console.log(`[FAILED] kredits.${contractName}.${method}(${JSON.stringify(args)})`);
+      next();
     });
   }, () => { console.log("\nDone!") });
 
