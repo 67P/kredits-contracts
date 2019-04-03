@@ -33,7 +33,7 @@ contract KreditsKit is KitBase  {
 
         Contributor contributor = Contributor(_installApp(dao, appIds[uint8(Apps.Contributor)]));
         contributor.initialize(root, appIds);
-        acl.createPermission(root, contributor, contributor.MANAGE_CONTRIBUTORS_ROLE(), root);
+        acl.createPermission(root, contributor, contributor.MANAGE_CONTRIBUTORS_ROLE(), this);
         
         Token token = Token(_installApp(dao, appIds[uint8(Apps.Token)]));
         token.initialize(appIds);
@@ -52,6 +52,7 @@ contract KreditsKit is KitBase  {
         params[0] = uint256(203) << 248 | uint256(1) << 240 | uint240(contributor);
         acl.grantPermissionP(acl.ANY_ENTITY(), contribution, contribution.ADD_CONTRIBUTION_ROLE(), params);
         acl.grantPermissionP(acl.ANY_ENTITY(), contribution, contribution.VETO_CONTRIBUTION_ROLE(), params);
+        acl.grantPermissionP(acl.ANY_ENTITY(), contributor, contributor.MANAGE_CONTRIBUTORS_ROLE(), params);
 
         //acl.setPermissionManager(this, proposal, proposal.VOTE_PROPOSAL_ROLE();
         acl.createPermission(root, proposal, proposal.VOTE_PROPOSAL_ROLE(), this);
@@ -65,6 +66,7 @@ contract KreditsKit is KitBase  {
         acl.setPermissionManager(root, proposal, proposal.ADD_PROPOSAL_ROLE());
         acl.setPermissionManager(root, contribution, contribution.ADD_CONTRIBUTION_ROLE());
         acl.setPermissionManager(root, contribution, contribution.VETO_CONTRIBUTION_ROLE());
+        acl.setPermissionManager(root, contributor, contributor.MANAGE_CONTRIBUTORS_ROLE());
         
         acl.createPermission(root, token, token.MINT_TOKEN_ROLE(), this);
         acl.grantPermission(contribution, token, token.MINT_TOKEN_ROLE());        
