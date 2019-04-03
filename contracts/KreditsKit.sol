@@ -50,15 +50,16 @@ contract KreditsKit is KitBase  {
         
         uint256[] memory params = new uint256[](1);
         params[0] = uint256(203) << 248 | uint256(1) << 240 | uint240(contributor);
-        acl.grantPermissionP(root, contribution, contribution.ADD_CONTRIBUTION_ROLE(), params);
-        acl.grantPermissionP(root, contribution, contribution.VETO_CONTRIBUTION_ROLE(), params);
+        acl.grantPermissionP(acl.ANY_ENTITY(), contribution, contribution.ADD_CONTRIBUTION_ROLE(), params);
+        acl.grantPermissionP(acl.ANY_ENTITY(), contribution, contribution.VETO_CONTRIBUTION_ROLE(), params);
 
         //acl.setPermissionManager(this, proposal, proposal.VOTE_PROPOSAL_ROLE();
         acl.createPermission(root, proposal, proposal.VOTE_PROPOSAL_ROLE(), this);
-        acl.grantPermissionP(root, proposal, proposal.VOTE_PROPOSAL_ROLE(), params);
+        acl.grantPermissionP(acl.ANY_ENTITY(), proposal, proposal.VOTE_PROPOSAL_ROLE(), params);
         
         acl.createPermission(root, proposal, proposal.ADD_PROPOSAL_ROLE(), this);
-        acl.grantPermissionP(root, proposal, proposal.ADD_PROPOSAL_ROLE(), params);
+        //acl.grantPermissionP(address(-1), proposal, proposal.ADD_PROPOSAL_ROLE(), params);
+        acl.grantPermission(acl.ANY_ENTITY(), proposal, proposal.ADD_PROPOSAL_ROLE());
 
         acl.setPermissionManager(root, proposal, proposal.VOTE_PROPOSAL_ROLE());
         acl.setPermissionManager(root, proposal, proposal.ADD_PROPOSAL_ROLE());
