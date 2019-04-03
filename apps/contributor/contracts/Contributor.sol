@@ -1,8 +1,14 @@
 pragma solidity ^0.4.24;
 
 import "@aragon/os/contracts/apps/AragonApp.sol";
+import "@aragon/os/contracts/kernel/IKernel.sol";
+
+interface ITokenBalance {
+  function balanceOf(address contributorAccount) public view returns (uint256);
+}
 
 contract Contributor is AragonApp {
+  bytes32 public constant KERNEL_APP_ADDR_NAMESPACE = 0xd6f028ca0e8edb4a8c9757ca4fdccab25fa1e0317da1188108f7d2dee14902fb;
   bytes32 public constant MANAGE_CONTRIBUTORS_ROLE = keccak256("MANAGE_CONTRIBUTORS_ROLE");
 
   struct Contributor {
@@ -38,6 +44,12 @@ contract Contributor is AragonApp {
     appIds = _appIds;
 
     initialized();
+  }
+
+  function getTokenContract() public view returns (address) {
+    IKernel k = IKernel(kernel());
+
+    return k.getApp(KERNEL_APP_ADDR_NAMESPACE, appIds[uint8(Apps.Token)]);
   }
 
   function coreContributorsCount() view public returns (uint256) {
@@ -113,7 +125,7 @@ contract Contributor is AragonApp {
     return contributors[id];
   }
 
-  function getContributorById(uint256 _id) public view returns (uint256 id, address account, bytes32 ipfsHash, uint8 hashFunction, uint8 hashSize, bool isCore, bool exists ) {
+  function getContributorById(uint256 _id) public view returns (uint256 id, address account, bytes32 ipfsHash, uint8 hashFunction, uint8 hashSize, bool isCore, uint256 balance, bool exists ) {
     id = _id;
     Contributor storage c = contributors[_id];
     account = c.account;
@@ -121,6 +133,8 @@ contract Contributor is AragonApp {
     hashFunction = c.hashFunction;
     hashSize = c.hashSize;
     isCore = c.isCore;
+    address token = getTokenContract();
+    balance = ITokenBalance(token).balanceOf(c.account);
     exists = c.exists;
   }
 
