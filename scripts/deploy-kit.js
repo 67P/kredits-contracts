@@ -3,7 +3,7 @@ const deployDAOFactory = require('@aragon/os/scripts/deploy-daofactory.js')
 const fs = require('fs');
 const path = require('path');
 const argv = require('yargs').argv
-const namehash = require('eth-ens-namehash').hash
+const namehash = require('ethers').utils.namehash;
 
 const fileInject = require('./helpers/file_inject.js')
 const getNetworkId = require('./helpers/networkid.js')
@@ -28,10 +28,16 @@ module.exports = async function(callback) {
   console.log(`Using ENS at: ${ensAddr}`);
 
   let daoFactory
+  try {
   if (daoFactoryAddress) {
     daoFactory = DAOFactory.at(daoFactoryAddress)
   } else {
     daoFactory = (await deployDAOFactory(null, { artifacts, verbose: false })).daoFactory
+  }
+  } catch(e) {
+    console.log(e);
+    callback(e);
+    return;
   }
   console.log(`Using DAOFactory at: ${daoFactory.address}`)
 
