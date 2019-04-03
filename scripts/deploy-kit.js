@@ -3,7 +3,7 @@ const deployDAOFactory = require('@aragon/os/scripts/deploy-daofactory.js')
 const fs = require('fs');
 const path = require('path');
 const argv = require('yargs').argv
-const namehash = require('eth-ens-namehash').hash
+const namehash = require('ethers').utils.namehash;
 
 const fileInject = require('./helpers/file_inject.js')
 const getNetworkId = require('./helpers/networkid.js')

@@ -41,7 +41,6 @@
     "solc": "^0.4.25"
   },
   "dependencies": {
-    "eth-ens-namehash": "^2.0.8",
     "ethers": "^4.0.27",
     "ipfs-api": "^19.0.0",
     "rsvp": "^4.8.2"
