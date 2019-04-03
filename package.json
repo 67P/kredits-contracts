@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "ethers": "^4.0.27",
-    "ipfs-api": "^19.0.0",
+    "ipfs-http-client": "^30.1.1",
     "rsvp": "^4.8.2"
   },
   "keywords": [
