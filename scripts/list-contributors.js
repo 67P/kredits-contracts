@@ -16,7 +16,7 @@ module.exports = async function(callback) {
 
 
   const table = new Table({
-    head: ['ID', 'Account', 'Core?', 'Name']
+    head: ['ID', 'Account', 'Core?', 'Name', 'Balance']
   })
 
   let contributors = await kredits.Contributor.all()
@@ -26,7 +26,8 @@ module.exports = async function(callback) {
       c.id.toString(),
       c.account,
       c.isCore,
-      `${c.name}`
+      `${c.name}`,
+      c.balance.toString()
     ])
   })
   console.log(table.toString())
