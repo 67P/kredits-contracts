@@ -86,8 +86,8 @@ contract Contribution is AragonApp {
     return (
       id,
       c.contributor,
-      c.amount, 
-      c.claimed, 
+      c.amount,
+      c.claimed,
       c.hashDigest,
       c.hashFunction,
       c.hashSize,
@@ -114,7 +114,7 @@ contract Contribution is AragonApp {
 
     contributionOwner[contributionId] = contributorAccount;
     ownedContributions[contributorAccount].push(contributionId);
- 
+
     emit ContributionAdded(contributionId, contributorAccount, amount);
   }
 
@@ -139,7 +139,7 @@ contract Contribution is AragonApp {
     IToken(token).mintFor(c.contributor, c.amount, contributionId);
     emit ContributionClaimed(contributionId, c.contributor, c.amount);
   }
-  
+
   function exists(uint256 contributionId) view public returns (bool) {
     return contributions[contributionId].exists;
   }
