@@ -64,6 +64,11 @@ Ethereum RPC port.
 
 **Step 2-4 is also summarized in `npm run bootstrap`**
 
+If you want to reset your local setup:
+
+        $ npm run reset // deploys a new kit and a new DAO
+        $ npm run reset:hard // deploys all apps and does reset
+
 ## Contract architecture
 
 Contracts are organized in independent apps (see `/apps`) and are developed 
@@ -86,6 +91,8 @@ CLI. _At some point these should be moved into a real nice CLI._
 
 To run these scripts use `truffle exec`. For example: `truffle exec
 scripts/add-proposal.js`.
+
+Some scripts are also defined as npm script, see package.json.
 
 ### cli.js
 
