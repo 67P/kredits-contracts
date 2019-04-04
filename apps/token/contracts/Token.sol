@@ -9,9 +9,9 @@ contract Token is ERC20Token, AragonApp {
   // ensure alphabetic order
   enum Apps { Contribution, Contributor, Proposal, Token }
   bytes32[4] public appIds;
- 
+
   event LogMint(address indexed recipient, uint256 amount, uint256 contributionId);
-  
+
   function initialize(bytes32[4] _appIds) public onlyInit {
     appIds = _appIds;
     initialized();
