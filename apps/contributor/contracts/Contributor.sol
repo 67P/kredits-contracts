@@ -20,20 +20,20 @@ contract Contributor is AragonApp {
     bool exists;
   }
 
-  mapping (address => uint256) public contributorIds;
-  mapping (uint256 => Contributor) public contributors;
-  uint256 public contributorsCount;
+  mapping (address => uint32) public contributorIds;
+  mapping (uint32 => Contributor) public contributors;
+  uint32 public contributorsCount;
 
   // ensure alphabetic order
   enum Apps { Contribution, Contributor, Proposal, Token }
   bytes32[4] public appIds;
 
-  event ContributorProfileUpdated(uint256 id, bytes32 oldIpfsHash, bytes32 newIpfsHash);
-  event ContributorAccountUpdated(uint256 id, address oldAccount, address newAccount);
-  event ContributorAdded(uint256 id, address account);
+  event ContributorProfileUpdated(uint32 id, bytes32 oldIpfsHash, bytes32 newIpfsHash);
+  event ContributorAccountUpdated(uint32 id, address oldAccount, address newAccount);
+  event ContributorAdded(uint32 id, address account);
 
   function initialize(address root,bytes32[4] _appIds) public onlyInit {
-    uint256 _id = contributorsCount + 1;
+    uint32 _id = contributorsCount + 1;
     Contributor storage c = contributors[_id];
     c.exists = true;
     c.isCore = true;
@@ -52,9 +52,9 @@ contract Contributor is AragonApp {
     return k.getApp(KERNEL_APP_ADDR_NAMESPACE, appIds[uint8(Apps.Token)]);
   }
 
-  function coreContributorsCount() view public returns (uint256) {
-    uint256 count = 0;
-    for (uint256 i = 1; i <= contributorsCount; i++) {
+  function coreContributorsCount() view public returns (uint32) {
+    uint32 count = 0;
+    for (uint32 i = 1; i <= contributorsCount; i++) {
       if (contributors[i].isCore) {
         count += 1;
       }
@@ -62,14 +62,14 @@ contract Contributor is AragonApp {
     return count;
   }
 
-  function updateContributorAccount(uint256 id, address oldAccount, address newAccount) public auth(MANAGE_CONTRIBUTORS_ROLE) {
+  function updateContributorAccount(uint32 id, address oldAccount, address newAccount) public auth(MANAGE_CONTRIBUTORS_ROLE) {
     contributorIds[oldAccount] = 0;
     contributorIds[newAccount] = id;
     contributors[id].account = newAccount;
     ContributorAccountUpdated(id, oldAccount, newAccount);
   }
 
-  function updateContributorIpfsHash(uint256 id, bytes32 ipfsHash, uint8 hashFunction, uint8 hashSize) public isInitialized auth(MANAGE_CONTRIBUTORS_ROLE) {
+  function updateContributorIpfsHash(uint32 id, bytes32 ipfsHash, uint8 hashFunction, uint8 hashSize) public isInitialized auth(MANAGE_CONTRIBUTORS_ROLE) {
     Contributor storage c = contributors[id];
     bytes32 oldIpfsHash = c.ipfsHash;
     c.ipfsHash = ipfsHash;
@@ -81,7 +81,7 @@ contract Contributor is AragonApp {
 
   function addContributor(address account, bytes32 ipfsHash, uint8 hashFunction, uint8 hashSize, bool isCore) public isInitialized auth(MANAGE_CONTRIBUTORS_ROLE) {
     require(!addressExists(account));
-    uint256 _id = contributorsCount + 1;
+    uint32 _id = contributorsCount + 1;
     assert(!contributors[_id].exists); // this can not be acually
     Contributor storage c = contributors[_id];
     c.exists = true;
@@ -96,11 +96,11 @@ contract Contributor is AragonApp {
     emit ContributorAdded(_id, account);
   }
 
-  function isCore(uint256 id) view public returns (bool) {
+  function isCore(uint32 id) view public returns (bool) {
     return contributors[id].isCore;
   }
 
-  function exists(uint256 id) view public returns (bool) {
+  function exists(uint32 id) view public returns (bool) {
     return contributors[id].exists;
   }
 
@@ -112,20 +112,20 @@ contract Contributor is AragonApp {
     return getContributorByAddress(account).exists;
   }
 
-  function getContributorIdByAddress(address account) view public returns (uint256) {
+  function getContributorIdByAddress(address account) view public returns (uint32) {
     return contributorIds[account];
   }
 
-  function getContributorAddressById(uint256 id) view public returns (address) {
+  function getContributorAddressById(uint32 id) view public returns (address) {
     return contributors[id].account;
   }
 
   function getContributorByAddress(address account) internal view returns (Contributor) {
-    uint256 id = contributorIds[account];
+    uint32 id = contributorIds[account];
     return contributors[id];
   }
 
-  function getContributorById(uint256 _id) public view returns (uint256 id, address account, bytes32 ipfsHash, uint8 hashFunction, uint8 hashSize, bool isCore, uint256 balance, bool exists ) {
+  function getContributorById(uint32 _id) public view returns (uint32 id, address account, bytes32 ipfsHash, uint8 hashFunction, uint8 hashSize, bool isCore, uint256 balance, bool exists ) {
     id = _id;
     Contributor storage c = contributors[_id];
     account = c.account;
@@ -138,14 +138,14 @@ contract Contributor is AragonApp {
     exists = c.exists;
   }
 
-  function canPerform(address _who, address _where, bytes32 _what, uint256[] memory _how) public returns (bool) {
+  function canPerform(address _who, address _where, bytes32 _what/*, uint256[] memory _how*/) public returns (bool) {
     address sender = _who;
     if (sender == address(-1)) {
       sender = tx.origin;
     }
     // _what == keccak256('VOTE_PROPOSAL_ROLE')
     if (_what == 0xd61216798314d2fc33e42ff2021d66707b1e38517d3f7166798a9d3a196a9c96) {
-      return contributorIds[sender] != uint256(0); 
+      return contributorIds[sender] != uint256(0);
     }
 
     return addressIsCore(sender);
