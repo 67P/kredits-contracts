@@ -6,7 +6,7 @@ rootDir=`pwd`
 
 app=$1
 daoAddress=$2
-if [ -z "$VAR" ]; then
+if [ -z "$2" ]; then
   daoAddress=$KREDITS_DAO_ADDRESS
 fi
 
