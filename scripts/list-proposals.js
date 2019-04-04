@@ -14,7 +14,6 @@ module.exports = async function(callback) {
 
   console.log(`Using Proposal at: ${kredits.Proposal.contract.address}`);
 
-
   const table = new Table({
     head: ['ID', 'Contributor ID', 'Amount', 'Votes', 'Executed?', 'Description']
   })
