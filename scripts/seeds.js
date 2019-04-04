@@ -40,6 +40,7 @@ module.exports = async function(callback) {
       next();
     }).catch((error) => {
       console.log(`[FAILED] kredits.${contractName}.${method}(${JSON.stringify(args)})`);
+      console.log(`Error: ${error.message}`);
       next();
     });
   }, () => { console.log("\nDone!") });
