@@ -27,7 +27,7 @@ module.exports = async function(callback) {
   console.log(`Creating a contribution for contributor account ${contributorAccount} ID: ${contributorId}`);
 
   let contributionAttributes = {
-    contributorAccount,
+    contributorId,
     amount: await promptly.prompt('Amount: '),
     description: await promptly.prompt('Description: '),
     kind: await promptly.prompt('Kind: ', { default: 'dev' }),
