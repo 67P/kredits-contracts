@@ -20,7 +20,7 @@ module.exports = async function(web3) {
       });
     }).catch(e => {
       console.log(`Signer account not available; readonly connection (${e.message}`);
-      new Kredits(provider, null).init().then(kredits => {
+      new Kredits(provider, null, { apm }).init().then(kredits => {
         resolve(kredits);
       }).catch(e => {
         reject(e);
