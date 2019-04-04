@@ -1,5 +1,13 @@
 # KreditsKit deployments
 
+## 2019-04-04
+
+Deploying to networkId: 4
+Using ENS at: 0x98Df287B6C145399Aaa709692c8D308357bC085D
+Using DAOFactory at: 0x2298d27a9b847c681d2b2c2828ab9d79013f5f1d
+Found apps: [contribution,contributor,proposal,token].open.aragonpm.eth
+Deployed KreditsKit at: 0x76e069b47b79442657eaf0555a32c6b16fa1b8b4
+
 ## 2019-03-26
 
 Using network 'rinkeby'.

@@ -1,5 +1,13 @@
 # Contribution deployments
 
+## 2019-04-04
+
+ ✔ Successfully published kredits-contribution.open.aragonpm.eth v4.0.0: 
+ ℹ Contract address: 0x7485e8fbde0112C53587079db450Eb002D359372
+ ℹ Content (ipfs): QmZKxYPm8wz4phgL4428Gh7MjmbyFFDMP2st7qhNL9qGDQ
+ ℹ Transaction hash: 0x7d9be7920db675be88e8f60ebf08dc62ee77c4e6e454c5fbf0f91f6ac97e4c26
+
+
 ## 2019-03-26
 
 ### v3.0.0 appids

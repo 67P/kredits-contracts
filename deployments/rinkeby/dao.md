@@ -1,5 +1,10 @@
 # Kredits deployment
 
+## 2019-04-04
+
+Using KreditsKit at: 0x76e069b47b79442657eaf0555a32c6b16fa1b8b4
+Created new DAO at: 0xcd75458fbc4aa2231252d5b21f1391fd031e5cb2
+
 ### 2019-03-26
 
 kredits/truffle-kredits@aragonos  » truffle exec scripts/new-dao.js --network=rinkeby

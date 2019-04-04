@@ -1,5 +1,13 @@
 # Token deployments
 
+## 2019-04-04
+
+ ✔ Successfully published kredits-token.open.aragonpm.eth v3.0.0: 
+ ℹ Contract address: 0xd9913A96e087f50E71BF14c62cBCa3b9635392A9
+ ℹ Content (ipfs): QmfZ7LwjkQRuLsEnVjrEF3ryTaHsL6YTxffiiDS5KWmHQG
+ ℹ Transaction hash: 0x102b27e154d1e144ec084f5e8dc78e1626fda9f26c20db3e3b230fac381c317a
+
+
 ## 2019-03-26
 
 ### v2.0.0 support for appIds
