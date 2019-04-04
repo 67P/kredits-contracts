@@ -14,7 +14,6 @@ module.exports = async function(callback) {
 
   console.log(`Using Contribution at: ${kredits.Contribution.contract.address}`);
 
-
   const table = new Table({
     head: ['ID', 'Contributor account', 'Amount', 'Claimed?', 'Vetoed?', 'Description']
   })
@@ -24,7 +23,7 @@ module.exports = async function(callback) {
   contributions.forEach((c) => {
     table.push([
       c.id.toString(),
-      c.contributor,
+      c.contributorId,
       c.amount.toString(),
       c.claimed,
       c.vetoed,
