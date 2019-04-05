@@ -32,7 +32,7 @@ contract Contribution is AragonApp {
     uint8 hashFunction;
     uint8 hashSize;
     string tokenMetadataURL;
-    uint claimAfterBlock;
+    uint256 confirmedAtBlock;
     bool vetoed;
     bool exists;
   }
@@ -48,7 +48,7 @@ contract Contribution is AragonApp {
   mapping(uint32 => ContributionData) public contributions;
   uint32 public contributionsCount;
 
-  uint32 public blocksToWait = 0;
+  uint32 public blocksToWait;
 
   event ContributionAdded(uint32 id, uint32 indexed contributorId, uint32 amount);
   event ContributionClaimed(uint32 id, uint32 indexed contributorId, uint32 amount);
@@ -56,6 +56,7 @@ contract Contribution is AragonApp {
 
   function initialize(bytes32[4] _appIds) public onlyInit {
     appIds = _appIds;
+    blocksToWait = 40320; // 7 days; 15 seconds block time
     initialized();
   }
 
@@ -117,7 +118,7 @@ contract Contribution is AragonApp {
   // Custom functions
   //
 
-  function getContribution(uint32 contributionId) public view returns (uint32 id, uint32 contributorId, uint32 amount, bool claimed, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize, uint claimAfterBlock, bool exists, bool vetoed) {
+  function getContribution(uint32 contributionId) public view returns (uint32 id, uint32 contributorId, uint32 amount, bool claimed, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize, uint256 confirmedAtBlock, bool exists, bool vetoed) {
     id = contributionId;
     ContributionData storage c = contributions[id];
     return (
@@ -128,7 +129,7 @@ contract Contribution is AragonApp {
       c.hashDigest,
       c.hashFunction,
       c.hashSize,
-      c.claimAfterBlock,
+      c.confirmedAtBlock,
       c.exists,
       c.vetoed
     );
@@ -145,7 +146,11 @@ contract Contribution is AragonApp {
     c.hashDigest = hashDigest;
     c.hashFunction = hashFunction;
     c.hashSize = hashSize;
-    c.claimAfterBlock = block.number; // + blocksToWait;
+    if (contributionId < 10) {
+      c.confirmedAtBlock = block.number;
+    } else {
+      c.confirmedAtBlock = block.number + blocksToWait;
+    }
 
     contributionsCount++;
 
@@ -159,6 +164,7 @@ contract Contribution is AragonApp {
     ContributionData storage c = contributions[contributionId];
     require(c.exists, 'NOT_FOUND');
     require(!c.claimed, 'ALREADY_CLAIMED');
+    require(block.number < c.confirmedAtBlock, 'VETO_PERIOD_ENDED');
     c.vetoed = true;
 
     emit ContributionVetoed(contributionId, msg.sender);
@@ -169,7 +175,7 @@ contract Contribution is AragonApp {
     require(c.exists, 'NOT_FOUND');
     require(!c.claimed, 'ALREADY_CLAIMED');
     require(!c.vetoed, 'VETOED');
-    require(block.number > c.claimAfterBlock, 'NOT_CLAIMABLE');
+    require(block.number >= c.confirmedAtBlock, 'NOT_CLAIMABLE');
 
     c.claimed = true;
     address token = getTokenContract();
