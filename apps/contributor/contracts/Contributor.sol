@@ -16,7 +16,6 @@ contract Contributor is AragonApp {
     bytes32 ipfsHash;
     uint8 hashFunction;
     uint8 hashSize;
-    bool isCore;
     bool exists;
   }
 
@@ -33,14 +32,6 @@ contract Contributor is AragonApp {
   event ContributorAdded(uint32 id, address account);
 
   function initialize(address root,bytes32[4] _appIds) public onlyInit {
-    uint32 _id = contributorsCount + 1;
-    Contributor storage c = contributors[_id];
-    c.exists = true;
-    c.isCore = true;
-    c.account = root;
-    contributorIds[root] = _id;
-    contributorsCount += 1;
-
     appIds = _appIds;
 
     initialized();
@@ -55,7 +46,7 @@ contract Contributor is AragonApp {
   function coreContributorsCount() view public returns (uint32) {
     uint32 count = 0;
     for (uint32 i = 1; i <= contributorsCount; i++) {
-      if (contributors[i].isCore) {
+      if (isCoreTeam(i)) {
         count += 1;
       }
     }
@@ -79,13 +70,12 @@ contract Contributor is AragonApp {
     ContributorProfileUpdated(id, oldIpfsHash, c.ipfsHash);
   }
 
-  function addContributor(address account, bytes32 ipfsHash, uint8 hashFunction, uint8 hashSize, bool isCore) public isInitialized auth(MANAGE_CONTRIBUTORS_ROLE) {
+  function addContributor(address account, bytes32 ipfsHash, uint8 hashFunction, uint8 hashSize) public isInitialized auth(MANAGE_CONTRIBUTORS_ROLE) {
     require(!addressExists(account));
     uint32 _id = contributorsCount + 1;
     assert(!contributors[_id].exists); // this can not be acually
     Contributor storage c = contributors[_id];
     c.exists = true;
-    c.isCore = isCore;
     c.ipfsHash = ipfsHash;
     c.hashFunction = hashFunction;
     c.hashSize = hashSize;
@@ -96,8 +86,10 @@ contract Contributor is AragonApp {
     emit ContributorAdded(_id, account);
   }
 
-  function isCore(uint32 id) view public returns (bool) {
-    return contributors[id].isCore;
+  function isCoreTeam(uint32 id) view public returns (bool) {
+    // TODO: for simplicity we simply define the first contributors as core
+    // later this needs to be changed to something more dynamic
+    return id < 7;
   }
 
   function exists(uint32 id) view public returns (bool) {
@@ -105,7 +97,8 @@ contract Contributor is AragonApp {
   }
 
   function addressIsCore(address account) view public returns (bool) {
-    return getContributorByAddress(account).isCore;
+    uint32 id = getContributorIdByAddress(account);
+    return isCoreTeam(id);
   }
 
   function addressExists(address account) view public returns (bool) {
@@ -132,7 +125,7 @@ contract Contributor is AragonApp {
     ipfsHash = c.ipfsHash;
     hashFunction = c.hashFunction;
     hashSize = c.hashSize;
-    isCore = c.isCore;
+    isCore = isCoreTeam(id);
     address token = getTokenContract();
     balance = ITokenBalance(token).balanceOf(c.account);
     exists = c.exists;
