@@ -28,7 +28,7 @@ const providerForNetwork = (network) => (
         let [first, ...rest] = network;
         preset = `infura${first.toUpperCase()}${rest.join('')}`;
       }
-      return provider('frame', 'local', preset);
+      return provider(['frame', 'local', preset]);
     }
   }
 )
