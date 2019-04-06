@@ -60,7 +60,7 @@ contract Contributor is AragonApp {
     ContributorAccountUpdated(id, oldAccount, newAccount);
   }
 
-  function updateContributorIpfsHash(uint32 id, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public isInitialized auth(MANAGE_CONTRIBUTORS_ROLE) {
+  function updateContributorProfileHash(uint32 id, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public isInitialized auth(MANAGE_CONTRIBUTORS_ROLE) {
     Contributor storage c = contributors[id];
     bytes32 oldHashDigest = c.hashDigest;
     c.hashDigest = hashDigest;
