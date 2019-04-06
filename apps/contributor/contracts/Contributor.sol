@@ -13,7 +13,7 @@ contract Contributor is AragonApp {
 
   struct Contributor {
     address account;
-    bytes32 ipfsHash;
+    bytes32 hashDigest;
     uint8 hashFunction;
     uint8 hashSize;
     bool exists;
@@ -27,7 +27,7 @@ contract Contributor is AragonApp {
   enum Apps { Contribution, Contributor, Proposal, Token }
   bytes32[4] public appIds;
 
-  event ContributorProfileUpdated(uint32 id, bytes32 oldIpfsHash, bytes32 newIpfsHash);
+  event ContributorProfileUpdated(uint32 id, bytes32 oldHashDigest, bytes32 newHashDigest); // what should be logged
   event ContributorAccountUpdated(uint32 id, address oldAccount, address newAccount);
   event ContributorAdded(uint32 id, address account);
 
@@ -60,23 +60,23 @@ contract Contributor is AragonApp {
     ContributorAccountUpdated(id, oldAccount, newAccount);
   }
 
-  function updateContributorIpfsHash(uint32 id, bytes32 ipfsHash, uint8 hashFunction, uint8 hashSize) public isInitialized auth(MANAGE_CONTRIBUTORS_ROLE) {
+  function updateContributorProfileHash(uint32 id, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public isInitialized auth(MANAGE_CONTRIBUTORS_ROLE) {
     Contributor storage c = contributors[id];
-    bytes32 oldIpfsHash = c.ipfsHash;
-    c.ipfsHash = ipfsHash;
+    bytes32 oldHashDigest = c.hashDigest;
+    c.hashDigest = hashDigest;
     c.hashFunction = hashFunction;
     c.hashSize = hashSize;
 
-    ContributorProfileUpdated(id, oldIpfsHash, c.ipfsHash);
+    ContributorProfileUpdated(id, oldHashDigest, c.hashDigest);
   }
 
-  function addContributor(address account, bytes32 ipfsHash, uint8 hashFunction, uint8 hashSize) public isInitialized auth(MANAGE_CONTRIBUTORS_ROLE) {
+  function addContributor(address account, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public isInitialized auth(MANAGE_CONTRIBUTORS_ROLE) {
     require(!addressExists(account));
     uint32 _id = contributorsCount + 1;
     assert(!contributors[_id].exists); // this can not be acually
     Contributor storage c = contributors[_id];
     c.exists = true;
-    c.ipfsHash = ipfsHash;
+    c.hashDigest = hashDigest;
     c.hashFunction = hashFunction;
     c.hashSize = hashSize;
     c.account = account;
@@ -118,11 +118,11 @@ contract Contributor is AragonApp {
     return contributors[id];
   }
 
-  function getContributorById(uint32 _id) public view returns (uint32 id, address account, bytes32 ipfsHash, uint8 hashFunction, uint8 hashSize, bool isCore, uint256 balance, bool exists ) {
+  function getContributorById(uint32 _id) public view returns (uint32 id, address account, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize, bool isCore, uint256 balance, bool exists ) {
     id = _id;
     Contributor storage c = contributors[_id];
     account = c.account;
-    ipfsHash = c.ipfsHash;
+    hashDigest = c.hashDigest;
     hashFunction = c.hashFunction;
     hashSize = c.hashSize;
     isCore = isCoreTeam(id);
