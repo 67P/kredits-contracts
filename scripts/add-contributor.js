@@ -23,7 +23,6 @@ module.exports = async function(callback) {
   let contributorAttributes = {
     account: await prompt('Contributor address: ', {}),
     name: await prompt('Name: '),
-    isCore: await prompt('core? y/n') === 'y',
     kind: await prompt('Kind (default person): ', {default: 'person'}),
     url: await prompt('URL: '),
     github_username: await prompt('GitHub username: '),
@@ -34,7 +33,7 @@ module.exports = async function(callback) {
   console.log("\nAdding contributor:");
   console.log(contributorAttributes);
 
-  kredits.Contributor.add(contributorAttributes, { gasLimit: 250000 }).then((result) => {
+  kredits.Contributor.add(contributorAttributes, { gasLimit: 350000 }).then((result) => {
     console.log("\n\nResult:");
     console.log(result);
     callback();
