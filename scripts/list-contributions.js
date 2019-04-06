@@ -15,21 +15,31 @@ module.exports = async function(callback) {
   console.log(`Using Contribution at: ${kredits.Contribution.contract.address}`);
 
   const table = new Table({
-    head: ['ID', 'Contributor account', 'Amount', 'Claimed?', 'Vetoed?', 'Description']
+    head: ['ID', 'Contributor ID', 'Description', 'Amount', 'Confirmed?', 'Vetoed?', 'Claimed?']
   })
 
-  let contributions = await kredits.Contribution.all()
+  try {
+    let blockNumber = await kredits.provider.getBlockNumber();
+    let contributions = await kredits.Contribution.all()
 
-  contributions.forEach((c) => {
-    table.push([
-      c.id.toString(),
-      c.contributorId,
-      c.amount.toString(),
-      c.claimed,
-      c.vetoed,
-      `${c.description}`
-    ])
-  })
-  console.log(table.toString())
-  callback()
+    contributions.forEach((c) => {
+      const confirmed = !!(c.claimAtBlock < blockNumber)
+
+      table.push([
+        c.id.toString(),
+        c.contributorId,
+        `${c.description}`,
+        c.amount.toString(),
+        confirmed,
+        c.vetoed,
+        c.claimed,
+      ])
+    })
+
+    console.log(table.toString())
+  } catch (err) {
+    console.log(err);
+  }
+
+  callback();
 }
