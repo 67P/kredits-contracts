@@ -7,11 +7,12 @@
     "test": "test"
   },
   "scripts": {
+    "postinstall": "./scripts/every-app.sh \"npm install\"",
     "build-json": "npm run compile-contracts && node ./scripts/build-json.js",
     "repl": "truffle exec scripts/repl.js",
     "seeds": "truffle exec scripts/seeds.js",
     "compile-contracts": "aragon contracts compile --all",
-    "bootstrap": "./scripts/every-app \"npm install \" && npm run reset:hard && npm run seeds",
+    "bootstrap": "./scripts/every-app.sh \"npm install \" && npm run reset:hard && npm run seeds",
     "reset": "npm run deploy:kit && npm run deploy:dao",
     "reset:hard": "npm run deploy:apps && npm run reset",
     "deploy:kit": "npm run compile-contracts && aragon contracts exec scripts/deploy-kit.js",

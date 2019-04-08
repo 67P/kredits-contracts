@@ -22,7 +22,7 @@ Each of the aragon apps are separate packages:
     $ cd apps/[app]
     $ npm install
 
-or use the bootstrap command (see below)
+this will be automatically executed after you run `npm install` through a `postinstall` hook.
 
 ### Local development chain
 
@@ -45,12 +45,14 @@ Ethereum RPC port.
 ### Bootstrap
 
 1. Run an Ethereum node and ipfs
-    
+
         $ npm run devchain
         $ ipfs daemon
 
+
 2. Deploy each app to the devchain
 
+        (make sure you've run `npm install` for every app - see installation)
         $ npm run deploy:apps
 
 3. Deploy a new KreditsKit and create a new DAO with the latest app versions
