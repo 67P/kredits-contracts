@@ -22,7 +22,7 @@ Each of the aragon apps are separate packages:
     $ cd apps/[app]
     $ npm install
 
-this will be automatically executed after you run `npm install` through a `postinstall` hook.
+You can use `npm run install-all` to install all app dependencies at once.
 
 ### Local development chain
 
