@@ -20,10 +20,10 @@ module.exports = async function(callback) {
 
   try {
     let blockNumber = await kredits.provider.getBlockNumber();
-    let contributions = await kredits.Contribution.all()
+    let contributions = await kredits.Contribution.all();
 
     contributions.forEach((c) => {
-      const confirmed = !!(c.claimAtBlock < blockNumber)
+      const confirmed = c.confirmedAtBlock <= blockNumber;
 
       table.push([
         c.id.toString(),
@@ -34,9 +34,9 @@ module.exports = async function(callback) {
         c.vetoed,
         c.claimed,
       ])
-    })
+    });
 
-    console.log(table.toString())
+    console.log(table.toString());
   } catch (err) {
     console.log(err);
   }
