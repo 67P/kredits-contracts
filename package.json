@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "postinstall": "./scripts/every-app.sh \"npm install\"",
+    "install-all": "./scripts/every-app.sh \"npm install\"",
     "build-json": "npm run compile-contracts && node ./scripts/build-json.js",
     "repl": "truffle exec scripts/repl.js",
     "seeds": "truffle exec scripts/seeds.js",
