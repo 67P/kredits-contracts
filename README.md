@@ -2,12 +2,13 @@
 
 # Kredits Contracts
 
-This repository contains the Solidity smart contracts organized as [Aragon](https://hack.aragon.org/) 
-apps and JavaScript API wrapper for [Kosmos Kredits](https://wiki.kosmos.org/Kredits).
+This repository contains the Solidity smart contracts organized as
+[Aragon](https://hack.aragon.org/) apps and JavaScript API wrapper for [Kosmos
+Kredits](https://wiki.kosmos.org/Kredits).
 
-It is based on [aragonOS](https://hack.aragon.org/docs/aragonos-intro.html) and 
-follows the aragonOS conventions.
-Aragon itself uses the [Truffle framework](http://truffleframework.com/) for some things.
+It is based on [aragonOS](https://hack.aragon.org/docs/aragonos-intro.html) and
+follows the aragonOS conventions.  Aragon itself uses the [Truffle
+framework](http://truffleframework.com/) for some things.
 
 ## Development
 
@@ -26,20 +27,20 @@ You can use `npm run install-all` to install all app dependencies at once.
 
 ### Local development chain
 
-For local development it is recommended to use 
-[ganache](http://truffleframework.com/ganache/) to run a local development 
+For local development it is recommended to use
+[ganache](http://truffleframework.com/ganache/) to run a local development
 chain. Using the ganache simulator no full Ethereum node is required.
 
-We use the default aragon-cli devchain command to confgure and run a local 
+We use the default aragon-cli devchain command to confgure and run a local
 development ganache.
 
     $ npm run devchain (or aragon devchain --port 7545)
 
-To clear/reset the chain use: 
+To clear/reset the chain use:
 
     $ npm run devchain -- --reset (or aragon devchain --port 7545 --reset)
 
-We default to port 7545 for development to not get in conflict with the default 
+We default to port 7545 for development to not get in conflict with the default
 Ethereum RPC port.
 
 ### Bootstrap
@@ -48,7 +49,6 @@ Ethereum RPC port.
 
         $ npm run devchain
         $ ipfs daemon
-
 
 2. Deploy each app to the devchain
 
@@ -60,7 +60,7 @@ Ethereum RPC port.
         $ npm run deploy:kit
         $ npm run deploy:dao
 
-4. Execute seeds to create demo contributors, contributons, etc. (optional) 
+4. Execute seeds to create demo contributors, contributons, etc. (optional)
 
         $ npm run seeds
 
@@ -73,15 +73,15 @@ If you want to reset your local setup:
 
 ## Contract architecture
 
-Contracts are organized in independent apps (see `/apps`) and are developed 
-and deployed independently. Each app has a version and can be "installed" 
-on the Kredits DAO independently.
+Contracts are organized in independent apps (see `/apps`) and are developed and
+deployed independently. Each app has a version and can be "installed" on the
+Kredits DAO independently.
 
 ![](docs/kredits-diagram.png)
 
-A DAO can be deployed using the `scripts/deploy-kit.js` script or with the 
-`npm run deploy:dao` command. This deploys a new Kredits DAO, installs
-the latest app versions and sets the required permissions.
+A DAO can be deployed using the `scripts/deploy-kit.js` script or with the `npm
+run deploy:dao` command. This deploys a new Kredits DAO, installs the latest
+app versions and sets the required permissions.
 
 See each app in `/apps/*` for details.
 
@@ -163,7 +163,7 @@ Creates and configures a new DAO instance.
     or
     $ npm run deploy:dao
 
-KreditsKit address is load from `lib/addresses/KreditsKit.json` or can be 
+KreditsKit address is load from `lib/addresses/KreditsKit.json` or can be
 configured through the `KREDITS_KIT` environment variable.
 
 ### deploy-apps.sh
@@ -174,14 +174,12 @@ Runs `npm install` for each app and publishes a new version.
     or
     $ npm run deploy:apps
 
-
 ## ACL / Permissions
-
 
 ## Upgradeable contracts
 
-We use aragonOS for upgradeablity of the different contracts.
-Refer to the [aragonOS upgradeablity documentation](https://hack.aragon.org/docs/upgradeability-intro) 
+We use aragonOS for upgradeablity of the different contracts.  Refer to the
+[aragonOS upgradeablity documentation](https://hack.aragon.org/docs/upgradeability-intro)
 for more details.
 
 ### Example
