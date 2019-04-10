@@ -176,14 +176,9 @@ module.exports = async (
 
   log('Deploying subdomain APM...')
 
-  console.log(namehash('open'));
-  console.log(keccak256('open'));
-  console.log(keccak256(namehash('open')));
-
-  const subACL = await Kernel.at(await registrar.kernel()).acl();
   console.log(await acl.hasPermission(owner, registrar.address, role))
   console.log(subApmFactory.address)
-  await registrar.createNameAndPoint(labelHash, subApmFactory.address)
+  await registrar.createNameAndPoint(namehash('open'), subApmFactory.address)
 
   const subReceipt = await subApmFactory.newAPM(namehash('aragonpm.eth'), namehash('open'), owner)
 
