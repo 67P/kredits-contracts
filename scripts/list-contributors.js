@@ -1,5 +1,6 @@
 const promptly = require('promptly');
 const Table = require('cli-table');
+const ethers = require('ethers');
 
 const initKredits = require('./helpers/init_kredits.js');
 
@@ -27,7 +28,7 @@ module.exports = async function(callback) {
       c.account,
       c.isCore,
       `${c.name}`,
-      c.balance.toString()
+      ethers.utils.formatEther(c.balance)
     ])
   })
   console.log(table.toString())
