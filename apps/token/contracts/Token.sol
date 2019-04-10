@@ -15,7 +15,7 @@ contract Token is ERC20Token, AragonApp {
   function initialize(bytes32[4] _appIds) public onlyInit {
     appIds = _appIds;
     name = 'Kredits';
-    symbol = 'K';
+    symbol = '₭S';
     decimals = 18;
     initialized();
   }
