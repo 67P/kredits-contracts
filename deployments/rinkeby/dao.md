@@ -1,5 +1,10 @@
 # Kredits deployment
 
+## 2019-04-10 - Weltempfänger release
+
+Using KreditsKit at: 0x76e069b47b79442657eaf0555a32c6b16fa1b8b4
+Created new DAO at: 0xc34edf7d11b7f8433d597f0bb0697acdff55ef14
+
 ## 2019-04-04
 
 Using KreditsKit at: 0x76e069b47b79442657eaf0555a32c6b16fa1b8b4

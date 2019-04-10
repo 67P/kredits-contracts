@@ -1,5 +1,13 @@
 # Proposal deployments
 
+## 2019-04-10 - Weltempfänger release
+
+✔ Successfully published kredits-proposal.open.aragonpm.eth v5.0.0: 
+ ℹ Contract address: 0x4ce5b0286483c66b861e5599a199054687434552
+ ℹ Content (ipfs): QmNYXEcmvKTGxYiob7WUf85oZhdmFDCuGiA6TsRrDE9TYb
+ ℹ Transaction hash: 0x0482b58a1ba87d494c6391026399d0ac41b45384330d916f3f99ba70e501584b
+
+
 ## 2019-04-04
 
  ✔ Successfully published kredits-proposal.open.aragonpm.eth v4.0.0: 
