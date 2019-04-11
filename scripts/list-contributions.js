@@ -15,7 +15,7 @@ module.exports = async function(callback) {
   console.log(`Using Contribution at: ${kredits.Contribution.contract.address}`);
 
   const table = new Table({
-    head: ['ID', 'Contributor ID', 'Description', 'Amount', 'Confirmed?', 'Vetoed?', 'Claimed?']
+    head: ['ID', 'Contributor ID', 'Description', 'Amount', 'Confirmed?', 'Vetoed?', 'Claimed?', 'IPFS']
   })
 
   try {
@@ -33,6 +33,7 @@ module.exports = async function(callback) {
         confirmed,
         c.vetoed,
         c.claimed,
+        c.ipfsHash
       ])
     });
 

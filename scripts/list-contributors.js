@@ -17,7 +17,7 @@ module.exports = async function(callback) {
 
 
   const table = new Table({
-    head: ['ID', 'Account', 'Core?', 'Name', 'Balance']
+    head: ['ID', 'Account', 'Name', 'Core?', 'Balance', 'IPFS']
   })
 
   let contributors = await kredits.Contributor.all()
@@ -26,9 +26,10 @@ module.exports = async function(callback) {
     table.push([
       c.id.toString(),
       c.account,
-      c.isCore,
       `${c.name}`,
-      ethers.utils.formatEther(c.balance)
+      c.isCore,
+      ethers.utils.formatEther(c.balance),
+      c.ipfsHash
     ])
   })
   console.log(table.toString())
