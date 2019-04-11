@@ -45,7 +45,9 @@
   "dependencies": {
     "ethers": "^4.0.27",
     "ipfs-http-client": "^30.1.1",
-    "rsvp": "^4.8.2"
+    "kosmos-schemas": "github:67P/kosmos-schemas#feature/contribution_date_time",
+    "rsvp": "^4.8.2",
+    "tv4": "^1.3.0"
   },
   "keywords": [
     "kosmos",
