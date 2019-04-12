@@ -16,12 +16,12 @@ framework](http://truffleframework.com/) for some things.
 
 All requirements are defined in `package.json`.
 
-    $ npm install
+    $ yarn install
 
 Each of the aragon apps are separate packages:
 
     $ cd apps/[app]
-    $ npm install
+    $ yarn install
 
 You can use `npm run install-all` to install all app dependencies at once.
 
@@ -52,7 +52,7 @@ Ethereum RPC port.
 
 2. Deploy each app to the devchain
 
-        (make sure you've run `npm install` for every app - see installation)
+        (make sure you've run `yarn install` for every app - see installation)
         $ npm run deploy:apps
 
 3. Deploy a new KreditsKit and create a new DAO with the latest app versions
@@ -168,7 +168,7 @@ configured through the `KREDITS_KIT` environment variable.
 
 ### deploy-apps.sh
 
-Runs `npm install` for each app and publishes a new version.
+Runs `yarn install` for each app and publishes a new version.
 
     $ ./scripts/deploy-apps.sh
     or
