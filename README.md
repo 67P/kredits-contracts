@@ -79,9 +79,9 @@ Kredits DAO independently.
 
 ![](docs/kredits-diagram.png)
 
-A DAO can be deployed using the `scripts/deploy-kit.js` script or with the `npm
-run deploy:dao` command. This deploys a new Kredits DAO, installs the latest
-app versions and sets the required permissions.
+A DAO can be deployed using the `scripts/deploy-kit.js` script or with the
+`npm run deploy:dao` command. This deploys a new Kredits DAO, installs the
+latest app versions and sets the required permissions.
 
 See each app in `/apps/*` for details.
 
@@ -115,11 +115,11 @@ Script to add a new entries to the contracts using the JS wrapper
 
     $ truffle exec scripts/add-{contributor, contribution, proposal}.js
 
-### list-{contributor, contribution, proposal}.js
+### list-{contributors, contributions, proposals}.js
 
 List contract entries
 
-    $ truffle exec scripts/list-{contributor, contribution, proposal}.js
+    $ truffle exec scripts/list-{contributors, contributions, proposals}.js
 
 ### send-funds.js
 
@@ -152,7 +152,7 @@ Deploys a new KreditsKit that allows to create a new DAO
     or
     $ npm run deploy:kit
 
-`ENS` address is required as environment variable.  
+`ENS` address is required as environment variable.
 `DAO_FACTORY` can optionally be set as environment variable. (see aragon)
 
 ### new-dao.js
