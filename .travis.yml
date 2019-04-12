@@ -1,0 +1,24 @@
+---
+language: node_js
+node_js:
+  - "11"
+
+sudo: false
+dist: xenial
+
+cache:
+  npm: true
+
+before_install:
+  - npm config set spin false
+
+install:
+  - npm install
+
+script:
+  - npm run lint:wrapper
+  - npm run lint:contracts
+
+branches:
+  only:
+    - "master"
