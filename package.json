@@ -20,7 +20,7 @@
     "deploy:apps": "./scripts/every-app.sh \"aragon apm publish major\"",
     "devchain": "aragon devchain --port 7545",
     "dao:address": "truffle exec scripts/current-address.js",
-    "lint:contracts": "solhint contracts/**/*.sol apps/**/contracts/**/*.sol",
+    "lint:contracts": "solhint \"contracts/**/*.sol\" \"apps/*/contracts/**/*.sol\"",
     "lint:wrapper": "eslint lib/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
