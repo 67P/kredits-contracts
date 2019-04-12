@@ -1,7 +1,6 @@
 {
-  "extends": "solhint:default",
+  "extends": "solhint:recommended",
   "rules": {
-    "indent": "2",
-    "space-after-comma": "error"
+    "indent": "2"
   }
 }
