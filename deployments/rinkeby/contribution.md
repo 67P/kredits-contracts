@@ -1,5 +1,13 @@
 # Contribution deployments
 
+## 2019-04-10 - Weltempfänger release
+
+✔ Successfully published kredits-contribution.open.aragonpm.eth v5.0.0: 
+ ℹ Contract address: 0xe0f7dB486321b917e3A986Bdb2F2b9d51BA98fa9
+ ℹ Content (ipfs): QmU3XEBb4f5jU8MFFEpwaa95C1mhc82UeYLRWLrKsvcQNw
+ ℹ Transaction hash: 0xd736ff5f79f8142be3fad1a50580fb40aa468838da397f8630285fd91a445af3
+
+
 ## 2019-04-04
 
  ✔ Successfully published kredits-contribution.open.aragonpm.eth v4.0.0: 
