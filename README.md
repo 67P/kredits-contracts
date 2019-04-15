@@ -36,7 +36,7 @@ development ganache.
 
     $ npm run devchain (or aragon devchain --port 7545)
 
-To clear/reset the chain use:
+To clear/reset the chain use (e.g. if you run out of funds on your devchain)
 
     $ npm run devchain -- --reset (or aragon devchain --port 7545 --reset)
 
