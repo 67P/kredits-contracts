@@ -21,6 +21,8 @@ contract Token is ERC20Token, AragonApp {
   }
 
   function mintFor(address contributorAccount, uint256 amount, uint32 contributionId) public isInitialized auth(MINT_TOKEN_ROLE) {
+    require(amount > 0, "amount should be greater than zero");
+
     uint256 amountInWei = amount.mul(1 ether);
     _mint(contributorAccount, amountInWei);
     emit LogMint(contributorAccount, amount, contributionId);

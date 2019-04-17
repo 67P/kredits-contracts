@@ -54,6 +54,13 @@ module.exports = {
     goerli: {
       network_id: 5,
       provider: providerForNetwork('goerli')
+    },
+    coverage: {
+      host: "localhost",
+      network_id: "*",
+      port: 8555,
+      gas: 0xffffffffff,
+      gasPrice: 0x01
     }
   },
   compilers: {

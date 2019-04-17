@@ -20,7 +20,8 @@
     "deploy:apps": "./scripts/every-app.sh \"aragon apm publish major\"",
     "devchain": "aragon devchain --port 7545",
     "dao:address": "truffle exec scripts/current-address.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:kit": "aragon contracts test --environment default"
   },
   "repository": {
     "type": "git",
@@ -40,12 +41,16 @@
     "eth-provider": "^0.2.2",
     "openzeppelin-solidity": "^2.2.0",
     "promptly": "^3.0.3",
-    "solc": "^0.4.25"
+    "solc": "^0.4.25",
+    "chai": "^4.2.0",
+    "solidity-coverage": "0.5.11",
+    "eth-ens-namehash": "^2.0.8"
   },
   "dependencies": {
     "ethers": "^4.0.27",
     "ipfs-http-client": "^30.1.1",
     "kosmos-schemas": "^2.0.0",
+    "rsvp": "^4.8.2",
     "tv4": "^1.3.0"
   },
   "keywords": [
