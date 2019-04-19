@@ -6,13 +6,14 @@
     "@aragon/os": "^4.1.0",
     "@aragon/cli": "^5.5.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@aragon/test-helpers": "^1.0.0"
+  },
   "scripts": {
     "start": "npm run start:aragon:ipfs",
     "start:aragon:ipfs": "aragon run",
     "start:aragon:http": "aragon run --http localhost:8001 --http-served-from ./dist",
     "start:app": "",
-    "test": "aragon contracts test",
     "compile": "aragon contracts compile",
     "sync-assets": "",
     "build:app": "",
@@ -21,7 +22,10 @@
     "publish:patch": "aragon apm publish patch",
     "publish:minor": "aragon apm publish minor",
     "publish:major": "aragon apm publish major",
-    "versions": "aragon apm versions"
+    "versions": "aragon apm versions",
+    "ganache-cli:test": "./node_modules/@aragon/test-helpers/ganache-cli.sh",
+    "test": "aragon contracts test",
+    "coverage": "SOLIDITY_COVERAGE=true npm run ganache-cli:test"
   },
   "keywords": []
 }
