@@ -28,7 +28,7 @@ module.exports = async function(callback) {
       c.account,
       `${c.name}`,
       c.isCore,
-      ethers.utils.formatEther(c.balance),
+      c.balanceInt,
       c.ipfsHash
     ])
   })
