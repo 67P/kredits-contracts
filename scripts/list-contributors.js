@@ -15,12 +15,16 @@ module.exports = async function(callback) {
 
   console.log(`Using Contributor at: ${kredits.Contributor.contract.address}`);
 
-
   const table = new Table({
     head: ['ID', 'Account', 'Name', 'Core?', 'Balance', 'IPFS']
   })
 
-  let contributors = await kredits.Contributor.all()
+  try {
+    const contributors = await kredits.Contributor.all()
+  } catch(e) {
+    callback(e);
+    return;
+  }
 
   contributors.forEach((c) => {
     table.push([
@@ -32,7 +36,9 @@ module.exports = async function(callback) {
       c.ipfsHash
     ])
   })
+
   console.log(table.toString())
+
   callback()
 }
 
