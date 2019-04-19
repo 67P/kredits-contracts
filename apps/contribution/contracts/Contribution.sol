@@ -118,7 +118,7 @@ contract Contribution is AragonApp {
   // Custom functions
   //
 
-  function totalCount(bool confirmedOnly) public view returns (uint256 count) {
+  function totalKreditsEarned(bool confirmedOnly) public view returns (uint256 count) {
     for (uint32 i = 1; i <= contributionsCount; i++) {
       ContributionData memory c = contributions[i];
       if (block.number >= c.confirmedAtBlock || !confirmedOnly) {
@@ -127,7 +127,7 @@ contract Contribution is AragonApp {
     }
   }
 
-  function contributorTotalCount(uint32 contributorId, bool confirmedOnly) public view returns (uint256 count) {
+  function totalKreditsEarnedByContributor(uint32 contributorId, bool confirmedOnly) public view returns (uint256 count) {
     uint256 tokenBalance = ownedContributions[contributorId].length;
     for (uint256 i = 0; i < tokenBalance; i++) {
       uint32 cId = ownedContributions[contributorId][i];

@@ -7,7 +7,7 @@ interface ITokenBalance {
   function balanceOf(address contributorAccount) public view returns (uint256);
 }
 interface IContributionBalance {
-  function contributorTotalCount(uint32 contributorId, bool confirmedOnly) public view returns (uint256 count);
+  function totalKreditsEarnedByContributor(uint32 contributorId, bool confirmedOnly) public view returns (uint256 count);
   function balanceOf(address owner) public view returns (uint256);
 }
 
@@ -128,7 +128,7 @@ contract Contributor is AragonApp {
     return contributors[id];
   }
 
-  function getContributorById(uint32 _id) public view returns (uint32 id, address account, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize, bool isCore, uint256 balance, uint256 contributionBalance, uint256 contributionsCount, bool exists ) {
+  function getContributorById(uint32 _id) public view returns (uint32 id, address account, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize, bool isCore, uint256 balance, uint256 totalKreditsEarned, uint256 contributionsCount, bool exists ) {
     id = _id;
     Contributor storage c = contributors[_id];
     account = c.account;
@@ -139,7 +139,7 @@ contract Contributor is AragonApp {
     address token = getTokenContract();
     balance = ITokenBalance(token).balanceOf(c.account);
     address contribution = getContributionContract();
-    contributionBalance = IContributionBalance(contribution).contributorTotalCount(_id, true);
+    totalKreditsEarned = IContributionBalance(contribution).totalKreditsEarnedByContributor(_id, true);
     contributionsCount = IContributionBalance(contribution).balanceOf(c.account);
     exists = c.exists;
   }
