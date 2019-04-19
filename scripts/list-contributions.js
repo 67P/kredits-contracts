@@ -22,6 +22,7 @@ module.exports = async function(callback) {
     let blockNumber = await kredits.provider.getBlockNumber();
     let contributions = await kredits.Contribution.all();
 
+    console.log(`Current block number: ${blockNumber}`);
     contributions.forEach((c) => {
       const confirmed = c.confirmedAtBlock <= blockNumber;
 
@@ -30,7 +31,7 @@ module.exports = async function(callback) {
         c.contributorId,
         `${c.description}`,
         c.amount.toString(),
-        confirmed,
+        `${confirmed} (${c.confirmedAtBlock})`,
         c.vetoed,
         c.claimed,
         c.ipfsHash
@@ -38,6 +39,9 @@ module.exports = async function(callback) {
     });
 
     console.log(table.toString());
+
+    let totalContributionBalances = await kredits.Contribution.functions.totalCount(true);
+    console.log(`Total confirmed balance: ${totalContributionBalances}`);
   } catch (err) {
     console.log(err);
   }

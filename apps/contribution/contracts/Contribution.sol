@@ -118,6 +118,26 @@ contract Contribution is AragonApp {
   // Custom functions
   //
 
+  function totalCount(bool confirmedOnly) public view returns (uint256 count) {
+    for (uint32 i = 1; i <= contributionsCount; i++) {
+      ContributionData memory c = contributions[i];
+      if (block.number >= c.confirmedAtBlock || !confirmedOnly) {
+        count += c.amount; // should use safemath
+      }
+    }
+  }
+
+  function contributorTotalCount(uint32 contributorId, bool confirmedOnly) public view returns (uint256 count) {
+    uint256 tokenBalance = ownedContributions[contributorId].length;
+    for (uint256 i = 0; i < tokenBalance; i++) {
+      uint32 cId = ownedContributions[contributorId][i];
+      ContributionData memory c = contributions[cId];
+      if (block.number >= c.confirmedAtBlock || !confirmedOnly) {
+        count += c.amount; // should use safemath
+      }
+    }
+  }
+
   function getContribution(uint32 contributionId) public view returns (uint32 id, uint32 contributorId, uint32 amount, bool claimed, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize, uint256 confirmedAtBlock, bool exists, bool vetoed) {
     id = contributionId;
     ContributionData storage c = contributions[id];
