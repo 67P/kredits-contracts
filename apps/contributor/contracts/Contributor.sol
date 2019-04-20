@@ -54,6 +54,7 @@ contract Contributor is AragonApp {
   }
 
   function updateContributorAccount(uint32 id, address oldAccount, address newAccount) public auth(MANAGE_CONTRIBUTORS_ROLE) {
+    require(newAccount != address(0), "invalid new account address");
     require(getContributorAddressById(id) == oldAccount, "contributor does not exist");
     
     contributorIds[oldAccount] = 0;
