@@ -111,7 +111,7 @@ contract('Contributor app', (accounts) => {
             id = await contributor.coreContributorsCount();
             oldAccount = root;
             newAccount = member1;
-            hashDigest = '0x1';
+            hashDigest = '0x1000000000000000000000000000000000000000000000000000000000000000';
             hashFunction = 1;
             hashSize = 1;
         });
@@ -145,8 +145,10 @@ contract('Contributor app', (accounts) => {
 
         it('update contributor profile hash', async() => {
             await contributor.updateContributorProfileHash(id.toNumber(), hashDigest, hashFunction, hashSize);
-            let contributorId = await contributor.getContributorIdByAddress(oldAccount);
-            assert.equal(contributorId.toNumber(), 0);
+            let contributorProfile = await contributor.contributors(id.toNumber());
+            assert.equal(hashDigest, contributorProfile[1]);
+            assert.equal(hashFunction, contributorProfile[2].toNumber());
+            assert.equal(hashSize, contributorProfile[3].toNumber());
         });
 
         it("should revert when update contributor profile hash from address that does not have permission", async() => {
