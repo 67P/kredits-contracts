@@ -26,7 +26,7 @@ module.exports = async function(callback) {
     kind: await prompt('Kind (default person): ', {default: 'person'}),
     url: await prompt('URL: '),
     github_username: await prompt('GitHub username: '),
-    github_uid: await prompt('GitHub UID: '),
+    github_uid: parseInt(await prompt('GitHub UID: ')),
     wiki_username: await prompt('Wiki username: '),
   };
 
