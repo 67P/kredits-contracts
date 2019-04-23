@@ -16,7 +16,7 @@ module.exports = async function(callback) {
   console.log(`Using Contributor at: ${kredits.Contributor.contract.address}`);
 
   const table = new Table({
-    head: ['ID', 'Account', 'Name', 'Core?', 'Balance', 'IPFS']
+    head: ['ID', 'Account', 'Name', 'Core?', 'Balance', 'Kredits earned', 'Contributions count', 'IPFS']
   })
 
   try {
@@ -33,6 +33,8 @@ module.exports = async function(callback) {
       `${c.name}`,
       c.isCore,
       ethers.utils.formatEther(c.balance),
+      c.totalKreditsEarned.toString(),
+      c.contributionsCount.toString(),
       c.ipfsHash
     ])
   })
