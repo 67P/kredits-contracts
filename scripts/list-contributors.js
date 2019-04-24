@@ -34,13 +34,12 @@ module.exports = async function(callback) {
         c.ipfsHash
       ])
     })
+
+    console.log(table.toString())
   } catch(e) {
     callback(e);
     return;
   }
 
-  console.log(table.toString())
-
   callback()
 }
-
