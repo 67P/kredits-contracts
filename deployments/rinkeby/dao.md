@@ -1,5 +1,19 @@
 # Kredits deployment
 
+## 2019-04-24 upgrade contributor and contribution
+
+aragon dao upgrade 0xc34edf7d11b7f8433d597f0bb0697acdff55ef14 kredits-contributor.open.aragonpm.eth --environment=rinkeby
+eth-provider | Invalid provider preset/location: "local"
+ ✔ Fetching kredits-contributor.open.aragonpm.eth@latest
+ ✔ Upgrading app
+ ✔ Successfully executed: "Set the resolving address of 'kredits-contributor.open.aragonpm.eth' in namespace 'App code' to 0xadefa3b66b68a127Fe38bEa1813b844EE69CFD86"
+
+
+aragon dao upgrade 0xc34edf7d11b7f8433d597f0bb0697acdff55ef14 kredits-contribution.open.aragonpm.eth --environment=rinkeby
+ ✔ Fetching kredits-contribution.open.aragonpm.eth@latest
+ ✔ Upgrading app
+ ✔ Successfully executed: "Set the resolving address of 'kredits-contribution.open.aragonpm.eth' in namespace 'App code' to 0x2c083EEA83fd3a99C93759D97D0317A43261c758"
+
 ## 2019-04-10 - Weltempfänger release
 
 Using KreditsKit at: 0x76e069b47b79442657eaf0555a32c6b16fa1b8b4
