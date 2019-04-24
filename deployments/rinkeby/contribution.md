@@ -1,5 +1,22 @@
 # Contribution deployments
 
+aragon apm publish major --environment=rinkeby"
+
+## 2019-04-24 update balances
+
+ ✔ Successfully published kredits-contribution.open.aragonpm.eth v6.0.0: 
+ ℹ Contract address: 0x2c083EEA83fd3a99C93759D97D0317A43261c758
+ ℹ Content (ipfs): QmULpSqz7BgTFmDu8AL7YZZEz525xkcEzf3dPKtbRdUtFs
+ ℹ Transaction hash: 0x8b01c4c00162e918659d267a2beaf33b578e2aaf9f427f1aa9a43029333c5cd7
+
+## 2019-04-10 - Weltempfänger release
+
+✔ Successfully published kredits-contribution.open.aragonpm.eth v5.0.0: 
+ ℹ Contract address: 0xe0f7dB486321b917e3A986Bdb2F2b9d51BA98fa9
+ ℹ Content (ipfs): QmU3XEBb4f5jU8MFFEpwaa95C1mhc82UeYLRWLrKsvcQNw
+ ℹ Transaction hash: 0xd736ff5f79f8142be3fad1a50580fb40aa468838da397f8630285fd91a445af3
+
+
 ## 2019-04-04
 
  ✔ Successfully published kredits-contribution.open.aragonpm.eth v4.0.0: 

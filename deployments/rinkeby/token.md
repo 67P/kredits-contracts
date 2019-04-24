@@ -1,5 +1,13 @@
 # Token deployments
 
+## 2019-04-10 - Weltempfänger release
+
+✔ Successfully published kredits-token.open.aragonpm.eth v4.0.0: 
+ ℹ Contract address: 0x05E0C2bbdA8e5BeE22AC1E20C1457dA4de63aE26
+ ℹ Content (ipfs): QmUuYLRMRNZcundUk2pxVaSjMNvtB7hzdf3eyoaUNqDPow
+ ℹ Transaction hash: 0x98c28b5ca645904d56eb83c4783682f018c0fcee015b3a3d5fa8bd609223fb89
+
+
 ## 2019-04-04
 
  ✔ Successfully published kredits-token.open.aragonpm.eth v3.0.0: 

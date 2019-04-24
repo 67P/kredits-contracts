@@ -36,7 +36,7 @@ development ganache.
 
     $ npm run devchain (or aragon devchain --port 7545)
 
-To clear/reset the chain use:
+To clear/reset the chain use (e.g. if you run out of funds on your devchain)
 
     $ npm run devchain -- --reset (or aragon devchain --port 7545 --reset)
 
@@ -173,6 +173,26 @@ Runs `npm install` for each app and publishes a new version.
     $ ./scripts/deploy-apps.sh
     or
     $ npm run deploy:apps
+
+## Deployment
+
+### Apps deployment
+
+To deploy a new app version run:
+
+    $ aragon apm publish major --environment=NETWORK_TO_DEPLOY
+
+### KreditsKit
+
+deploy the KreditsKit as Kit to create new DAOs
+
+    $ truffle exec scripts/deploy-kit.js --network=NETWORK_TO_DEPLOY
+
+### Creating a new DAO
+
+make sure all apps and the KreditsKit are deployed, then create a new DAO:
+
+    $ truffle exec scripts/new-dao.js --network=NETWORK_TO_DEPLOY
 
 ## ACL / Permissions
 
