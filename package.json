@@ -21,6 +21,7 @@
     "devchain": "aragon devchain --port 7545",
     "dao:address": "truffle exec scripts/current-address.js",
     "lint:contracts": "solhint \"contracts/**/*.sol\" \"apps/*/contracts/**/*.sol\"",
+    "lint:contract-tests": "eslint apps/*/test",
     "lint:wrapper": "eslint lib/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

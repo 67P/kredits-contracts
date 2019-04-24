@@ -4602,9 +4602,10 @@ klaw@^1.0.0:
   optionalDependencies:
     graceful-fs "^4.1.9"
 
-"kosmos-schemas@github:67P/kosmos-schemas#feature/contribution_date_time":
-  version "1.1.2"
-  resolved "https://codeload.github.com/67P/kosmos-schemas/tar.gz/28a5e9f1fc2e083165e4e02ce3361c3f4fafa592"
+kosmos-schemas@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/kosmos-schemas/-/kosmos-schemas-2.0.0.tgz#89f71e7bcf6d582605d569007fa605f2b8886177"
+  integrity sha512-zIjWcDxaN94m1vPgUaI5LRX6y07Ihw9ScPoGKf1NkZ0sLgD/CRV8YIKRyDafH5mThe3uBN2+F6H6Gp5qhNhALg==
   dependencies:
     brfs-babel "^1.0.0"
 
@@ -6581,11 +6582,6 @@ rsa-unpack@0.0.6:
   integrity sha1-9Q69VqYoN45jHylxYQJs6atO3bo=
   dependencies:
     optimist "~0.3.5"
-
-rsvp@^4.8.2:
-  version "4.8.4"
-  resolved "https://registry.yarnpkg.com/rsvp/-/rsvp-4.8.4.tgz#b50e6b34583f3dd89329a2f23a8a2be072845911"
-  integrity sha512-6FomvYPfs+Jy9TfXmBpBuMWNH94SgCsZmJKcanySzgNNP6LjWxBvyLTa9KaMfDDM5oxRfrKDB0r/qeRsLwnBfA==
 
 run-async@^2.2.0:
   version "2.3.0"

@@ -18,7 +18,8 @@ install:
 
 script:
   - yarn lint:wrapper
-  - yarn lint:contracts
+  - yarn lint:contract-tests
+  # - yarn lint:contracts
 
 branches:
   only:
