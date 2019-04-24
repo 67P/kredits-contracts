@@ -21,26 +21,25 @@ module.exports = async function(callback) {
 
   try {
     const contributors = await kredits.Contributor.all()
+
+    contributors.forEach((c) => {
+      table.push([
+        c.id.toString(),
+        c.account,
+        `${c.name}`,
+        c.isCore,
+        c.balanceInt.toString(),
+        c.totalKreditsEarned.toString(),
+        c.contributionsCount.toString(),
+        c.ipfsHash
+      ])
+    })
+
+    console.log(table.toString())
   } catch(e) {
     callback(e);
     return;
   }
 
-  contributors.forEach((c) => {
-    table.push([
-      c.id.toString(),
-      c.account,
-      `${c.name}`,
-      c.isCore,
-      c.balanceInt.toString(),
-      c.totalKreditsEarned.toString(),
-      c.contributionsCount.toString(),
-      c.ipfsHash
-    ])
-  })
-
-  console.log(table.toString())
-
   callback()
 }
-

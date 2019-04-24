@@ -40,8 +40,8 @@ module.exports = async function(callback) {
 
     console.log(table.toString());
 
-    let totalContributionBalances = await kredits.Contribution.functions.totalCount(true);
-    console.log(`Total confirmed balance: ${totalContributionBalances}`);
+    let totalKreditsEarned = await kredits.Contribution.functions.totalKreditsEarned(true);
+    console.log(`Total confirmed kredits: ${totalKreditsEarned}`);
   } catch (err) {
     console.log(err);
   }
