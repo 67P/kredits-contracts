@@ -1,5 +1,5 @@
-const Token = artifacts.require('Token.sol')
+// const Token = artifacts.require('Token.sol');
 
-contract('Token', (accounts) => {
-  it('should be tested')
-})
+contract('Token', (_accounts) => {
+  it('should be tested');
+});
