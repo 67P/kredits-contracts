@@ -1,5 +1,5 @@
-const Contributor = artifacts.require('Contributor.sol')
+// const Contributor = artifacts.require('Contributor.sol');
 
-contract('Contributor', (accounts) => {
-  it('should be tested')
-})
+contract('Contributor', (_accounts) => {
+  it('should be tested');
+});

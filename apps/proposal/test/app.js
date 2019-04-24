@@ -1,5 +1,5 @@
-const Proposal = artifacts.require('Proposal.sol')
+// const Proposal = artifacts.require('Proposal.sol');
 
-contract('Proposal', (accounts) => {
-  it('should be tested')
-})
+contract('Proposal', (_accounts) => {
+  it('should be tested');
+});
