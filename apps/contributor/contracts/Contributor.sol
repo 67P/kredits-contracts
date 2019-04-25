@@ -144,7 +144,7 @@ contract Contributor is AragonApp {
     exists = c.exists;
   }
 
-  function canPerform(address _who, address _where, bytes32 _what/*, uint256[] memory _how*/) public returns (bool) {
+  function canPerform(address _who, address _where, bytes32 _what, uint256[] memory _how) public returns (bool) {
     address sender = _who;
     if (sender == address(-1)) {
       sender = tx.origin;
