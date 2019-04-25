@@ -35,7 +35,7 @@ module.exports = async function(callback) {
   }
   console.log(`Using DAOFactory at: ${daoFactory.address}`)
 
-  const apps = fs.readdirSync('./apps')
+  const apps = fs.readdirSync('./apps', {withFileTypes: true}).filter(e => e.isDirectory()).map(e => e.name)
   console.log(`Found apps: [${apps}].${apm}`)
   let appIds = {}
   apps.sort().forEach((app) => {
