@@ -2,7 +2,14 @@
 
 aragon apm publish major --environment=rinkeby
 
-## 2019-04-29 update balances
+## 2019-04-25 canPerform fix
+
+✔ Successfully published kredits-contributor.open.aragonpm.eth v6.0.0: 
+ ℹ Contract address: 0xA5379D49C718845A1BD7720c6BE3872bA69906cc
+ ℹ Content (ipfs): QmdennNV6s2FNpe6QNYxrUsUXPVdnQGvh1vCi22Tqs8ojq
+ ℹ Transaction hash: 0x51077afeff70a24e87c78bb23ea13bdb9b4445bd43ea7a74a4178fadfeeb6c35
+
+## 2019-04-24 update balances
 
  ✔ Successfully published kredits-contributor.open.aragonpm.eth v5.0.0: 
  ℹ Contract address: 0xadefa3b66b68a127Fe38bEa1813b844EE69CFD86
