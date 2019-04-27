@@ -127,13 +127,13 @@ contract Contribution is AragonApp {
     }
   }
 
-  function totalKreditsEarnedByContributor(uint32 contributorId, bool confirmedOnly) public view returns (uint256 count) {
-    uint256 tokenBalance = ownedContributions[contributorId].length;
-    for (uint256 i = 0; i < tokenBalance; i++) {
+  function totalKreditsEarnedByContributor(uint32 contributorId, bool confirmedOnly) public view returns (uint32 amount) {
+    uint256 tokenCount = ownedContributions[contributorId].length;
+    for (uint256 i = 0; i < tokenCount; i++) {
       uint32 cId = ownedContributions[contributorId][i];
       ContributionData memory c = contributions[cId];
       if (block.number >= c.confirmedAtBlock || !confirmedOnly) {
-        count += c.amount; // should use safemath
+        amount += c.amount; // should use safemath
       }
     }
   }
