@@ -23,6 +23,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "test:token": "cd apps/token && aragon contracts test --environment default",
     "test:contributor": "cd apps/contributor && aragon contracts test --environment default",
+    "test:contribution": "cd apps/contribution && aragon contracts test --environment default",
     "test:kit": "aragon contracts test --environment default"
   },
   "repository": {
