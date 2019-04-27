@@ -1,6 +1,7 @@
 const namehash = require('eth-ens-namehash').hash;
 
 const Contribution = artifacts.require("Contribution.sol");
+const { Token, getTokenContract } = require("../../token/artifacts");
 
 const getContract = name => artifacts.require(name)
 const { assertRevert } = require('@aragon/test-helpers/assertThrow');
@@ -8,7 +9,7 @@ const { assertRevert } = require('@aragon/test-helpers/assertThrow');
 const ZERO_ADDR = '0x0000000000000000000000000000000000000000';
 
 contract('Token app', (accounts) => {
-    let kernelBase, aclBase, daoFactory, dao, acl, contribution;
+    let kernelBase, aclBase, daoFactory, dao, acl, contribution, token;
   
     const root = accounts[0];
     const member1 = accounts[1];
@@ -29,18 +30,6 @@ contract('Token app', (accounts) => {
             root,
             { from: root }
         );
-    
-        //get new app instance from DAO
-        const receipt = await dao.newAppInstance(
-            '0x1234',
-            (await Contribution.new()).address,
-            0x0,
-            false,
-            { from: root }
-        )
-        contribution = Contribution.at(
-            receipt.logs.filter(l => l.event == 'NewAppProxy')[0].args.proxy
-        )
 
         //apps id
         let appsId = [];
@@ -48,6 +37,30 @@ contract('Token app', (accounts) => {
         appsId[1] = namehash("kredits-contributor");
         appsId[2] = namehash("kredits-proposal");
         appsId[3] = namehash("kredits-token");
+        
+    
+        //get new app instance from DAO
+        let receipt = await dao.newAppInstance(
+            appsId[0],
+            (await Contribution.new()).address,
+            0x0,
+            false,
+            { from: root }
+        )
+        contribution = Contribution.at(
+            receipt.logs.filter(l => l.event == 'NewAppProxy')[0].args.proxy
+        );
+
+        receipt = await dao.newAppInstance(
+            appsId[3],
+            (await getTokenContract('Token').new()).address,
+            0x0,
+            false,
+            { from: root }
+        )
+        token = Token.at(
+            receipt.logs.filter(l => l.event == 'NewAppProxy')[0].args.proxy
+        );
     
         //init app
         await contribution.initialize(appsId);
@@ -66,8 +79,21 @@ contract('Token app', (accounts) => {
             await contribution.VETO_CONTRIBUTION_ROLE(),
             root,
             { from: root }
-        )
+        );
+
+        //init token (app)
+        await token.initialize(appsId);
     
+        //create token mint permission for coin owner
+        await acl.createPermission(
+            root,
+            token.address,
+            await token.MINT_TOKEN_ROLE(),
+            root,
+            { from: root }
+        );
+
+        //acl.grantPermission(contribution, token, await token.MINT_TOKEN_ROLE(), {from: root});            
     });
 
     describe("Owner default space permissions", async() => {
