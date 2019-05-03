@@ -24,6 +24,7 @@ module.exports = async function(callback) {
 
     console.log(`Current block number: ${blockNumber}`);
     contributions.forEach((c) => {
+      if (!c.exists) { return; } // if there are zero contributions we currently get an empty one
       const confirmed = c.confirmedAtBlock <= blockNumber;
 
       table.push([
