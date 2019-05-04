@@ -8,7 +8,7 @@ const { assertRevert } = require('@aragon/test-helpers/assertThrow');
 
 const ZERO_ADDR = '0x0000000000000000000000000000000000000000';
 
-contract('Token app', (accounts) => {
+contract('Contribution app', (accounts) => {
     let kernelBase, aclBase, daoFactory, dao, acl, contribution, token;
   
     const root = accounts[0];
