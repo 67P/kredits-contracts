@@ -1,6 +1,6 @@
 {
   "name": "kredits-contracts",
-  "version": "5.1.1",
+  "version": "5.3.0",
   "description": "Ethereum contracts and npm wrapper for Kredits",
   "main": "./lib/kredits.js",
   "directories": {
@@ -24,7 +24,10 @@
     "test:contributor": "cd apps/contributor && aragon contracts test --environment default",
     "test:contribution": "cd apps/contribution && aragon contracts test --environment default",
     "test:proposal": "cd apps/proposal && aragon contracts test --environment default",
-    "test:kit": "aragon contracts test --environment default"
+    "test:kit": "aragon contracts test --environment default",
+    "lint:contracts": "solhint \"contracts/**/*.sol\" \"apps/*/contracts/**/*.sol\"",
+    "lint:contract-tests": "eslint apps/*/test",
+    "lint:wrapper": "eslint lib/"
   },
   "repository": {
     "type": "git",
@@ -41,13 +44,18 @@
     "@aragon/kits-base": "^1.0.0",
     "@aragon/os": "^4.1.0",
     "async-each-series": "^1.1.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-promise": "^4.1.1",
     "eth-provider": "^0.2.2",
     "openzeppelin-solidity": "^2.2.0",
     "promptly": "^3.0.3",
     "solc": "^0.4.25",
     "chai": "^4.2.0",
     "solidity-coverage": "0.5.11",
-    "eth-ens-namehash": "^2.0.8"
+    "eth-ens-namehash": "^2.0.8",
+    "solhint": "^2.0.0"
   },
   "dependencies": {
     "ethers": "^4.0.27",

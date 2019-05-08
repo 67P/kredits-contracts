@@ -6,6 +6,10 @@ import "@aragon/os/contracts/kernel/IKernel.sol";
 interface ITokenBalance {
   function balanceOf(address contributorAccount) public view returns (uint256);
 }
+interface IContributionBalance {
+  function totalKreditsEarnedByContributor(uint32 contributorId, bool confirmedOnly) public view returns (uint256 count);
+  function balanceOf(address owner) public view returns (uint256);
+}
 
 contract Contributor is AragonApp {
   bytes32 public constant KERNEL_APP_ADDR_NAMESPACE = 0xd6f028ca0e8edb4a8c9757ca4fdccab25fa1e0317da1188108f7d2dee14902fb;
@@ -41,6 +45,12 @@ contract Contributor is AragonApp {
     IKernel k = IKernel(kernel());
 
     return k.getApp(KERNEL_APP_ADDR_NAMESPACE, appIds[uint8(Apps.Token)]);
+  }
+
+  function getContributionContract() public view returns (address) {
+    IKernel k = IKernel(kernel());
+
+    return k.getApp(KERNEL_APP_ADDR_NAMESPACE, appIds[uint8(Apps.Contribution)]);
   }
 
   function coreContributorsCount() view public returns (uint32) {
@@ -122,7 +132,7 @@ contract Contributor is AragonApp {
     return contributors[id];
   }
 
-  function getContributorById(uint32 _id) public view returns (uint32 id, address account, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize, bool isCore, uint256 balance, bool exists ) {
+  function getContributorById(uint32 _id) public view returns (uint32 id, address account, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize, bool isCore, uint256 balance, uint256 totalKreditsEarned, uint256 contributionsCount, bool exists ) {
     id = _id;
     Contributor storage c = contributors[_id];
     account = c.account;
@@ -132,10 +142,13 @@ contract Contributor is AragonApp {
     isCore = isCoreTeam(id);
     address token = getTokenContract();
     balance = ITokenBalance(token).balanceOf(c.account);
+    address contribution = getContributionContract();
+    totalKreditsEarned = IContributionBalance(contribution).totalKreditsEarnedByContributor(_id, true);
+    contributionsCount = IContributionBalance(contribution).balanceOf(c.account);
     exists = c.exists;
   }
 
-  function canPerform(address _who, address _where, bytes32 _what/*, uint256[] memory _how*/) public returns (bool) {
+  function canPerform(address _who, address _where, bytes32 _what, uint256[] memory _how) public returns (bool) {
     address sender = _who;
     if (sender == address(-1)) {
       sender = tx.origin;

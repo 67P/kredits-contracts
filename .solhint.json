@@ -1,0 +1,9 @@
+{
+  "extends": [
+    "solhint:default",
+    "solhint:recommended"
+  ],
+  "rules": {
+    "indent": "2"
+  }
+}
