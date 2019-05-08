@@ -20,10 +20,10 @@
     "deploy:apps": "./scripts/every-app.sh \"aragon apm publish major\"",
     "devchain": "aragon devchain --port 7545",
     "dao:address": "truffle exec scripts/current-address.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "test:token": "cd apps/token && aragon contracts test --environment default",
     "test:contributor": "cd apps/contributor && aragon contracts test --environment default",
     "test:contribution": "cd apps/contribution && aragon contracts test --environment default",
+    "test:proposal": "cd apps/proposal && aragon contracts test --environment default",
     "test:kit": "aragon contracts test --environment default"
   },
   "repository": {
