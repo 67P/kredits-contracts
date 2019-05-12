@@ -1,25 +1,28 @@
 const namehash = require('eth-ens-namehash').hash;
 
+// eslint-disable-next-line no-undef
 const Token = artifacts.require("Token.sol");
 
-const getContract = name => artifacts.require(name)
+// eslint-disable-next-line no-undef
+const getContract = name => artifacts.require(name);
 const { assertRevert } = require('@aragon/test-helpers/assertThrow');
 
 const ZERO_ADDR = '0x0000000000000000000000000000000000000000';
 
 contract('Token app', (accounts) => {
-    let kernelBase, aclBase, daoFactory, dao, acl, token;
+    let kernelBase, aclBase, daoFactory, dao, r, acl, token;
   
     const root = accounts[0];
     const member1 = accounts[1];
   
-    before(async() => {
-        kernelBase = await getContract('Kernel').new(true) // petrify immediately
-        aclBase = await getContract('ACL').new()
+    // eslint-disable-next-line no-undef
+    before(async () => {
+        kernelBase = await getContract('Kernel').new(true); // petrify immediately
+        aclBase = await getContract('ACL').new();
         daoFactory = await getContract('DAOFactory').new(kernelBase.address, aclBase.address, ZERO_ADDR);
-        r = await daoFactory.newDAO(root)
-        dao = getContract('Kernel').at(r.logs.filter(l => l.event == 'DeployDAO')[0].args.dao)
-        acl = getContract('ACL').at(await dao.acl())
+        r = await daoFactory.newDAO(root);
+        dao = getContract('Kernel').at(r.logs.filter(l => l.event == 'DeployDAO')[0].args.dao);
+        acl = getContract('ACL').at(await dao.acl());
     
         //create dao mamnager permission for coin owner
         await acl.createPermission(
@@ -37,10 +40,10 @@ contract('Token app', (accounts) => {
             0x0,
             false,
             { from: root }
-        )
+        );
         token = Token.at(
             receipt.logs.filter(l => l.event == 'NewAppProxy')[0].args.proxy
-        )
+        );
 
         //apps id
         let appsId = [];
@@ -59,13 +62,14 @@ contract('Token app', (accounts) => {
             await token.MINT_TOKEN_ROLE(),
             root,
             { from: root }
-        )
+        );
     
     });
 
-    describe("Owner default space permissions", async() => {
-        it('check owner is token issuer', async() => {
+    describe("Owner default space permissions", async () => {
+        it('check owner is token issuer', async () => {
           let tokenIssuerPermission = await acl.hasPermission(root, token.address, await token.MINT_TOKEN_ROLE());
+          // eslint-disable-next-line no-undef
           assert.equal(tokenIssuerPermission, true);
         });  
     });
@@ -75,45 +79,45 @@ contract('Token app', (accounts) => {
         let symbol = "₭S";
         let decimals = 18;
   
-        it("check token properties", async() => {
-          assert.equal(await token.name(), name);
-          assert.equal(await token.symbol(), symbol);
-          assert.equal(await token.decimals(), decimals);
+        it("check token properties", async () => {
+          assert.equal(await token.name(), name); // eslint-disable-line no-undef
+          assert.equal(await token.symbol(), symbol); // eslint-disable-line no-undef
+          assert.equal(await token.decimals(), decimals); // eslint-disable-line no-undef
         });
   
     });
 
-    describe("Token minting", async() => {
+    describe("Token minting", async () => {
         let tokenToMint = 250;
         let ether = 1000000000000000000;
   
-        it("should revert when mint tokens from an address that does not have minting permission", async() => {
-          return assertRevert(async() => {
-            await token.mintFor(root, tokenToMint, 1, { from: member1})
-            'address does not have permission to mint tokens'
+        it("should revert when mint tokens from an address that does not have minting permission", async () => {
+          return assertRevert(async () => {
+            await token.mintFor(root, tokenToMint, 1, { from: member1});
+            'address does not have permission to mint tokens';
           });
         });
   
-        it("should revert when mint tokens to address(0)", async() => {
-          return assertRevert(async() => {
-            await token.mintFor(ZERO_ADDR, tokenToMint, 1, { from: root})
-            'invalid contributor address'
+        it("should revert when mint tokens to address(0)", async () => {
+          return assertRevert(async () => {
+            await token.mintFor(ZERO_ADDR, tokenToMint, 1, { from: root});
+            'invalid contributor address';
           });
         });
   
-        it("should revert when mint amount of tokens equal to 0", async() => {
-          return assertRevert(async() => {
-            await token.mintFor(root, 0, 1, { from: root})
-            'amount to mint should be greater than zero'
+        it("should revert when mint amount of tokens equal to 0", async () => {
+          return assertRevert(async () => {
+            await token.mintFor(root, 0, 1, { from: root});
+            'amount to mint should be greater than zero';
           });
         });
   
-        it("mint tokens", async() => {
+        it("mint tokens", async () => {
           await token.mintFor(root, tokenToMint, 1, { from: root });
           let ownerBalance = await token.balanceOf(root);
           let totalSupply = await token.totalSupply();
-          assert.equal(ownerBalance.toNumber(), tokenToMint*ether);
-          assert.equal(totalSupply.toNumber(), tokenToMint*ether);
+          assert.equal(ownerBalance.toNumber(), tokenToMint*ether); // eslint-disable-line no-undef
+          assert.equal(totalSupply.toNumber(), tokenToMint*ether);  // eslint-disable-line no-undef
         });
     });
-})
+});

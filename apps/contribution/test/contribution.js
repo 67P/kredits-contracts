@@ -1,26 +1,29 @@
 const namehash = require('eth-ens-namehash').hash;
 
+// eslint-disable-next-line no-undef
 const Contribution = artifacts.require("Contribution.sol");
 const { Token, getTokenContract } = require("../../token/artifacts");
 
-const getContract = name => artifacts.require(name)
+// eslint-disable-next-line no-undef
+const getContract = name => artifacts.require(name);
 const { assertRevert } = require('@aragon/test-helpers/assertThrow');
 
 const ZERO_ADDR = '0x0000000000000000000000000000000000000000';
 
 contract('Contribution app', (accounts) => {
-    let kernelBase, aclBase, daoFactory, dao, acl, contribution, token;
+    let kernelBase, aclBase, daoFactory, r, dao, acl, contribution, token;
   
     const root = accounts[0];
     const member1 = accounts[1];
 
-    before(async() => {
-        kernelBase = await getContract('Kernel').new(true) // petrify immediately
-        aclBase = await getContract('ACL').new()
+    // eslint-disable-next-line no-undef
+    before(async () => {
+        kernelBase = await getContract('Kernel').new(true); // petrify immediately
+        aclBase = await getContract('ACL').new();
         daoFactory = await getContract('DAOFactory').new(kernelBase.address, aclBase.address, ZERO_ADDR);
-        r = await daoFactory.newDAO(root)
-        dao = getContract('Kernel').at(r.logs.filter(l => l.event == 'DeployDAO')[0].args.dao)
-        acl = getContract('ACL').at(await dao.acl())
+        r = await daoFactory.newDAO(root);
+        dao = getContract('Kernel').at(r.logs.filter(l => l.event == 'DeployDAO')[0].args.dao);
+        acl = getContract('ACL').at(await dao.acl());
     
         //create dao mamnager permission for coin owner
         await acl.createPermission(
@@ -46,7 +49,7 @@ contract('Contribution app', (accounts) => {
             0x0,
             false,
             { from: root }
-        )
+        );
         contribution = Contribution.at(
             receipt.logs.filter(l => l.event == 'NewAppProxy')[0].args.proxy
         );
@@ -57,7 +60,7 @@ contract('Contribution app', (accounts) => {
             0x0,
             false,
             { from: root }
-        )
+        );
         token = Token.at(
             receipt.logs.filter(l => l.event == 'NewAppProxy')[0].args.proxy
         );
@@ -71,7 +74,7 @@ contract('Contribution app', (accounts) => {
             await contribution.ADD_CONTRIBUTION_ROLE(),
             root,
             { from: root }
-        )
+        );
 
         await acl.createPermission(
             root,
@@ -96,97 +99,103 @@ contract('Contribution app', (accounts) => {
         //acl.grantPermission(contribution, token, await token.MINT_TOKEN_ROLE(), {from: root});            
     });
 
-    describe("Owner default space permissions", async() => {
-        it('check owner can add contribution', async() => {
+    describe("Owner default space permissions", async () => {
+        it('check owner can add contribution', async () => {
           let addContributionPermission = await acl.hasPermission(root, contribution.address, await contribution.ADD_CONTRIBUTION_ROLE());
+          // eslint-disable-next-line no-undef
           assert.equal(addContributionPermission, true);
         });  
 
-        it('check owner can veto contribution', async() => {
+        it('check owner can veto contribution', async () => {
             let vetoContributionPermission = await acl.hasPermission(root, contribution.address, await contribution.VETO_CONTRIBUTION_ROLE());
+            // eslint-disable-next-line no-undef
             assert.equal(vetoContributionPermission, true);
         });  
     });
 
-    describe("Add contribution", async() => {
+    describe("Add contribution", async () => {
         let amount = 100;
         let contributorId = 1;
         let hashDigest = '0x0000000000000000000000000000000000000000000000000000000000000000';
         let hashFunction = 1;
         let hashSize = 1;
 
-        it("should revert when add contribution from address that does not have permission", async() => {
-            return assertRevert(async() => {
+        it("should revert when add contribution from address that does not have permission", async () => {
+            return assertRevert(async () => {
                 await contribution.add(amount, contributorId, hashDigest, hashFunction, hashSize, {from: member1});
-              'sender does not have permission'
+              'sender does not have permission';
             });
         });
 
-        it("should revert when add contribution with amount equal to zero", async() => {
-            return assertRevert(async() => {
+        it("should revert when add contribution with amount equal to zero", async () => {
+            return assertRevert(async () => {
                 await contribution.add(0, contributorId, hashDigest, hashFunction, hashSize, {from: root});
-              'amount equal to zero'
+              'amount equal to zero';
             });
         });
 
-        it("add contribution", async() => {
+        it("add contribution", async () => {
             let contributionCountBefore = await contribution.contributionsCount();
             await contribution.add(amount, contributorId, hashDigest, hashFunction, hashSize, {from: root});
             let contributionCountAfter = await contribution.contributionsCount();
+            // eslint-disable-next-line no-undef
             assert.equal(contributionCountAfter.toNumber()-contributionCountBefore.toNumber(), 1);
             let contributionObject = await contribution.getContribution(contributionCountAfter.toNumber());
+            // eslint-disable-next-line no-undef
             assert.equal(contributionObject[1], contributorId);
             let isExist = await contribution.exists(contributionCountAfter.toNumber());
+            // eslint-disable-next-line no-undef
             assert.equal(isExist, true);
         });
     });
 
-    describe("Veto/Claim contribution", async() => {
+    describe("Veto/Claim contribution", async () => {
 
-        it("should revert when veto from address that does not have permission", async() => {
+        it("should revert when veto from address that does not have permission", async () => {
             let contributionId = await contribution.contributionsCount();
-            return assertRevert(async() => {
+            return assertRevert(async () => {
                 await contribution.veto(contributionId.toNumber(), {from: member1});
-              'sender does not have permission to veto'
+              'sender does not have permission to veto';
             });
         });
 
-        it("should revert when veto contribution that does not exist", async() => {
+        it("should revert when veto contribution that does not exist", async () => {
             let contributionId = await contribution.contributionsCount();
-            return assertRevert(async() => {
+            return assertRevert(async () => {
                 await contribution.veto(contributionId.toNumber()+1, {from: root});
-              'contribution not found'
+              'contribution not found';
             });
         });
 
-        it("should revert when claim contribution that does not exist", async() => {
+        it("should revert when claim contribution that does not exist", async () => {
             let contributionId = await contribution.contributionsCount();
-            return assertRevert(async() => {
+            return assertRevert(async () => {
                 await contribution.claim(contributionId.toNumber()+1, {from: root});
-              'contribution not found'
+              'contribution not found';
             });
         });
 
-        it("claim contribution", async() => {
+        it("claim contribution", async () => {
             let contributionId = await contribution.contributionsCount();
             await contribution.claim(contributionId);
             let contributionObject = await contribution.getContribution(contributionId.toNumber());
+            // eslint-disable-next-line no-undef
             assert(contributionObject[3], true);
         });
 
-        it("should revert when claim already claimed contribution", async() => {
+        it("should revert when claim already claimed contribution", async () => {
             let contributionId = await contribution.contributionsCount();
-            return assertRevert(async() => {
+            return assertRevert(async () => {
                 await contribution.claim(contributionId.toNumber(), {from: root});
-              'contribution already claimed'
+              'contribution already claimed';
             });
         });
 
-        it("should revert when veto already claimed contribution", async() => {
+        it("should revert when veto already claimed contribution", async () => {
             let contributionId = await contribution.contributionsCount();
-            return assertRevert(async() => {
+            return assertRevert(async () => {
                 await contribution.veto(contributionId.toNumber(), {from: root});
-              'contribution already claimed'
+              'contribution already claimed';
             });
         });
 
