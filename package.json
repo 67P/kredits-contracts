@@ -23,7 +23,8 @@
     "lint:contracts": "solhint \"contracts/**/*.sol\" \"apps/*/contracts/**/*.sol\"",
     "lint:contract-tests": "eslint apps/*/test",
     "lint:wrapper": "eslint lib/",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "setup": "sh scripts/git-hooks/install"
   },
   "repository": {
     "type": "git",
