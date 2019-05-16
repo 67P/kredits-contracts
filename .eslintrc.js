@@ -2,12 +2,19 @@ module.exports = {
   'env': {
     'browser': true,
     'es6': true,
-    'node': true
+    'node': true,
+    'mocha': true
   },
   'extends': 'eslint:recommended',
   'globals': {
     'Atomics': 'readonly',
-    'SharedArrayBuffer': 'readonly'
+    'SharedArrayBuffer': 'readonly',
+    'artifacts': 'true',
+    'contract': 'true',
+    'accounts': 'true',
+    'web3': 'true',
+    'it': 'true',
+    'assert': 'true'
   },
   'parserOptions': {
     'ecmaVersion': 2018,
