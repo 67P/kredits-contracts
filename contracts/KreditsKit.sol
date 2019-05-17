@@ -34,20 +34,20 @@ contract KreditsKit is KitBase  {
         Contributor contributor = Contributor(_installApp(dao, appIds[uint8(Apps.Contributor)]));
         contributor.initialize(root, appIds);
         acl.createPermission(root, contributor, contributor.MANAGE_CONTRIBUTORS_ROLE(), this);
-        
+
         Token token = Token(_installApp(dao, appIds[uint8(Apps.Token)]));
         token.initialize(appIds);
-        
+
         Contribution contribution = Contribution(_installApp(dao, appIds[uint8(Apps.Contribution)]));
         contribution.initialize(appIds);
-        
+
         Proposal proposal = Proposal(_installApp(dao, appIds[uint8(Apps.Proposal)]));
         proposal.initialize(appIds);
 
         acl.createPermission(root, contribution, contribution.ADD_CONTRIBUTION_ROLE(), this);
         acl.createPermission(root, contribution, contribution.VETO_CONTRIBUTION_ROLE(), this);
         acl.grantPermission(proposal, contribution, contribution.ADD_CONTRIBUTION_ROLE());
-        
+
         uint256[] memory params = new uint256[](1);
         params[0] = uint256(203) << 248 | uint256(1) << 240 | uint240(contributor);
         acl.grantPermissionP(acl.ANY_ENTITY(), contribution, contribution.ADD_CONTRIBUTION_ROLE(), params);
@@ -57,7 +57,7 @@ contract KreditsKit is KitBase  {
         //acl.setPermissionManager(this, proposal, proposal.VOTE_PROPOSAL_ROLE();
         acl.createPermission(root, proposal, proposal.VOTE_PROPOSAL_ROLE(), this);
         acl.grantPermissionP(acl.ANY_ENTITY(), proposal, proposal.VOTE_PROPOSAL_ROLE(), params);
-        
+
         acl.createPermission(root, proposal, proposal.ADD_PROPOSAL_ROLE(), this);
         //acl.grantPermissionP(address(-1), proposal, proposal.ADD_PROPOSAL_ROLE(), params);
         acl.grantPermission(acl.ANY_ENTITY(), proposal, proposal.ADD_PROPOSAL_ROLE());
@@ -67,9 +67,9 @@ contract KreditsKit is KitBase  {
         acl.setPermissionManager(root, contribution, contribution.ADD_CONTRIBUTION_ROLE());
         acl.setPermissionManager(root, contribution, contribution.VETO_CONTRIBUTION_ROLE());
         acl.setPermissionManager(root, contributor, contributor.MANAGE_CONTRIBUTORS_ROLE());
-        
+
         acl.createPermission(root, token, token.MINT_TOKEN_ROLE(), this);
-        acl.grantPermission(contribution, token, token.MINT_TOKEN_ROLE());        
+        acl.grantPermission(contribution, token, token.MINT_TOKEN_ROLE());
         acl.setPermissionManager(root, token, token.MINT_TOKEN_ROLE());
 
 
