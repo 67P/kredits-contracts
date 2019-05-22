@@ -25,11 +25,6 @@ Each of the aragon apps are separate packages:
 
 You can use `npm run install-all` to install all app dependencies at once.
 
-We also recommend using our git hooks for linting staged files and other
-convenient helpers. You can install them via:
-
-    $ npm run setup
-
 ### Local development chain
 
 For local development it is recommended to use

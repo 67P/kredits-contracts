@@ -1,2 +1,2 @@
 #!/bin/sh
-cp scripts/git-hooks/pre-commit .git/hooks
+cp -f scripts/git-hooks/pre-commit .git/hooks
