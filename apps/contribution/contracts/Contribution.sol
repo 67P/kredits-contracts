@@ -118,11 +118,11 @@ contract Contribution is AragonApp {
   // Custom functions
   //
 
-  function totalKreditsEarned(bool confirmedOnly) public view returns (uint256 count) {
+  function totalKreditsEarned(bool confirmedOnly) public view returns (uint256 amount) {
     for (uint32 i = 1; i <= contributionsCount; i++) {
       ContributionData memory c = contributions[i];
-      if (block.number >= c.confirmedAtBlock || !confirmedOnly) {
-        count += c.amount; // should use safemath
+      if (!c.vetoed && (block.number >= c.confirmedAtBlock || !confirmedOnly)) {
+        amount += c.amount; // should use safemath
       }
     }
   }
@@ -132,7 +132,7 @@ contract Contribution is AragonApp {
     for (uint256 i = 0; i < tokenCount; i++) {
       uint32 cId = ownedContributions[contributorId][i];
       ContributionData memory c = contributions[cId];
-      if (block.number >= c.confirmedAtBlock || !confirmedOnly) {
+      if (!c.vetoed && (block.number >= c.confirmedAtBlock || !confirmedOnly)) {
         amount += c.amount; // should use safemath
       }
     }
