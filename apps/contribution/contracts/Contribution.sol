@@ -118,7 +118,7 @@ contract Contribution is AragonApp {
   // Custom functions
   //
 
-  function totalKreditsEarned(bool confirmedOnly) public view returns (uint256 amount) {
+  function totalKreditsEarned(bool confirmedOnly) public view returns (uint32 amount) {
     for (uint32 i = 1; i <= contributionsCount; i++) {
       ContributionData memory c = contributions[i];
       if (!c.vetoed && (block.number >= c.confirmedAtBlock || !confirmedOnly)) {
