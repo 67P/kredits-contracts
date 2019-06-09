@@ -8,7 +8,6 @@
   },
   "scripts": {
     "install-all": "./scripts/every-app.sh \"npm install\"",
-    "postinstall": "sh scripts/git-hooks/install",
     "build-json": "npm run compile-contracts && node ./scripts/build-json.js",
     "repl": "truffle exec scripts/repl.js",
     "seeds": "truffle exec scripts/seeds.js",
@@ -24,7 +23,8 @@
     "lint:contracts": "solhint \"contracts/**/*.sol\" \"apps/*/contracts/**/*.sol\"",
     "lint:contract-tests": "eslint apps/*/test",
     "lint:wrapper": "eslint lib/",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "setup-git-hooks": "sh scripts/git-hooks/install"
   },
   "repository": {
     "type": "git",
