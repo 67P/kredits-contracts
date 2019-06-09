@@ -20,8 +20,9 @@ module.exports = async function(callback) {
 
   try {
     let blockNumber = await kredits.provider.getBlockNumber();
-    let contributions = await kredits.Contribution.all();
+    let contributions = await kredits.Contribution.all({page: {size: 1000}});
 
+    let kreditsSum = 0;
     console.log(`Current block number: ${blockNumber}`);
     contributions.forEach((c) => {
       const confirmed = c.confirmedAtBlock <= blockNumber;
@@ -40,8 +41,9 @@ module.exports = async function(callback) {
 
     console.log(table.toString());
 
-    let totalKreditsEarned = await kredits.Contribution.functions.totalKreditsEarned(true);
-    console.log(`Total confirmed kredits: ${totalKreditsEarned}`);
+    let totalKreditsEarnedUnConfirmed = await kredits.Contribution.functions.totalKreditsEarned(false);
+    let totalKreditsEarnedConfirmed = await kredits.Contribution.functions.totalKreditsEarned(true);
+    console.log(`Total Kredits: ${totalKreditsEarnedConfirmed} (confirmed) | ${totalKreditsEarnedUnConfirmed} (including unconfirmed)`);
   } catch (err) {
     console.log(err);
   }
