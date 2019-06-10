@@ -7,18 +7,14 @@ sudo: false
 dist: xenial
 
 cache:
-  yarn: true
-
-before_install:
-  - curl -o- -L https://yarnpkg.com/install.sh | bash
-  - export PATH=$HOME/.yarn/bin:$PATH
+  npm: true
 
 install:
-  - yarn install --no-lockfile --non-interactive
+  - npm install
 
 script:
-  - yarn lint:wrapper
-  - yarn lint:contract-tests
+  - npm run lint:wrapper
+  - npm run lint:contract-tests
   # - yarn lint:contracts
 
 branches:
