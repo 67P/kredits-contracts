@@ -1,53 +1,7 @@
 //const Kredits = require('kredits-contracts');
+//const Kredits = require('kredits-contracts/utils/ipfs-pinner');
 const Kredits = require('../lib/kredits');
-const multihashes = require('multihashes');
-
-async function pinContributor (kredits, id) {
-  const data = await kredits.Contributor.functions.getContributorById(id);
-  const ipfsHash = multihashes.toB58String(kredits.ipfs.encodeHash(data));
-  console.log(`Pinning Contributor ${id} ${ipfsHash}`);
-  kredits.ipfs._ipfsAPI.pin.add(ipfsHash, (err) => {
-    if (err) {
-      console.log(`Failed to pin ${ipfsHash}`);
-      console.log(err);
-    }
-  });
-}
-
-async function pinContribution (kredits, id) {
-  const data = await kredits.Contribution.functions.getContribution(id);
-  const ipfsHash = multihashes.toB58String(kredits.ipfs.encodeHash(data));
-  console.log(`Pinning Contribution ${id} ${ipfsHash}`);
-  kredits.ipfs._ipfsAPI.pin.add(ipfsHash, (err) => {
-    if (err) {
-      console.log(`Failed to pin ${ipfsHash}`);
-      console.log(err);
-    }
-  });
-}
-
-async function all (kredits) {
-  const contributionCount = await kredits.Contribution.count;
-  for (let id=1; id<=contributionCount; id++) {
-    pinContribution(kredits, id);
-  }
-  const contributorCount = await kredits.Contributor.count;
-  for (let id=1; id<=contributorCount; id++) {
-    pinContributor(kredits, id);
-  }
-}
-
-function subscribe (kredits) {
-  kredits.Contribution.on('ContributionAdded', async (id) => {
-    pinContribution(kredits, id);
-  });
-  kredits.Contributor.on('ContributorAdded', async (id) => {
-    pinContribution(kredits, id);
-  });
-  kredits.Contributor.on('ContributorProfileUpdated', async (id) => {
-    pinContributor(kredits, id);
-  });
-}
+const IpfsPinner = require('../lib/utils/ipfs-pinner');
 
 const network = process.env.ETH_NETWORK || 'rinkeby';
 const rpcUrl = process.env.ETH_RPC_URL;
@@ -60,8 +14,13 @@ const ipfsConfig = {
 
 console.log(`Using IPFS:`, ipfsConfig);
 
-Kredits.for({ network, rpcUrl }, { apm, ipfsConfig }).init().then(async (kredits) => {
-  all(kredits);
-  subscribe (kredits);
-  console.log(`Subscribed to new events for DAO: ${kredits.Kernel.contract.address}`);
+Kredits.for({ network, rpcUrl }, { apm, ipfsConfig }).init().then(kredits => {
+  const ipfsPinner = new IpfsPinner(kredits);
+  ipfsPinner.pinAll().then(pins => {
+    console.log('Pinned', JSON.stringify(pins, null, 2));
+  });
+  ipfsPinner.monitor((pin) => {
+    console.log('Pinned', JSON.stringify(pin));
+  });
+  console.log(`Subscribed to DAO: ${kredits.Kernel.contract.address}`);
 });
