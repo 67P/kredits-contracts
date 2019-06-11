@@ -52,8 +52,15 @@ function subscribe (kredits) {
 const network = process.env.ETH_NETWORK || 'rinkeby';
 const rpcUrl = process.env.ETH_RPC_URL;
 const apm = process.env.APM_DOMAIN || 'open.aragonpm.eth';
+const ipfsConfig = {
+  host: process.env.IPFS_HOST || 'localhost',
+  port: process.env.IPFS_PORT || '5001',
+  protocol: process.env.IPFS_PROTOCOL || 'http'
+};
 
-Kredits.for({ network, rpcUrl }, { apm }).init().then(async (kredits) => {
+console.log(`Using IPFS:`, ipfsConfig);
+
+Kredits.for({ network, rpcUrl }, { apm, ipfsConfig }).init().then(async (kredits) => {
   all(kredits);
   subscribe (kredits);
   console.log(`Subscribed to new events for DAO: ${kredits.Kernel.contract.address}`);
