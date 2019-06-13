@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "dependencies": {
-    "@aragon/os": "^4.1.0",
-    "@aragon/cli": "^5.5.0"
+    "@aragon/os": "^4.2.0",
+    "@aragon/cli": "^5.9.6"
   },
   "devDependencies": {},
   "scripts": {
