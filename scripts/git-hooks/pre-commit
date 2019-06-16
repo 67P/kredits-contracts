@@ -1,0 +1,17 @@
+#!/bin/sh
+#
+# Run appropriate linter against staged files
+#
+if [ $(git diff --name-only --cached lib/ | wc -l) != 0 ]; then
+  ./node_modules/.bin/eslint lib/
+  if [ $? != 0 ]; then
+    exit 1
+  fi
+fi
+# TODO master not linted yet, uncomment this when ready
+# if [ $(git diff --name-only --cached contracts/ | wc -l) != 0 ]; then
+#   solhint contracts/**/*.sol && apps/*/contracts/**/*.sol
+#   if [ $? != 0 ]; then
+#     exit 1
+#   fi
+# fi

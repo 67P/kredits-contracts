@@ -1,12 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 
+const ethers = require('ethers');
 const fileInject = require('./helpers/file_inject.js');
 const getNetworkId = require('./helpers/networkid.js');
+const KreditsKit = require('../lib/kreditskit');
 
 const addressesPath = path.join(__dirname, '..', 'lib/addresses');
-
-const KreditsKit = artifacts.require('KreditsKit')
 
 module.exports = async function(callback) {
   const networkId = await getNetworkId(web3)
@@ -20,25 +20,21 @@ module.exports = async function(callback) {
   }
   console.log(`Using KreditsKit at: ${kreditsKitAddress}`);
 
-  let kreditsKit = KreditsKit.at(kreditsKitAddress)
+  const provider = new ethers.providers.Web3Provider(web3.currentProvider);
+  let signer = provider.getSigner();
 
-  kreditsKit.newInstance().then((ret) => {
-    console.log(ret.logs);
-    const installedEvents = ret.logs.filter(log => log.event === 'InstalledApp').map(log => log.args)
-    const deployEvents = ret.logs.filter(log => log.event === 'DeployInstance').map(log => log.args)
+  let kit = await new KreditsKit(provider, signer).init()
 
-    if (deployEvents.length > 1) {
-      callback(new Error("More than one DAO was deployed. Something is wrong"))
-    }
-    const daoAddress = deployEvents[0].dao;
+  // TODO: get rid of the hard coded gas limit
+  kit.newDAO({ gasLimit: 10000000 }).then(result => {
+    console.log(result);
+    fileInject(path.join(addressesPath, 'dao.json'), networkId, result.daoAddress)
 
-    fileInject(path.join(addressesPath, 'dao.json'), networkId, daoAddress)
-
-    console.log(`\n\nCreated new DAO at: ${daoAddress}`)
+    console.log(`\n\nCreated new DAO at: ${result.daoAddress}`)
 
     callback();
   }).catch((err) => {
-    console.log('failed to create a new instance')
+    console.log('failed to create a new DAO')
     callback(err)
   })
 }
