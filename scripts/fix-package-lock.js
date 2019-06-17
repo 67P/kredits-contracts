@@ -5,6 +5,7 @@
 // https://github.com/aragon/aragon-cli/blob/master/docs-internal/Dependencies.md#regenerate-the-lockfiles
 
 const fs = require('fs')
+const path = require('path')
 
 function replaceAll(string, mapObject) {
   const regex = new RegExp(Object.keys(mapObject).join('|'), 'gi')
@@ -21,11 +22,12 @@ async function fixLockfile(path, replacementMap) {
   const originalText = JSON.stringify(originalJson, null, 2)
   const fixedText = replaceAll(originalText, replacementMap)
   const fixedJson = JSON.parse(fixedText)
+  console.log('writing file', path);
   await fs.writeFileSync(path, JSON.stringify(fixedJson, null, 2))
 }
 //
 
-const LOCKFILE_PATH = '../package-lock.json'
+const LOCKFILE_PATH = path.join(__dirname, '..', 'package-lock.json')
 
 const replacementMap = {
   //
