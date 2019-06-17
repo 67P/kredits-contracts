@@ -8,6 +8,7 @@
   },
   "devDependencies": {
     "@aragon/test-helpers": "^1.1.0",
+    "eth-ens-namehash": "^2.0.8",
     "eth-gas-reporter": "^0.2.0",
     "ganache-cli": "^6.4.3",
     "solidity-coverage": "^0.5.11"
