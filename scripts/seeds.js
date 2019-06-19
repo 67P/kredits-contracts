@@ -18,14 +18,17 @@ module.exports = async function(callback) {
   each(seeds.funds, (address, next) => {
     console.log(`funding ${address} with 2 ETH`);
     try {
-      web3.eth.sendTransaction({
-        to: address,
-        value: web3.toWei(fundingAmount),
-        from: web3.eth.accounts[0]
-      }, result => next())
+      web3.eth.personal.getAccounts().then(accounts => {
+        web3.eth.personal.sendTransaction({
+          to: address,
+          from: accounts[0],
+          value: web3.utils.toWei(new web3.utils.BN(fundingAmount))
+        });
+      });
     } catch(e) {
       console.log('FAILED:', e);
     }
+    next();
   });
 
   each(seeds.contractCalls, (call, next) => {
