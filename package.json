@@ -8,6 +8,7 @@
   },
   "scripts": {
     "install-all": "./scripts/every-app.sh \"npm install\"",
+    "postshrinkwrap": "node scripts/fix-package-lock.js &>/dev/null || true",
     "build-json": "npm run compile-contracts && node ./scripts/build-json.js",
     "repl": "truffle exec scripts/repl.js",
     "seeds": "truffle exec scripts/seeds.js",
@@ -37,7 +38,7 @@
   },
   "homepage": "https://github.com/67P/truffle-kredits#readme",
   "devDependencies": {
-    "@aragon/cli": "^5.9.4",
+    "@aragon/cli": "^5.9.6",
     "@aragon/kits-base": "^1.0.0",
     "@aragon/os": "^4.2.0",
     "async-each-series": "^1.1.0",
