@@ -6,13 +6,17 @@
     "@aragon/os": "^4.2.0",
     "@aragon/cli": "^5.9.6"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@aragon/test-helpers": "^1.1.0",
+    "eth-gas-reporter": "^0.2.0",
+    "ganache-cli": "^6.4.3",
+    "solidity-coverage": "^0.5.11"
+  },
   "scripts": {
     "start": "npm run start:aragon:ipfs",
     "start:aragon:ipfs": "aragon run",
     "start:aragon:http": "aragon run --http localhost:8001 --http-served-from ./dist",
     "start:app": "",
-    "test": "aragon contracts test",
     "compile": "aragon contracts compile",
     "sync-assets": "",
     "build:app": "",
@@ -21,7 +25,11 @@
     "publish:patch": "aragon apm publish patch",
     "publish:minor": "aragon apm publish minor",
     "publish:major": "aragon apm publish major",
-    "versions": "aragon apm versions"
+    "versions": "aragon apm versions",
+    "test": "TRUFFLE_TEST=true PORT=7545 npm run ganache-cli:test",
+    "test:gas": "GAS_REPORTER=true npm test",
+    "coverage": "SOLIDITY_COVERAGE=true npm run ganache-cli:test",
+    "ganache-cli:test": "./node_modules/@aragon/test-helpers/ganache-cli.sh"
   },
   "keywords": []
 }
