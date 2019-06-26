@@ -1,13 +1,10 @@
 ---
 language: node_js
 node_js:
-  - "11"
+  - "lts/*"
 
 sudo: false
 dist: xenial
-
-cache:
-  npm: true
 
 install:
   - npm install
