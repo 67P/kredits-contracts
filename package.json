@@ -60,6 +60,7 @@
     "ethers": "^4.0.29",
     "ipfs-http-client": "^32.0.1",
     "kosmos-schemas": "^2.1.0",
+    "node-fetch": "^2.6.0",
     "tv4": "^1.3.0"
   },
   "keywords": [
