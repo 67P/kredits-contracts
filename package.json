@@ -12,7 +12,7 @@
     "build-json": "npm run compile-contracts && node ./scripts/build-json.js",
     "repl": "truffle exec scripts/repl.js",
     "seeds": "truffle exec scripts/seeds.js",
-    "compile-contracts": "aragon contracts compile --all",
+    "compile-contracts": "truffle compile --all",
     "bootstrap": "npm run reset:hard && npm run seeds",
     "reset": "npm run deploy:kit && npm run deploy:dao",
     "reset:hard": "npm run deploy:apps && npm run reset",
