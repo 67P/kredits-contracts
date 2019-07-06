@@ -1,4 +1,4 @@
-const namehash = require('eth-ens-namehash').hash;
+const namehash = require('ethers').utils.namehash;
 
 // eslint-disable-next-line no-undef
 const Contributor = artifacts.require("Contributor.sol");
