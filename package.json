@@ -18,7 +18,7 @@
     "reset:hard": "npm run deploy:apps && npm run reset",
     "deploy:kit": "npm run compile-contracts && aragon contracts exec scripts/deploy-kit.js",
     "deploy:dao": "aragon contracts exec scripts/new-dao.js",
-    "deploy:apps": "./scripts/every-app.sh \"aragon apm publish major\"",
+    "deploy:apps": "./scripts/every-app.sh \"aragon apm publish major --skip-confirmation\"",
     "devchain": "aragon devchain --port 7545",
     "dao:address": "truffle exec scripts/current-address.js",
     "lint:contracts": "solhint \"contracts/**/*.sol\" \"apps/*/contracts/**/*.sol\"",
@@ -41,7 +41,6 @@
   },
   "homepage": "https://github.com/67P/truffle-kredits#readme",
   "devDependencies": {
-    "@aragon/cli": "^5.9.6",
     "@aragon/kits-base": "^1.0.0",
     "@aragon/os": "^4.2.0",
     "async-each-series": "^1.1.0",
