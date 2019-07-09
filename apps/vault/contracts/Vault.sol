@@ -1,10 +1,18 @@
 pragma solidity ^0.4.24;
 
 import "@aragon/os/contracts/apps/AragonApp.sol";
+import "@aragon/os/contracts/kernel/IKernel.sol";
 import "@aragon/os/contracts/common/DepositableStorage.sol";
 import "@aragon/os/contracts/common/EtherTokenConstant.sol";
 import "@aragon/os/contracts/common/SafeERC20.sol";
 import "@aragon/os/contracts/lib/token/ERC20.sol";
+
+interface IContributor {
+}
+
+interface IToken {
+    function balanceOf(address owner) public view returns (uint256);
+}
 
 contract Vault is EtherTokenConstant, AragonApp, DepositableStorage {
     using SafeERC20 for ERC20;
@@ -13,6 +21,14 @@ contract Vault is EtherTokenConstant, AragonApp, DepositableStorage {
     string private constant ERROR_DEPOSIT_VALUE_ZERO = "VAULT_DEPOSIT_VALUE_ZERO";
     string private constant ERROR_VALUE_MISMATCH = "VAULT_VALUE_MISMATCH";
     string private constant ERROR_TOKEN_TRANSFER_FROM_REVERTED = "VAULT_TOKEN_TRANSFER_FROM_REVERT";
+
+    uint256 private _snapshotTotalSupply;
+
+    mapping (address => uint256) private _snapshotBalances;
+
+    // ensure alphabetic order
+    enum Apps { Contribution, Contributor, Proposal, Token }
+    bytes32[4] public appIds;
 
     event VaultDeposit(address indexed token, address indexed sender, uint256 amount);
 
@@ -24,9 +40,23 @@ contract Vault is EtherTokenConstant, AragonApp, DepositableStorage {
     * @notice Initialize Vault app
     * @dev As an AragonApp it needs to be initialized in order for roles (`auth` and `authP`) to work
     */
-    function initialize() external onlyInit {
+    function initialize(bytes32[4] _appIds) external onlyInit {
         initialized();
+
+        appIds = _appIds;
         setDepositable(true);
+    }
+
+    function getTokenContract() public view returns (address) {
+        IKernel k = IKernel(kernel());
+
+        return k.getApp(KERNEL_APP_ADDR_NAMESPACE, appIds[uint8(Apps.Token)]);
+    }
+
+    function getContributorContract() public view returns (address) {
+        IKernel k = IKernel(kernel());
+
+        return k.getApp(KERNEL_APP_ADDR_NAMESPACE, appIds[uint8(Apps.Contributor)]);
     }
 
     /**
