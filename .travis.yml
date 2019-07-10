@@ -12,6 +12,7 @@ install:
 script:
   - npm run lint:wrapper
   - npm run lint:contract-tests
+  - npm run devchain
   - npm test
 
 branches:

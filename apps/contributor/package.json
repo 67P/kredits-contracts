@@ -9,7 +9,8 @@
   "devDependencies": {
     "eth-gas-reporter": "^0.2.0",
     "ganache-cli": "^6.4.3",
-    "solidity-coverage": "^0.5.11"
+    "solidity-coverage": "^0.5.11",
+    "@aragon/test-helpers": "^1.0.0"
   },
   "scripts": {
     "start": "npm run start:aragon:ipfs",
@@ -25,7 +26,7 @@
     "publish:minor": "aragon apm publish minor",
     "publish:major": "aragon apm publish major",
     "versions": "aragon apm versions",
-    "test": "TRUFFLE_TEST=true PORT=7545 npm run ganache-cli:test",
+    "test": "aragon contracts test",
     "test:gas": "GAS_REPORTER=true npm test",
     "coverage": "SOLIDITY_COVERAGE=true npm run ganache-cli:test",
     "ganache-cli:test": "../../scripts/ganache-cli.sh"
