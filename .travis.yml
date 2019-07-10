@@ -12,7 +12,7 @@ install:
 script:
   - npm run lint:wrapper
   - npm run lint:contract-tests
-  # - yarn lint:contracts
+  - npm test
 
 branches:
   only:
