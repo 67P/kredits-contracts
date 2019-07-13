@@ -22,7 +22,7 @@ contract Vault is EtherTokenConstant, AragonApp, DepositableStorage {
     string private constant ERROR_VALUE_MISMATCH = "VAULT_VALUE_MISMATCH";
     string private constant ERROR_TOKEN_TRANSFER_FROM_REVERTED = "VAULT_TOKEN_TRANSFER_FROM_REVERT";
 
-    uint256 private _snapshotTotalSupply;
+    uint256 private _snapshotTotalBalance;
 
     mapping (address => uint256) private _snapshotBalances;
 
@@ -88,6 +88,7 @@ contract Vault is EtherTokenConstant, AragonApp, DepositableStorage {
         require(isDepositable(), ERROR_NOT_DEPOSITABLE);
         require(_value > 0, ERROR_DEPOSIT_VALUE_ZERO);
 
+        /*
         if (_token == ETH) {
             // Deposit is implicit in this case
             require(msg.value == _value, ERROR_VALUE_MISMATCH);
@@ -97,8 +98,14 @@ contract Vault is EtherTokenConstant, AragonApp, DepositableStorage {
                 ERROR_TOKEN_TRANSFER_FROM_REVERTED
             );
         }
+        */
 
-        emit VaultDeposit(_token, msg.sender, _value);
+        if (_token == ETH) {
+            // Deposit is implicit in this case
+            require(msg.value == _value, ERROR_VALUE_MISMATCH);
+
+            emit VaultDeposit(_token, msg.sender, _value);
+        }
     }
 
 }
