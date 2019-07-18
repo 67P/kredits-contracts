@@ -9,13 +9,10 @@ dist: xenial
 install:
   - npm install
 
-before_script:
-  - npm run devchain
-
 script:
   - npm run lint:wrapper
   - npm run lint:contract-tests
-  - npm test
+  - npm run devchain & travis_wait 60 npm test
 
 branches:
   only:
