@@ -66,8 +66,8 @@ contract('Contributor app', (accounts) => {
   
   });
 
-  describe("Owner default space permissions", async () => {
-    it('check owner is token issuer', async () => {
+  describe("Owner default permissions", async () => {
+    it('check owner is contributors manager', async () => {
       let manageContributorPermission = await acl.hasPermission(root, contributor.address, await contributor.MANAGE_CONTRIBUTORS_ROLE());
       // eslint-disable-next-line no-undef
       assert.equal(manageContributorPermission, true);
