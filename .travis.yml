@@ -6,6 +6,15 @@ node_js:
 sudo: false
 dist: xenial
 
+cache:
+  directories:
+    - node_modules
+    - apps/contribution/node_modules
+    - apps/contributor/node_modules
+    - apps/proposal/node_modules
+    - apps/token/node_modules
+    - apps/vault/node_modules
+
 install:
   - npm install
   - npm run install-all
@@ -13,7 +22,7 @@ install:
 script:
   - npm run lint:wrapper
   - npm run lint:contract-tests
-  - npm run devchain & travis_wait 60 npm test
+  - npm run devchain & travis_wait 60 npm run test:contributor
 
 branches:
   only:
