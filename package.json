@@ -45,6 +45,7 @@
     "@aragon/cli": "^5.9.6",
     "@aragon/kits-base": "^1.0.0",
     "@aragon/os": "^4.2.0",
+    "@aragon/test-helpers": "^1.0.0",
     "async-each-series": "^1.1.0",
     "cli-table": "^0.3.1",
     "eslint": "^5.16.0",
