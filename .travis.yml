@@ -21,7 +21,7 @@ install:
 script:
   - npm run lint:wrapper
   - npm run lint:contract-tests
-  - npm run devchain & travis_wait 60 npm run test:contributor
+  - npm run devchain & travis_wait 60 npm run test
 
 branches:
   only:
