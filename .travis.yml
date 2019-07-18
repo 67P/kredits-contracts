@@ -8,6 +8,7 @@ dist: xenial
 
 install:
   - npm install
+  - npm run install-all
 
 script:
   - npm run lint:wrapper
