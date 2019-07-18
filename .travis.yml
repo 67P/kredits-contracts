@@ -24,7 +24,7 @@ before_script:
 script:
   - npm run lint:wrapper
   - npm run lint:contract-tests
-  - travis_wait 60 npm run test
+  - npm run test
 
 branches:
   only:
