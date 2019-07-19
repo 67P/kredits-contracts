@@ -5,7 +5,8 @@ module.exports = async function(callback) {
   let amount = await promptly.prompt('Amount: ', {default: '1'});
   amount = parseInt(amount);
 
-  let fromAccount = web3.eth.accounts[0];
+  const accounts = await web3.eth.personal.getAccounts();
+  let fromAccount = accounts[0];
   let fromBalance = await web3.eth.getBalance(fromAccount);
   let recipientBalance = await web3.eth.getBalance(recipient);
 
@@ -13,11 +14,11 @@ module.exports = async function(callback) {
   console.log(`sender account balance ${fromAccount}: ${fromBalance}`);
   console.log(`recipient account balance ${recipient}: ${recipientBalance}`);
 
-  console.log(`\nsending ${amount} ETH from ${web3.eth.accounts[0]} to ${recipient}`);
+  console.log(`\nsending ${amount} ETH from ${accounts[0]} to ${recipient}`);
 
-  let transaction = await web3.eth.sendTransaction({to: recipient, value: web3.toWei(amount), from: web3.eth.accounts[0]});
+  let transaction = await web3.eth.sendTransaction({to: recipient, value: web3.utils.toWei(new web3.utils.BN(amount)), from: accounts[0]});
 
-  console.log(`transaction id: ${transaction}`);
+  console.log(`transaction id: ${transaction.transactionHash}`);
 
   recipientBalance = await web3.eth.getBalance(recipient);
   console.log(`\nnew recipient account balance ${recipient}: ${recipientBalance}`);
