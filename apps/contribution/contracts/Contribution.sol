@@ -60,23 +60,18 @@ contract Contribution is AragonApp {
     initialized();
   }
 
-  // TODO refactor into a single function
-  function getTokenContract() public view returns (address) {
+  function getContract(uint8 appId) public view returns (address) {
     IKernel k = IKernel(kernel());
-    return k.getApp(KERNEL_APP_ADDR_NAMESPACE, appIds[uint8(Apps.Token)]);
-  }
-  function getContributorContract() public view returns (address) {
-    IKernel k = IKernel(kernel());
-    return k.getApp(KERNEL_APP_ADDR_NAMESPACE, appIds[uint8(Apps.Contributor)]);
+    return k.getApp(KERNEL_APP_ADDR_NAMESPACE, appIds[appId]);
   }
 
   function getContributorIdByAddress(address contributorAccount) public view returns (uint32) {
-    address contributor = getContributorContract();
+    address contributor = getContract(uint8(Apps.Contributor));
     return ContributorInterface(contributor).getContributorIdByAddress(contributorAccount);
   }
 
   function getContributorAddressById(uint32 contributorId) public view returns (address) {
-    address contributor = getContributorContract();
+    address contributor = getContract(uint8(Apps.Contributor));
     return ContributorInterface(contributor).getContributorAddressById(contributorId);
   }
 
@@ -198,14 +193,14 @@ contract Contribution is AragonApp {
     require(block.number >= c.confirmedAtBlock, 'NOT_CLAIMABLE');
 
     c.claimed = true;
-    address token = getTokenContract();
+    address token = getContract(uint8(Apps.Token));
     address contributorAccount = getContributorAddressById(c.contributorId);
     uint256 amount = uint256(c.amount);
     IToken(token).mintFor(contributorAccount, amount, contributionId);
     emit ContributionClaimed(contributionId, c.contributorId, c.amount);
   }
 
-  function exists(uint32 contributionId) view public returns (bool) {
+  function exists(uint32 contributionId) public view returns (bool) {
     return contributions[contributionId].exists;
   }
 }

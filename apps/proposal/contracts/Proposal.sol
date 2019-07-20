@@ -51,16 +51,13 @@ contract Proposal is AragonApp {
     initialized();
   }
 
-  function getContributorContract() public view returns (address) {
-    return IKernel(kernel()).getApp(KERNEL_APP_ADDR_NAMESPACE, appIds[uint8(Apps.Contributor)]);
-  }
-
-  function getContributionContract() public view returns (address) {
-    return IKernel(kernel()).getApp(KERNEL_APP_ADDR_NAMESPACE, appIds[uint8(Apps.Contribution)]);
+  function getContract(uint8 appId) public view returns (address) {
+    IKernel k = IKernel(kernel());
+    return k.getApp(KERNEL_APP_ADDR_NAMESPACE, appIds[appId]);
   }
 
   function addProposal(uint32 contributorId, uint32 amount, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public isInitialized auth(ADD_PROPOSAL_ROLE) {
-    require(IContributor(getContributorContract()).exists(contributorId), 'CONTRIBUTOR_NOT_FOUND');
+    require(IContributor(getContract(uint8(Apps.Contributor))).exists(contributorId), 'CONTRIBUTOR_NOT_FOUND');
 
     uint32 proposalId = proposalsCount + 1;
     uint16 _votesNeeded = 1; //contributorsContract().coreContributorsCount() / 100 * 75;
@@ -69,10 +66,10 @@ contract Proposal is AragonApp {
     p.creatorAccount = msg.sender;
     p.contributorId = contributorId;
     p.amount = amount;
-    p.hashDigest  = hashDigest;
+    p.hashDigest = hashDigest;
     p.hashFunction = hashFunction;
-    p.hashSize =  hashSize;
-    p.votesCount =  0;
+    p.hashSize = hashSize;
+    p.votesCount = 0;
     p.votesNeeded = _votesNeeded;
     p.exists = true;
 
@@ -102,7 +99,7 @@ contract Proposal is AragonApp {
   function vote(uint32 proposalId) public isInitialized auth(VOTE_PROPOSAL_ROLE) {
     Proposal storage p = proposals[proposalId];
     require(!p.executed, 'ALREADY_EXECUTED');
-    uint32 voterId = IContributor(getContributorContract()).getContributorIdByAddress(msg.sender);
+    uint32 voterId = IContributor(getContract(uint8(Apps.Contributor))).getContributorIdByAddress(msg.sender);
     require(p.votes[voterId] != true, 'ALREADY_VOTED');
     p.voterIds.push(voterId);
     p.votes[voterId] = true;
@@ -126,7 +123,7 @@ contract Proposal is AragonApp {
     require(p.votesCount >= p.votesNeeded, 'MISSING_VOTES');
 
     p.executed = true;
-    IContribution(getContributionContract()).add(p.amount, p.contributorId, p.hashDigest, p.hashFunction, p.hashSize);
+    IContribution(getContract(uint8(Apps.Contribution))).add(p.amount, p.contributorId, p.hashDigest, p.hashFunction, p.hashSize);
     emit ProposalExecuted(proposalId, p.contributorId, p.amount);
   }
 
