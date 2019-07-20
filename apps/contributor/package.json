@@ -10,7 +10,7 @@
     "eth-gas-reporter": "^0.2.0",
     "ganache-cli": "^6.4.3",
     "solidity-coverage": "^0.5.11",
-    "@aragon/test-helpers": "^1.0.0"
+    "@aragon/test-helpers": "^2.0.0"
   },
   "scripts": {
     "start": "npm run start:aragon:ipfs",
