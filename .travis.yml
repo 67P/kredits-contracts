@@ -17,7 +17,6 @@ cache:
 
 install:
   - npm install
-  - npm run install-all
 
 before_script:
   - npm run devchain &
