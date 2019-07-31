@@ -6,6 +6,8 @@ import "./ERC20Token.sol";
 contract Token is ERC20Token, AragonApp {
   bytes32 public constant MINT_TOKEN_ROLE = keccak256("MINT_TOKEN_ROLE");
 
+  string private constant ERROR_INVALID_AMOUNT = "Amount should be greater than zero";
+
   // ensure alphabetic order
   enum Apps { Contribution, Contributor, Proposal, Token }
   bytes32[4] public appIds;
@@ -21,7 +23,7 @@ contract Token is ERC20Token, AragonApp {
   }
 
   function mintFor(address contributorAccount, uint256 amount, uint32 contributionId) public isInitialized auth(MINT_TOKEN_ROLE) {
-    require(amount > 0, "amount should be greater than zero");
+    require(amount > 0, ERROR_INVALID_AMOUNT);
 
     uint256 amountInWei = amount.mul(1 ether);
     _mint(contributorAccount, amountInWei);
