@@ -168,17 +168,17 @@ contract('Contribution app', (accounts) => {
       await contribution.add(amount, contributorId, hashDigest, hashFunction, hashSize, {from: root});
       let contributionCountAfter = await contribution.contributionsCount();
       // eslint-disable-next-line no-undef
-      assert.equal(contributionCountAfter.toNumber()-contributionCountBefore.toNumber(), 1);
+      assert.equal(contributionCountAfter.toNumber()-contributionCountBefore.toNumber(), 1, "contributions counter incremented");
       let contributionObject = await contribution.getContribution(contributionCountAfter.toNumber());
       // eslint-disable-next-line no-undef
-      assert.equal(contributionObject[1], contributorId);
+      assert.equal(contributionObject[1], contributorId, "contribution added belong to contributor id");
       let isExist = await contribution.exists(contributionCountAfter.toNumber());
       // eslint-disable-next-line no-undef
-      assert.equal(isExist, true);
+      assert.equal(isExist, true, "contribution exist");
     });
   });
 
-  describe("Veto/Claim contribution", async () => {
+  describe("Claim/Veto contribution", async () => {
 
     it("should revert when veto from address that does not have permission", async () => {
       let contributionId = await contribution.contributionsCount();
