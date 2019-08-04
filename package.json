@@ -16,7 +16,7 @@
     "bootstrap": "npm run reset:hard && npm run seeds",
     "reset": "npm run deploy:kit && npm run deploy:dao",
     "reset:hard": "npm run deploy:apps && npm run reset",
-    "deploy:kit": "npm run compile-contracts && aragon contracts exec scripts/deploy-kit.js",
+    "deploy:kit": "aragon contracts exec scripts/deploy-kit.js",
     "deploy:dao": "aragon contracts exec scripts/new-dao.js",
     "deploy:apps": "./scripts/every-app.sh \"aragon apm publish major\"",
     "devchain": "aragon devchain --port 7545",
