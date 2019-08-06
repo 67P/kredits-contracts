@@ -211,33 +211,6 @@ contract('Contribution app', (accounts) => {
     });
   });
 
-  describe("Claim/Veto contribution", async () => {
-
-    it("should revert when veto from address that does not have permission", async () => {
-      let contributionId = await contribution.contributionsCount();
-      return assertRevert(async () => {
-        await contribution.veto(contributionId.toNumber(), {from: member1});
-        'sender does not have permission to veto';
-      });
-    });
-
-    it("should revert when veto contribution that does not exist", async () => {
-      let contributionId = await contribution.contributionsCount();
-      return assertRevert(async () => {
-        await contribution.veto(contributionId.toNumber()+1, {from: root});
-        'contribution not found';
-      });
-    });
-
-    it("should revert when veto already claimed contribution", async () => {
-      let contributionId = await contribution.contributionsCount();
-      return assertRevert(async () => {
-        await contribution.veto(contributionId.toNumber(), {from: root});
-        'contribution already claimed';
-      });
-    });
-  });
-
   describe("Claim contribution", async () => {
     it("should revert when claim contribution that does not exist", async () => {
       let contributionId = await contribution.contributionsCount();
@@ -271,9 +244,7 @@ contract('Contribution app', (accounts) => {
       // eslint-disable-next-line no-undef
       assert(contributionObject[3], true);
     });
-  });
 
-  describe("Veto claimed contribution", async () => {
     it("should revert when claim already claimed contribution", async () => {
       let contributionId = await contribution.contributionsCount();
       return assertRevert(async () => {
@@ -281,5 +252,69 @@ contract('Contribution app', (accounts) => {
         'contribution already claimed';
       });
     });
+
   });
+
+  describe("Veto contribution", async () => {
+
+    // eslint-disable-next-line no-undef
+    beforeEach(async () =>{
+      let amount = 200;
+      let contributorId = 1;
+      let hashDigest = '0x0000000000000000000000000000000000000000000000000000000000000000';
+      let hashFunction = 1;
+      let hashSize = 1;
+  
+      await contribution.add(amount, contributorId, hashDigest, hashFunction, hashSize, {from: root});
+    });
+
+    it("veto contribution", async () => {
+      let contributionId = await contribution.contributionsCount();
+      await contribution.veto(contributionId.toNumber(), {from: root});
+      let contributionObject = await contribution.getContribution(contributionId.toNumber());
+      // eslint-disable-next-line no-undef
+      assert(contributionObject[9], true);
+    });
+
+    it("should revert when veto from address that does not have permission", async () => {
+      let contributionId = await contribution.contributionsCount();
+      return assertRevert(async () => {
+        await contribution.veto(contributionId.toNumber(), {from: member1});
+        'sender does not have permission to veto';
+      });
+    });
+
+    it("should revert when veto contribution that does not exist", async () => {
+      let contributionId = await contribution.contributionsCount();
+      return assertRevert(async () => {
+        await contribution.veto(contributionId.toNumber()+1, {from: root});
+        'contribution not found';
+      });
+    });
+
+    describe("Veto claimed contribution", async () => {
+      let contributionId = await contribution.contributionsCount();
+
+      // eslint-disable-next-line no-undef
+      before(async () => {
+        //Claim contribution
+        if(contributionId < 10) {
+          await timeTravel(100);
+        }
+        else {
+          await timeTravel(blocksToWait);
+        }
+        await mineBlock();
+        await contribution.claim(contributionId);
+      });
+      
+      it("should revert when veto already claimed contribution", async () => {  
+        return assertRevert(async () => {
+          await contribution.veto(contributionId.toNumber(), {from: root});
+          'contribution already claimed';
+        });
+      });  
+    });
+  });
+
 });
