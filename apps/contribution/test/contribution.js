@@ -10,13 +10,12 @@ const Token = artifacts.require("Token.sol");
 // eslint-disable-next-line no-undef
 const getContract = name => artifacts.require(name);
 const { assertRevert } = require('@aragon/test-helpers/assertThrow');
-// eslint-disable-next-line no-undef
-//const { timeTravel } = require('@aragon/test-helpers/timeTravel')(web3);
 
 const ZERO_ADDR = '0x0000000000000000000000000000000000000000';
 
 const timeTravel = function(time){
   return new Promise((resolve, reject) => {
+    // eslint-disable-next-line no-undef
     web3.currentProvider.sendAsync({
       jsonrpc: "2.0",
       method: "evm_increaseTime",
@@ -29,10 +28,11 @@ const timeTravel = function(time){
       return resolve(result);
     });
   });
-}
+};
 
 const mineBlock = function() {
   return new Promise((resolve, reject) => {
+    // eslint-disable-next-line no-undef
     web3.currentProvider.sendAsync({
       jsonrpc: "2.0",
       method: "evm_mine",
@@ -41,15 +41,6 @@ const mineBlock = function() {
     }, (err, result) => {
       if(err){ return reject(err); }
       return resolve(result);
-    });
-  })
-}
-
-const getBlockNumber = function() {
-  return new Promise((resolve, reject) => {
-    web3.eth.getBlockNumber(async (err, res) => {
-      if (err || !res) return reject(err);
-      resolve(res);
     });
   });
 };
