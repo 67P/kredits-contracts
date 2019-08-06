@@ -10,14 +10,56 @@ const Token = artifacts.require("Token.sol");
 // eslint-disable-next-line no-undef
 const getContract = name => artifacts.require(name);
 const { assertRevert } = require('@aragon/test-helpers/assertThrow');
+// eslint-disable-next-line no-undef
+//const { timeTravel } = require('@aragon/test-helpers/timeTravel')(web3);
 
 const ZERO_ADDR = '0x0000000000000000000000000000000000000000';
+
+const timeTravel = function(time){
+  return new Promise((resolve, reject) => {
+    web3.currentProvider.sendAsync({
+      jsonrpc: "2.0",
+      method: "evm_increaseTime",
+      params: [time], //86400 is num seconds in day
+      id: new Date().getSeconds(),
+    }, (err, result) => {
+      if(err) {
+        return reject(err);
+      }
+      return resolve(result);
+    });
+  });
+}
+
+const mineBlock = function() {
+  return new Promise((resolve, reject) => {
+    web3.currentProvider.sendAsync({
+      jsonrpc: "2.0",
+      method: "evm_mine",
+      params: [],
+      id: new Date().getSeconds(),
+    }, (err, result) => {
+      if(err){ return reject(err); }
+      return resolve(result);
+    });
+  })
+}
+
+const getBlockNumber = function() {
+  return new Promise((resolve, reject) => {
+    web3.eth.getBlockNumber(async (err, res) => {
+      if (err || !res) return reject(err);
+      resolve(res);
+    });
+  });
+};
 
 contract('Contribution app', (accounts) => {
   let kernelBase, aclBase, daoFactory, r, dao, acl, contribution, token, contributor;
 
   const root = accounts[0];
   const member1 = accounts[1];
+  const blocksToWait = 40320;
 
   // eslint-disable-next-line no-undef
   before(async () => {
@@ -163,7 +205,7 @@ contract('Contribution app', (accounts) => {
       });
     });
 
-    it("add contribution", async () => {
+    it("should add contribution", async () => {
       let contributionCountBefore = await contribution.contributionsCount();
       await contribution.add(amount, contributorId, hashDigest, hashFunction, hashSize, {from: root});
       let contributionCountAfter = await contribution.contributionsCount();
@@ -196,6 +238,16 @@ contract('Contribution app', (accounts) => {
       });
     });
 
+    it("should revert when veto already claimed contribution", async () => {
+      let contributionId = await contribution.contributionsCount();
+      return assertRevert(async () => {
+        await contribution.veto(contributionId.toNumber(), {from: root});
+        'contribution already claimed';
+      });
+    });
+  });
+
+  describe("Claim contribution", async () => {
     it("should revert when claim contribution that does not exist", async () => {
       let contributionId = await contribution.contributionsCount();
       return assertRevert(async () => {
@@ -204,26 +256,37 @@ contract('Contribution app', (accounts) => {
       });
     });
 
+    it("should revert when claim contribution before confirmation block", async () => {
+      let contributionId = await contribution.contributionsCount();
+      return assertRevert(async () => {
+        await contribution.claim(contributionId.toNumber(), {from: root});
+        'contribution not confirmed yet';
+      });
+    });
+
     it("claim contribution", async () => {
       let contributionId = await contribution.contributionsCount();
+
+      if(contributionId < 10) {
+        await timeTravel(100);
+      }
+      else {
+        await timeTravel(blocksToWait);
+      }
+      await mineBlock();
+
       await contribution.claim(contributionId);
       let contributionObject = await contribution.getContribution(contributionId.toNumber());
       // eslint-disable-next-line no-undef
       assert(contributionObject[3], true);
     });
+  });
 
+  describe("Veto claimed contribution", async () => {
     it("should revert when claim already claimed contribution", async () => {
       let contributionId = await contribution.contributionsCount();
       return assertRevert(async () => {
         await contribution.claim(contributionId.toNumber(), {from: root});
-        'contribution already claimed';
-      });
-    });
-
-    it("should revert when veto already claimed contribution", async () => {
-      let contributionId = await contribution.contributionsCount();
-      return assertRevert(async () => {
-        await contribution.veto(contributionId.toNumber(), {from: root});
         'contribution already claimed';
       });
     });
