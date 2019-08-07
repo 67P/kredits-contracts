@@ -31,7 +31,7 @@ For local development it is recommended to use
 [ganache](http://truffleframework.com/ganache/) to run a local development
 chain. Using the ganache simulator no full Ethereum node is required.
 
-We use the default aragon-cli devchain command to confgure and run a local
+We use the default aragon-cli devchain command to configure and run a local
 development ganache.
 
     $ npm run devchain (or aragon devchain --port 7545)
@@ -60,7 +60,7 @@ Ethereum RPC port.
         $ npm run deploy:kit
         $ npm run deploy:dao
 
-4. Execute seeds to create demo contributors, contributons, etc. (optional)
+4. Execute seeds to create demo contributors, contributions, etc. (optional)
 
         $ npm run seeds
 
@@ -163,7 +163,7 @@ Creates and configures a new DAO instance.
     or
     $ npm run deploy:dao
 
-KreditsKit address is load from `lib/addresses/KreditsKit.json` or can be
+KreditsKit address is loaded from `lib/addresses/KreditsKit.json` or can be
 configured through the `KREDITS_KIT` environment variable.
 
 ### deploy-apps.sh
@@ -198,7 +198,7 @@ make sure all apps and the KreditsKit are deployed, then create a new DAO:
 
 ## Upgradeable contracts
 
-We use aragonOS for upgradeablity of the different contracts.  Refer to the
+We use aragonOS for upgradeability of the different contracts.  Refer to the
 [aragonOS upgradeablity documentation](https://hack.aragon.org/docs/upgradeability-intro)
 for more details.
 
