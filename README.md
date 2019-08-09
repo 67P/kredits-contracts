@@ -38,7 +38,7 @@ Aragon CLI and Truffle need to be installed on your sytem as well:
 
 For local development it is recommended to use
 [ganache](http://truffleframework.com/ganache/) to run a local development
-chain. Using the ganache simulator no full Ethereum node is required.
+chain. When using the ganache simulator, no full Ethereum node is required.
 
 We use the default aragon-cli devchain command to configure and run a local
 development ganache.
@@ -51,6 +51,10 @@ To clear/reset the chain use (e.g. if you run out of funds on your devchain)
 
 We default to port 7545 for development to not get in conflict with the default
 Ethereum RPC port.
+
+You can also set certain ganache options to configure the devchain, for example
+if you want to increase the block time to 10 seconds you can add
+`--block-time=10`.
 
 ### Bootstrap
 
