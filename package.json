@@ -42,7 +42,6 @@
   },
   "homepage": "https://github.com/67P/truffle-kredits#readme",
   "devDependencies": {
-    "@aragon/cli": "^5.9.6",
     "@aragon/kits-base": "^1.0.0",
     "@aragon/os": "^4.2.0",
     "async-each-series": "^1.1.0",
