@@ -14,6 +14,8 @@ framework](http://truffleframework.com/) for some things.
 
 ### Installation
 
+#### App dependencies
+
 All requirements are defined in `package.json`.
 
     $ npm install
@@ -24,6 +26,13 @@ Each of the aragon apps are separate packages:
     $ npm install
 
 You can use `npm run install-all` to install all app dependencies at once.
+
+#### Sytem dependencies
+
+Aragon CLI and Truffle need to be installed on your sytem as well:
+
+    npm install -g @aragon/cli
+    npm install -g truffle
 
 ### Local development chain
 
