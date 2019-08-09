@@ -45,6 +45,16 @@ const mineBlock = function() {
   });
 };
 
+const getBlockNumber = function() {
+  return new Promise((resolve, reject) => {
+    // eslint-disable-next-line no-undef
+    web3.eth.getBlockNumber(async (err, res) => {
+      if (err || !res) return reject(err);
+      resolve(res);
+    });
+  });
+}
+
 contract('Contribution app', (accounts) => {
   let kernelBase, aclBase, daoFactory, r, dao, acl, contribution, token, contributor;
 
@@ -211,9 +221,52 @@ contract('Contribution app', (accounts) => {
     });
   });
 
+  describe("Veto contribution", async () => {
+    it("should revert when veto from address that does not have permission", async () => {
+      const contributionId = await contribution.contributionsCount();
+      return assertRevert(async () => {
+        await contribution.veto(contributionId.toNumber(), {from: member1});
+        'sender does not have permission to veto';
+      });
+    });
+
+    it("should revert when veto contribution that does not exist", async () => {
+      const contributionId = await contribution.contributionsCount();
+      return assertRevert(async () => {
+        await contribution.veto(contributionId.toNumber()+1, {from: root});
+        'contribution not found';
+      });
+    });
+
+    it("veto contribution", async () => {
+      const contributionId = await contribution.contributionsCount();
+      let contributionObject = await contribution.getContribution(contributionId.toNumber());
+      console.log("veto block: " + contributionObject[7]);
+      console.log("current block: " + await getBlockNumber());
+
+      await contribution.veto(contributionId.toNumber(), {from: root});
+      // eslint-disable-next-line no-undef
+      assert(contributionObject[9], true);
+    });
+  });
+
   describe("Claim contribution", async () => {
+    let contributionId;
+
+    // eslint-disable-next-line no-undef
+    before(async () =>{
+      let amount = 200;
+      let contributorId = 1;
+      let hashDigest = '0x0000000000000000000000000000000000000000000000000000000000000000';
+      let hashFunction = 1;
+      let hashSize = 1;
+  
+      await contribution.add(amount, contributorId, hashDigest, hashFunction, hashSize, {from: root});
+    
+      contributionId = await contribution.contributionsCount();
+    });
+
     it("should revert when claim contribution that does not exist", async () => {
-      let contributionId = await contribution.contributionsCount();
       return assertRevert(async () => {
         await contribution.claim(contributionId.toNumber()+1, {from: root});
         'contribution not found';
@@ -221,7 +274,6 @@ contract('Contribution app', (accounts) => {
     });
 
     it("should revert when claim contribution before confirmation block", async () => {
-      let contributionId = await contribution.contributionsCount();
       return assertRevert(async () => {
         await contribution.claim(contributionId.toNumber(), {from: root});
         'contribution not confirmed yet';
@@ -229,8 +281,6 @@ contract('Contribution app', (accounts) => {
     });
 
     it("claim contribution", async () => {
-      let contributionId = await contribution.contributionsCount();
-
       if(contributionId < 10) {
         await timeTravel(100);
       }
@@ -239,14 +289,16 @@ contract('Contribution app', (accounts) => {
       }
       await mineBlock();
 
-      await contribution.claim(contributionId);
       let contributionObject = await contribution.getContribution(contributionId.toNumber());
+      console.log("claim block: " + contributionObject[7]);
+      console.log("current block: " + await getBlockNumber());
+
+      await contribution.claim(contributionId);
       // eslint-disable-next-line no-undef
       assert(contributionObject[3], true);
     });
 
     it("should revert when claim already claimed contribution", async () => {
-      let contributionId = await contribution.contributionsCount();
       return assertRevert(async () => {
         await contribution.claim(contributionId.toNumber(), {from: root});
         'contribution already claimed';
@@ -255,66 +307,43 @@ contract('Contribution app', (accounts) => {
 
   });
 
-  describe("Veto contribution", async () => {
-
+  describe("Veto claimed contribution", async () => {
     // eslint-disable-next-line no-undef
-    beforeEach(async () =>{
+    before(async () => {
       let amount = 200;
       let contributorId = 1;
       let hashDigest = '0x0000000000000000000000000000000000000000000000000000000000000000';
       let hashFunction = 1;
       let hashSize = 1;
-  
+
+      const contributionIdBefore = await contribution.contributionsCount();
+
+      //add contribution
       await contribution.add(amount, contributorId, hashDigest, hashFunction, hashSize, {from: root});
-    });
 
-    it("veto contribution", async () => {
-      let contributionId = await contribution.contributionsCount();
-      await contribution.veto(contributionId.toNumber(), {from: root});
-      let contributionObject = await contribution.getContribution(contributionId.toNumber());
+      const contributionId = await contribution.contributionsCount();
       // eslint-disable-next-line no-undef
-      assert(contributionObject[9], true);
-    });
-
-    it("should revert when veto from address that does not have permission", async () => {
-      let contributionId = await contribution.contributionsCount();
-      return assertRevert(async () => {
-        await contribution.veto(contributionId.toNumber(), {from: member1});
-        'sender does not have permission to veto';
-      });
-    });
-
-    it("should revert when veto contribution that does not exist", async () => {
-      let contributionId = await contribution.contributionsCount();
-      return assertRevert(async () => {
-        await contribution.veto(contributionId.toNumber()+1, {from: root});
-        'contribution not found';
-      });
-    });
-
-    describe("Veto claimed contribution", async () => {
-      let contributionId = await contribution.contributionsCount();
-
-      // eslint-disable-next-line no-undef
-      before(async () => {
-        //Claim contribution
-        if(contributionId < 10) {
-          await timeTravel(100);
-        }
-        else {
-          await timeTravel(blocksToWait);
-        }
-        await mineBlock();
-        await contribution.claim(contributionId);
-      });
+      assert.equal(contributionId.toNumber()-contributionIdBefore.toNumber(), true, "contribution added");
       
-      it("should revert when veto already claimed contribution", async () => {  
-        return assertRevert(async () => {
-          await contribution.veto(contributionId.toNumber(), {from: root});
-          'contribution already claimed';
-        });
-      });  
+      //Claim contribution
+      if(contributionId < 10) {
+        await timeTravel(100);
+      }
+      else {
+        await timeTravel(blocksToWait);
+      }
+      await mineBlock();
+      await contribution.claim(contributionId);
     });
+    
+    it("should revert when veto already claimed contribution", async () => {  
+      const contributionId = await contribution.contributionsCount();
+
+      return assertRevert(async () => {
+        await contribution.veto(contributionId.toNumber(), {from: root});
+        'contribution already claimed';
+      });
+    });  
   });
 
 });
