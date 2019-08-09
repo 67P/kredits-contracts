@@ -16,6 +16,8 @@ cache:
     - apps/vault/node_modules
 
 install:
+  - npm install -g @aragon/cli
+  - npm install -g truffle
   - npm install
 
 before_script:
