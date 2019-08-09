@@ -22,11 +22,13 @@ install:
 
 before_script:
   - npm run devchain &
+  - ipfs daemon --offline &
 
 script:
   - npm run lint:wrapper
   - npm run lint:contract-tests
   - npm run test
+  - npm run bootstrap
 
 branches:
   only:
