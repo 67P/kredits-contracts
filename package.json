@@ -18,7 +18,7 @@
     "reset:hard": "npm run deploy:apps && npm run reset",
     "deploy:kit": "npm run compile-contracts && aragon contracts exec scripts/deploy-kit.js",
     "deploy:dao": "aragon contracts exec scripts/new-dao.js",
-    "deploy:apps": "./scripts/every-app.sh \"aragon apm publish major\"",
+    "deploy:apps": "./scripts/every-app.sh \"aragon apm publish major --propagate-content=false --build=false --prepublish=false --skip-confirmation\"",
     "devchain": "aragon devchain --port 7545",
     "dao:address": "truffle exec scripts/current-address.js",
     "lint:contracts": "solhint \"contracts/**/*.sol\" \"apps/*/contracts/**/*.sol\"",
