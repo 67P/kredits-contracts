@@ -1,3 +1,4 @@
+const ethers = require('ethers');
 const namehash = require('ethers').utils.namehash;
 
 // eslint-disable-next-line no-undef
@@ -45,17 +46,9 @@ const mineBlock = function() {
   });
 };
 
-const getBlockNumber = function() {
-  return new Promise((resolve, reject) => {
-    // eslint-disable-next-line no-undef
-    web3.eth.getBlockNumber(async (err, res) => {
-      if (err || !res) return reject(err);
-      resolve(res);
-    });
-  });
-}
-
 contract('Contribution app', (accounts) => {
+  // eslint-disable-next-line no-undef
+  let ethProvider = new ethers.providers.Web3Provider(web3.currentProvider);
   let kernelBase, aclBase, daoFactory, r, dao, acl, contribution, token, contributor;
 
   const root = accounts[0];
@@ -242,8 +235,7 @@ contract('Contribution app', (accounts) => {
       const contributionId = await contribution.contributionsCount();
       let contributionObject = await contribution.getContribution(contributionId.toNumber());
       console.log("veto block: " + contributionObject[7]);
-      console.log("current block: " + await getBlockNumber());
-
+      console.log("current block: " + await ethProvider.getBlockNumber());
       await contribution.veto(contributionId.toNumber(), {from: root});
       // eslint-disable-next-line no-undef
       assert(contributionObject[9], true);
@@ -291,7 +283,7 @@ contract('Contribution app', (accounts) => {
 
       let contributionObject = await contribution.getContribution(contributionId.toNumber());
       console.log("claim block: " + contributionObject[7]);
-      console.log("current block: " + await getBlockNumber());
+      console.log("current block: " + await ethProvider.getBlockNumber());
 
       await contribution.claim(contributionId);
       // eslint-disable-next-line no-undef
