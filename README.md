@@ -14,6 +14,8 @@ framework](http://truffleframework.com/) for some things.
 
 ### Installation
 
+#### App dependencies
+
 All requirements are defined in `package.json`.
 
     $ npm install
@@ -25,13 +27,20 @@ Each of the aragon apps are separate packages:
 
 You can use `npm run install-all` to install all app dependencies at once.
 
+#### Sytem dependencies
+
+Aragon CLI and Truffle need to be installed on your sytem as well:
+
+    npm install -g @aragon/cli
+    npm install -g truffle
+
 ### Local development chain
 
 For local development it is recommended to use
 [ganache](http://truffleframework.com/ganache/) to run a local development
-chain. Using the ganache simulator no full Ethereum node is required.
+chain. When using the ganache simulator, no full Ethereum node is required.
 
-We use the default aragon-cli devchain command to confgure and run a local
+We use the default aragon-cli devchain command to configure and run a local
 development ganache.
 
     $ npm run devchain (or aragon devchain --port 7545)
@@ -42,6 +51,10 @@ To clear/reset the chain use (e.g. if you run out of funds on your devchain)
 
 We default to port 7545 for development to not get in conflict with the default
 Ethereum RPC port.
+
+You can also set certain ganache options to configure the devchain, for example
+if you want to increase the block time to 10 seconds you can add
+`--block-time=10`.
 
 ### Bootstrap
 
@@ -60,7 +73,7 @@ Ethereum RPC port.
         $ npm run deploy:kit
         $ npm run deploy:dao
 
-4. Execute seeds to create demo contributors, contributons, etc. (optional)
+4. Execute seeds to create demo contributors, contributions, etc. (optional)
 
         $ npm run seeds
 
@@ -163,7 +176,7 @@ Creates and configures a new DAO instance.
     or
     $ npm run deploy:dao
 
-KreditsKit address is load from `lib/addresses/KreditsKit.json` or can be
+KreditsKit address is loaded from `lib/addresses/KreditsKit.json` or can be
 configured through the `KREDITS_KIT` environment variable.
 
 ### deploy-apps.sh
@@ -198,7 +211,7 @@ make sure all apps and the KreditsKit are deployed, then create a new DAO:
 
 ## Upgradeable contracts
 
-We use aragonOS for upgradeablity of the different contracts.  Refer to the
+We use aragonOS for upgradeability of the different contracts.  Refer to the
 [aragonOS upgradeablity documentation](https://hack.aragon.org/docs/upgradeability-intro)
 for more details.
 
