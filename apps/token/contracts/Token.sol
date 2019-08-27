@@ -7,12 +7,12 @@ contract Token is ERC20Token, AragonApp {
   bytes32 public constant MINT_TOKEN_ROLE = keccak256("MINT_TOKEN_ROLE");
 
   // ensure alphabetic order
-  enum Apps { Contribution, Contributor, Proposal, Token }
-  bytes32[4] public appIds;
+  enum Apps { Contribution, Contributor, Proposal, Token, Vault }
+  bytes32[5] public appIds;
 
   event LogMint(address indexed recipient, uint256 amount, uint32 contributionId);
 
-  function initialize(bytes32[4] _appIds) public onlyInit {
+  function initialize(bytes32[5] _appIds) public onlyInit {
     appIds = _appIds;
     name = 'Kredits';
     symbol = '₭S';

@@ -28,14 +28,14 @@ contract Contributor is AragonApp {
   uint32 public contributorsCount;
 
   // ensure alphabetic order
-  enum Apps { Contribution, Contributor, Proposal, Token }
-  bytes32[4] public appIds;
+  enum Apps { Contribution, Contributor, Proposal, Token, Vault }
+  bytes32[5] public appIds;
 
   event ContributorProfileUpdated(uint32 id, bytes32 oldHashDigest, bytes32 newHashDigest); // what should be logged
   event ContributorAccountUpdated(uint32 id, address oldAccount, address newAccount);
   event ContributorAdded(uint32 id, address account);
 
-  function initialize(address root,bytes32[4] _appIds) public onlyInit {
+  function initialize(address root, bytes32[5] _appIds) public onlyInit {
     appIds = _appIds;
 
     initialized();

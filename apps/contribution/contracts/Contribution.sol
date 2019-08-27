@@ -21,8 +21,8 @@ contract Contribution is AragonApp {
   bytes32 public constant KERNEL_APP_ADDR_NAMESPACE = 0xd6f028ca0e8edb4a8c9757ca4fdccab25fa1e0317da1188108f7d2dee14902fb;
 
   // ensure alphabetic order
-  enum Apps { Contribution, Contributor, Proposal, Token }
-  bytes32[4] public appIds;
+  enum Apps { Contribution, Contributor, Proposal, Token, Vault }
+  bytes32[5] public appIds;
 
   struct ContributionData {
     uint32 contributorId;
@@ -54,7 +54,7 @@ contract Contribution is AragonApp {
   event ContributionClaimed(uint32 id, uint32 indexed contributorId, uint32 amount);
   event ContributionVetoed(uint32 id, address vetoedByAccount);
 
-  function initialize(bytes32[4] _appIds) public onlyInit {
+  function initialize(bytes32[5] _appIds) public onlyInit {
     appIds = _appIds;
     blocksToWait = 40320; // 7 days; 15 seconds block time
     initialized();

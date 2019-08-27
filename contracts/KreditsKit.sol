@@ -6,6 +6,8 @@ import "@aragon/os/contracts/acl/ACL.sol";
 
 import "@aragon/kits-base/contracts/KitBase.sol";
 
+import "@aragon/apps-vault/contracts/Vault.sol";
+
 import "../apps/contribution/contracts/Contribution.sol";
 import "../apps/contributor/contracts/Contributor.sol";
 import "../apps/token/contracts/Token.sol";
@@ -14,13 +16,13 @@ import "../apps/proposal/contracts/Proposal.sol";
 contract KreditsKit is KitBase  {
 
     // ensure alphabetic order
-    enum Apps { Contribution, Contributor, Proposal, Token }
-    bytes32[4] public appIds;
+    enum Apps { Contribution, Contributor, Proposal, Token, Vault }
+    bytes32[5] public appIds;
 
     event DeployInstance(address dao);
     event InstalledApp(address dao, address appProxy, bytes32 appId);
 
-    constructor (DAOFactory _fac, ENS _ens, bytes32[4] _appIds) public KitBase(_fac, _ens) {
+    constructor (DAOFactory _fac, ENS _ens, bytes32[5] _appIds) public KitBase(_fac, _ens) {
       appIds = _appIds;
     }
 
@@ -43,6 +45,9 @@ contract KreditsKit is KitBase  {
 
         Proposal proposal = Proposal(_installApp(dao, appIds[uint8(Apps.Proposal)]));
         proposal.initialize(appIds);
+
+        Vault vault = Vault(_installApp(dao, appIds[uint8(Apps.Vault)]));
+        vault.initialize();
 
         acl.createPermission(root, contribution, contribution.ADD_CONTRIBUTION_ROLE(), this);
         acl.createPermission(root, contribution, contribution.VETO_CONTRIBUTION_ROLE(), this);
@@ -72,6 +77,10 @@ contract KreditsKit is KitBase  {
         acl.grantPermission(contribution, token, token.MINT_TOKEN_ROLE());
         acl.setPermissionManager(root, token, token.MINT_TOKEN_ROLE());
 
+        // Vault permissions
+        acl.createPermission(root, vault, vault.TRANSFER_ROLE(), this);
+        //TODO: grant rewards app permission to transfer funds
+        //acl.grantPermission(rewards, vault, vault.TRANSFER_ROLE());
 
         cleanupDAOPermissions(dao, acl, root);
 
