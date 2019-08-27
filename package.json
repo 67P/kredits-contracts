@@ -1,6 +1,6 @@
 {
   "name": "kredits-contracts",
-  "version": "5.3.0",
+  "version": "5.4.0",
   "description": "Ethereum contracts and npm wrapper for Kredits",
   "main": "./lib/kredits.js",
   "directories": {
@@ -12,19 +12,23 @@
     "build-json": "npm run compile-contracts && node ./scripts/build-json.js",
     "repl": "truffle exec scripts/repl.js",
     "seeds": "truffle exec scripts/seeds.js",
-    "compile-contracts": "aragon contracts compile --all",
+    "compile-contracts": "truffle compile --all",
     "bootstrap": "npm run reset:hard && npm run seeds",
     "reset": "npm run deploy:kit && npm run deploy:dao",
     "reset:hard": "npm run deploy:apps && npm run reset",
-    "deploy:kit": "npm run compile-contracts && aragon contracts exec scripts/deploy-kit.js",
+    "deploy:kit": "aragon contracts exec scripts/deploy-kit.js",
     "deploy:dao": "aragon contracts exec scripts/new-dao.js",
-    "deploy:apps": "./scripts/every-app.sh \"aragon apm publish major\"",
+    "deploy:apps": "./scripts/every-app.sh \"aragon apm publish major --propagate-content=false --build=false --prepublish=false --skip-confirmation\"",
     "devchain": "aragon devchain --port 7545",
     "dao:address": "truffle exec scripts/current-address.js",
     "lint:contracts": "solhint \"contracts/**/*.sol\" \"apps/*/contracts/**/*.sol\"",
     "lint:contract-tests": "eslint apps/*/test",
     "lint:wrapper": "eslint lib/",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run test:token && npm run test:contributor && npm run test:contribution && npm run test:proposal",
+    "test:token": "cd apps/token && npm run test",
+    "test:contributor": "cd apps/contributor && npm run test",
+    "test:contribution": "cd apps/contribution && npm run test",
+    "test:proposal": "cd apps/proposal && npm run test",
     "setup-git-hooks": "sh scripts/git-hooks/install"
   },
   "repository": {
@@ -38,7 +42,6 @@
   },
   "homepage": "https://github.com/67P/truffle-kredits#readme",
   "devDependencies": {
-    "@aragon/cli": "^5.9.6",
     "@aragon/kits-base": "^1.0.0",
     "@aragon/os": "^4.2.0",
     "async-each-series": "^1.1.0",
@@ -55,8 +58,9 @@
   },
   "dependencies": {
     "ethers": "^4.0.29",
-    "ipfs-http-client": "^32.0.1",
+    "ipfs-http-client": "^30.1.3",
     "kosmos-schemas": "^2.1.0",
+    "node-fetch": "^2.6.0",
     "tv4": "^1.3.0"
   },
   "keywords": [

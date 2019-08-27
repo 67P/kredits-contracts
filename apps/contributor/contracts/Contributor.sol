@@ -41,19 +41,12 @@ contract Contributor is AragonApp {
     initialized();
   }
 
-  function getTokenContract() public view returns (address) {
+  function getContract(uint8 appId) public view returns (address) {
     IKernel k = IKernel(kernel());
-
-    return k.getApp(KERNEL_APP_ADDR_NAMESPACE, appIds[uint8(Apps.Token)]);
+    return k.getApp(KERNEL_APP_ADDR_NAMESPACE, appIds[appId]);
   }
 
-  function getContributionContract() public view returns (address) {
-    IKernel k = IKernel(kernel());
-
-    return k.getApp(KERNEL_APP_ADDR_NAMESPACE, appIds[uint8(Apps.Contribution)]);
-  }
-
-  function coreContributorsCount() view public returns (uint32) {
+  function coreContributorsCount() public view returns (uint32) {
     uint32 count = 0;
     for (uint32 i = 1; i <= contributorsCount; i++) {
       if (isCoreTeam(i)) {
@@ -64,10 +57,13 @@ contract Contributor is AragonApp {
   }
 
   function updateContributorAccount(uint32 id, address oldAccount, address newAccount) public auth(MANAGE_CONTRIBUTORS_ROLE) {
+    require(newAccount != address(0), "invalid new account address");
+    require(getContributorAddressById(id) == oldAccount, "contributor does not exist");
+
     contributorIds[oldAccount] = 0;
     contributorIds[newAccount] = id;
     contributors[id].account = newAccount;
-    ContributorAccountUpdated(id, oldAccount, newAccount);
+    emit ContributorAccountUpdated(id, oldAccount, newAccount);
   }
 
   function updateContributorProfileHash(uint32 id, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public isInitialized auth(MANAGE_CONTRIBUTORS_ROLE) {
@@ -136,9 +132,9 @@ contract Contributor is AragonApp {
     hashFunction = c.hashFunction;
     hashSize = c.hashSize;
     isCore = isCoreTeam(id);
-    address token = getTokenContract();
+    address token = getContract(uint8(Apps.Token));
     balance = ITokenBalance(token).balanceOf(c.account);
-    address contribution = getContributionContract();
+    address contribution = getContract(uint8(Apps.Contribution));
     totalKreditsEarned = IContributionBalance(contribution).totalKreditsEarnedByContributor(_id, true);
     contributionsCount = IContributionBalance(contribution).balanceOf(c.account);
     exists = c.exists;

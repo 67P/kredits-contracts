@@ -6,13 +6,27 @@ node_js:
 sudo: false
 dist: xenial
 
+cache:
+  directories:
+    - node_modules
+    - apps/contribution/node_modules
+    - apps/contributor/node_modules
+    - apps/proposal/node_modules
+    - apps/token/node_modules
+    - apps/vault/node_modules
+
 install:
+  - npm install -g @aragon/cli
+  - npm install -g truffle
   - npm install
+
+before_script:
+  - npm run devchain &
 
 script:
   - npm run lint:wrapper
   - npm run lint:contract-tests
-  # - yarn lint:contracts
+  - npm run test
 
 branches:
   only:
