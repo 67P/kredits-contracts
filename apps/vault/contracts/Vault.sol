@@ -34,7 +34,6 @@ contract Vault is EtherTokenConstant, AragonApp, DepositableStorage {
   bytes32[4] public appIds;
 
   event VaultDeposit(address indexed token, address indexed sender, uint256 amount);
-  event VaultWithdraw(address indexed token, address indexed receiver, uint256 amount);
 
   function () external payable isInitialized {
     _deposit(ETH, msg.value);
@@ -101,17 +100,6 @@ contract Vault is EtherTokenConstant, AragonApp, DepositableStorage {
     _deposit(_token, _value);
   }
 
-  function withdraw(address _token) external payable isInitialized {
-    uint256 contributorFundPercentage = (balanceOf(msg.sender) * 100) / totalSupply();
-    //to check if sender is a contributor
-    require(contributorFundPercentage > 0, "Contributor have no fund");
-
-    uint256 contributorFund = (address(this).balance * contributorFundPercentage) / 100;
-    msg.sender.transfer(contributorFund);
-
-    emit VaultWithdraw(_token, msg.sender, contributorFund);
-  }
-
   function balance(address _token) public view returns (uint256) {
     if (_token == ETH) {
         return address(this).balance;
@@ -132,18 +120,6 @@ contract Vault is EtherTokenConstant, AragonApp, DepositableStorage {
     require(isDepositable(), ERROR_NOT_DEPOSITABLE);
     require(_value > 0, ERROR_DEPOSIT_VALUE_ZERO);
 
-    /*
-    if (_token == ETH) {
-        // Deposit is implicit in this case
-        require(msg.value == _value, ERROR_VALUE_MISMATCH);
-    } else {
-        require(
-            ERC20(_token).safeTransferFrom(msg.sender, address(this), _value),
-            ERROR_TOKEN_TRANSFER_FROM_REVERTED
-        );
-    }
-    */
-
     if (_token == ETH) {
         // Deposit is implicit in this case
         require(msg.value == _value, ERROR_VALUE_MISMATCH);
@@ -151,6 +127,11 @@ contract Vault is EtherTokenConstant, AragonApp, DepositableStorage {
         createSnapshot();
 
         emit VaultDeposit(_token, msg.sender, _value);
+    } else {
+      require(
+        ERC20(_token).safeTransferFrom(msg.sender, address(this), _value),
+        ERROR_TOKEN_TRANSFER_FROM_REVERTED
+      );
     }
   }
 
