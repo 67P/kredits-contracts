@@ -12,8 +12,11 @@ contract('DAO bare kit', (accounts) => {
   let address;
   let apps;
   let kernel;
-  let space;
-  let coin;
+  let contribution;
+  let contributor;
+  let proposal;
+  let token;
+  let vault;
 
   before(async () => {
     //apps id
