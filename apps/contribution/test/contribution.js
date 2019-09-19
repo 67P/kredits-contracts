@@ -1,5 +1,4 @@
 const namehash = require('ethers').utils.namehash;
-
 // eslint-disable-next-line no-undef
 const Contribution = artifacts.require("Contribution.sol");
 // eslint-disable-next-line no-undef
@@ -77,7 +76,6 @@ contract('Contribution app', (accounts) => {
     appsId[1] = namehash("kredits-contributor");
     appsId[2] = namehash("kredits-proposal");
     appsId[3] = namehash("kredits-token");
-
 
     //get new app instance from DAO
     let receipt = await dao.newAppInstance(
@@ -277,14 +275,12 @@ contract('Contribution app', (accounts) => {
     });
 
     it("claim contribution", async () => {
-      if(contributionId < 10) {
-        await timeTravel(100);
-      }
-      else {
+      if(contributionId > 10) {
         await timeTravel(blocksToWait);
+        await mineBlock();
       }
-      await mineBlock();
 
+      //Claim contribution
       await contribution.claim(contributionId);
       let contributionObject = await contribution.getContribution(contributionId.toNumber());
       // eslint-disable-next-line no-undef
@@ -299,44 +295,4 @@ contract('Contribution app', (accounts) => {
     });
 
   });
-
-  describe("Veto claimed contribution", async () => {
-    // eslint-disable-next-line no-undef
-    before(async () => {
-      let amount = 200;
-      let contributorId = 1;
-      let hashDigest = '0x0000000000000000000000000000000000000000000000000000000000000000';
-      let hashFunction = 1;
-      let hashSize = 1;
-
-      const contributionIdBefore = await contribution.contributionsCount();
-
-      //add contribution
-      await contribution.add(amount, contributorId, hashDigest, hashFunction, hashSize, {from: root});
-
-      const contributionId = await contribution.contributionsCount();
-      // eslint-disable-next-line no-undef
-      assert.equal(contributionId.toNumber()-contributionIdBefore.toNumber(), true, "contribution added");
-      
-      //Claim contribution
-      if(contributionId < 10) {
-        await timeTravel(100);
-      }
-      else {
-        await timeTravel(blocksToWait);
-      }
-      await mineBlock();
-      await contribution.claim(contributionId);
-    });
-    
-    it("should revert when veto already claimed contribution", async () => {  
-      const contributionId = await contribution.contributionsCount();
-
-      return assertRevert(async () => {
-        await contribution.veto(contributionId.toNumber(), {from: root});
-        'contribution already claimed';
-      });
-    });  
-  });
-
 });
