@@ -231,10 +231,18 @@ contract('Contribution app', (accounts) => {
 
     it("veto contribution", async () => {
       const contributionId = await contribution.contributionsCount();
-      let contributionObject = await contribution.getContribution(contributionId.toNumber());
-      await contribution.veto(contributionId.toNumber(), {from: root});
-      // eslint-disable-next-line no-undef
-      assert(contributionObject[9], true);
+      if(contributionId < 10) {
+        return assertRevert(async () => {
+          await contribution.veto(contributionId.toNumber(), {from: root});
+          'can not veto first 10 contribution';
+        });  
+      }
+      else {
+        await contribution.veto(contributionId.toNumber(), {from: root});
+        let contributionObject = await contribution.getContribution(contributionId.toNumber());
+        // eslint-disable-next-line no-undef
+        assert(contributionObject[9], true);  
+      }
     });
   });
 
@@ -277,9 +285,8 @@ contract('Contribution app', (accounts) => {
       }
       await mineBlock();
 
-      let contributionObject = await contribution.getContribution(contributionId.toNumber());
-
       await contribution.claim(contributionId);
+      let contributionObject = await contribution.getContribution(contributionId.toNumber());
       // eslint-disable-next-line no-undef
       assert(contributionObject[3], true);
     });
