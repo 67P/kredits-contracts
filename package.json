@@ -24,7 +24,7 @@
     "lint:contracts": "solhint \"contracts/**/*.sol\" \"apps/*/contracts/**/*.sol\"",
     "lint:contract-tests": "eslint apps/*/test",
     "lint:wrapper": "eslint lib/",
-    "test": "npm run test:token && npm run test:contributor && npm run test:contribution && npm run test:proposal",
+    "test": "npm run test:token && npm run test:contributor && npm run test:contribution && npm run test:proposal && npm run test:kit",
     "test:token": "cd apps/token && npm run test",
     "test:contributor": "cd apps/contributor && npm run test",
     "test:contribution": "cd apps/contribution && npm run test",
