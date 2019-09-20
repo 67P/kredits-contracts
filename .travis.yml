@@ -30,7 +30,6 @@ script:
   - npm run test:contributor
   - npm run test:contribution
   - npm run test:proposal
-  - npm run test:kit
 
 branches:
   only:
