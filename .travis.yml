@@ -15,21 +15,25 @@ cache:
     - apps/token/node_modules
     - apps/vault/node_modules
 
+env:
+  - TASK=lint:wrapper
+  - TASK=lint:contract-tests
+  - TASK=test:token
+  - TASK=test:contributor
+  - TASK=test:contribution
+  - TASK=test:proposal
+
 install:
   - npm install -g @aragon/cli
   - npm install -g truffle
   - npm install
 
 before_script:
-  - npm run devchain &
+  - npm run devchain > /dev/null &
+  - sleep 5
 
 script:
-  - npm run lint:wrapper
-  - npm run lint:contract-tests
-  - npm run test:token
-  - npm run test:contributor
-  - npm run test:contribution
-  - npm run test:proposal
+  - travis_wait 60 npm run $TASK
 
 branches:
   only:
