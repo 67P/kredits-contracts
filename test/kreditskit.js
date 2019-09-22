@@ -1,7 +1,6 @@
 /* eslint-disable no-undef */
 const namehash = require('ethers').utils.namehash;
 const KreditsKit = artifacts.require("KreditsKit.sol");
-const DAOFactory = artifacts.require('DAOFactory');
 const getContract = name => artifacts.require(name);
 const ZERO_ADDR = '0x0000000000000000000000000000000000000000';
 const arapp = require('../arapp.json');
@@ -25,13 +24,13 @@ contract('DAO bare kit', (accounts) => {
     appsId[1] = namehash("kredits-contributor");
     appsId[2] = namehash("kredits-proposal");
     appsId[3] = namehash("kredits-token");
-    appsId[4] = namehash("vault.aragonpm.eth");
+    appsId[4] = namehash("vault");
 
     const kernelBase = await getContract('Kernel').new(true); // petrify immediately
     const aclBase = await getContract('ACL').new();
     const daoFactory = await getContract('DAOFactory').new(kernelBase.address, aclBase.address, ZERO_ADDR);
     
-    kreditsKit = await KreditsKit.new(daoFactory, ENS_ADDRESS, appsId, { from: accounts[0] });
+    kreditsKit = await KreditsKit.new(ZERO_ADDR, ENS_ADDRESS, appsId, { from: accounts[0] });
   });
 
   describe("New DAO instance", () => {
@@ -57,15 +56,15 @@ contract('DAO bare kit', (accounts) => {
       apps[1].id.should.equal(namehash('kredits-contributor'));
       apps[0].id.should.equal(namehash('kredits-proposal'));
       apps[1].id.should.equal(namehash('kredits-token'));
-      apps[0].id.should.equal(namehash('vault.aragonpm.eth'));
+      apps[0].id.should.equal(namehash('vault'));
     });
 
     it('it should initialize apps', async () => {
       contribution = await getContract('Contribution').at(apps[0].proxy);
       contributor = await getContract('Contributor').at(apps[1].proxy);
-      proposal = await getContract('Proposal').at(apps[0].proxy);
-      token = await getContract('Token').at(apps[1].proxy);
-      vault = await getContract('Vault').at(apps[0].proxy);
+      proposal = await getContract('Proposal').at(apps[2].proxy);
+      token = await getContract('Token').at(apps[3].proxy);
+      vault = await getContract('Vault').at(apps[4].proxy);
       (await Promise.all([
         contribution.hasInitialized(),
         contributor.hasInitialized(),
