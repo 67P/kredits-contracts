@@ -9,7 +9,6 @@ const Token = artifacts.require("Token.sol");
 // eslint-disable-next-line no-undef
 const getContract = name => artifacts.require(name);
 const { assertRevert } = require('@aragon/test-helpers/assertThrow');
-
 const ZERO_ADDR = '0x0000000000000000000000000000000000000000';
 
 const timeTravel = function(time){
@@ -40,6 +39,16 @@ const mineBlock = function() {
     }, (err, result) => {
       if(err){ return reject(err); }
       return resolve(result);
+    });
+  });
+};
+
+const getBlockNumber = function() {
+  return new Promise((resolve, reject) => {
+    // eslint-disable-next-line no-undef
+    web3.eth.getBlockNumber(async (err, res) => {
+      if (err || !res) return reject(err);
+      resolve(res);
     });
   });
 };
@@ -249,14 +258,22 @@ contract('Contribution app', (accounts) => {
 
     // eslint-disable-next-line no-undef
     before(async () =>{
+      //add contributor
+      let account = root;
+      let contributorHashDigest = '0x0000000000000000000000000000000000000000000000000000000000000000';
+      let contributorHashFunction = 0;
+      let contributorHashSize = 0;
+      await contributor.addContributor(account, contributorHashDigest, contributorHashFunction, contributorHashSize);
+      // eslint-disable-next-line no-undef
+      assert.equal(await contributor.addressExists(account), true);
+
+      //add contribution
       let amount = 200;
-      let contributorId = 1;
-      let hashDigest = '0x0000000000000000000000000000000000000000000000000000000000000000';
-      let hashFunction = 1;
-      let hashSize = 1;
-  
-      await contribution.add(amount, contributorId, hashDigest, hashFunction, hashSize, {from: root});
-    
+      let contributorId = await contributor.getContributorIdByAddress(root);
+      let contributionHashDigest = '0x0000000000000000000000000000000000000000000000000000000000000000';
+      let contributionHashFunction = 1;
+      let contributionHashSize = 1;
+      await contribution.add(amount, contributorId.toNumber(), contributionHashDigest, contributionHashFunction, contributionHashSize, {from: root});
       contributionId = await contribution.contributionsCount();
     });
 
@@ -268,10 +285,12 @@ contract('Contribution app', (accounts) => {
     });
 
     it("should revert when claim contribution before confirmation block", async () => {
-      return assertRevert(async () => {
-        await contribution.claim(contributionId.toNumber(), {from: root});
-        'contribution not confirmed yet';
-      });
+      if(contributionId > 10) {
+        return assertRevert(async () => {
+          await contribution.claim(contributionId.toNumber(), {from: root});
+          'contribution not confirmed yet';
+        });
+      }
     });
 
     it("claim contribution", async () => {
