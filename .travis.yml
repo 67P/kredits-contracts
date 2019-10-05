@@ -29,7 +29,8 @@ install:
   - npm install
 
 before_script:
-  - npm run devchain &
+  - npm run devchain > /dev/null &
+  - sleep 5
 
 script:
   - travis_wait 60 npm run $TASK
