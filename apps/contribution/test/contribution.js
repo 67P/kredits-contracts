@@ -181,14 +181,32 @@ contract('Contribution app', (accounts) => {
       // eslint-disable-next-line no-undef
       assert.equal(mintTokenPermission, true);
     });
+
   });
 
   describe("Add contribution", async () => {
-    let amount = 100;
-    let contributorId = 1;
-    let hashDigest = '0x0000000000000000000000000000000000000000000000000000000000000000';
-    let hashFunction = 1;
-    let hashSize = 1;
+    // contributor detials
+    let account, contributorHashDigest, contributorHashFunction, contributorHashSize;
+    // contribution details
+    let amount, contributorId, hashDigest, hashFunction, hashSize;
+
+    // eslint-disable-next-line no-undef
+    before(async () => {
+      // Add contributor from Contributor app
+      account = root;
+      contributorHashDigest = '0x0000000000000000000000000000000000000000000000000000000000000000';
+      contributorHashFunction = 0;
+      contributorHashSize = 0;
+      await contributor.addContributor(account, contributorHashDigest, contributorHashFunction, contributorHashSize);
+      // eslint-disable-next-line no-undef
+      assert.equal(await contributor.addressExists(account), true);
+
+      amount = 100;
+      contributorId = await contributor.getContributorIdByAddress(root);
+      hashDigest = '0x0000000000000000000000000000000000000000000000000000000000000000';
+      hashFunction = 1;
+      hashSize = 1;  
+    });
 
     it("should revert when add contribution from address that does not have permission", async () => {
       return assertRevert(async () => {
@@ -212,7 +230,7 @@ contract('Contribution app', (accounts) => {
       assert.equal(contributionCountAfter.toNumber()-contributionCountBefore.toNumber(), 1, "contributions counter incremented");
       let contributionObject = await contribution.getContribution(contributionCountAfter.toNumber());
       // eslint-disable-next-line no-undef
-      assert.equal(contributionObject[1], contributorId, "contribution added belong to contributor id");
+      assert.equal(contributionObject[1].toNumber(), contributorId.toNumber(), "contribution added belong to contributor id");
       let isExist = await contribution.exists(contributionCountAfter.toNumber());
       // eslint-disable-next-line no-undef
       assert.equal(isExist, true, "contribution exist");
@@ -258,15 +276,6 @@ contract('Contribution app', (accounts) => {
 
     // eslint-disable-next-line no-undef
     before(async () =>{
-      //add contributor
-      let account = root;
-      let contributorHashDigest = '0x0000000000000000000000000000000000000000000000000000000000000000';
-      let contributorHashFunction = 0;
-      let contributorHashSize = 0;
-      await contributor.addContributor(account, contributorHashDigest, contributorHashFunction, contributorHashSize);
-      // eslint-disable-next-line no-undef
-      assert.equal(await contributor.addressExists(account), true);
-
       //add contribution
       let amount = 200;
       let contributorId = await contributor.getContributorIdByAddress(root);
@@ -294,14 +303,20 @@ contract('Contribution app', (accounts) => {
     });
 
     it("claim contribution", async () => {
+      let contributionObject = await contribution.getContribution(contributionId.toNumber());
+      let confirmationBlock = contributionObject[7];
+      let chainBlockNumberBefore = await getBlockNumber();
+
       if(contributionId > 10) {
         await timeTravel(blocksToWait);
         await mineBlock();
+        let chainBlockNumberAfter = await getBlockNumber();
+        // eslint-disable-next-line no-undef
+        assert.equal(chainBlockNumberAfter.toNumber()-chainBlockNumberBefore.toNumber(), confirmationBlock.toNumber());
       }
-
       //Claim contribution
-      await contribution.claim(contributionId);
-      let contributionObject = await contribution.getContribution(contributionId.toNumber());
+      await contribution.claim(contributionId, {from: root});
+      contributionObject = await contribution.getContribution(contributionId.toNumber());
       // eslint-disable-next-line no-undef
       assert(contributionObject[3], true);
     });
