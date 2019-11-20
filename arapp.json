@@ -34,7 +34,9 @@
   "environments": {
     "development": {
       "network": "development",
-      "apm": "open.aragonpm.eth",
+      "apm": {
+        "open.aragonpm.eth"
+      },
       "registry": "0x5f6f7e8cc7346a11ca2def8f827b7a0b612c56a1",
       "appName": "dummy.open.aragonpm.eth"
     },
@@ -44,7 +46,9 @@
       "wsRPC": "wss://rinkeby.eth.aragon.network/ws",
       "daoFactory": "0x2298d27a9b847c681d2b2c2828ab9d79013f5f1d",
       "appName": "dummy.open.aragonpm.eth",
-      "apm": "open.aragonpm.eth"
+      "apm": {
+        "open.aragonpm.eth"
+      }
     },
     "kovan": {
       "network": "kovan",
@@ -53,7 +57,9 @@
     "default": {
       "network": "development",
       "appName": "dummy.aragonpm.eth",
-      "apm": "open.aragonpm.eth"
+      "apm": {
+        "open.aragonpm.eth"
+      }
     }
   },
   "path": "contracts/misc/DummyApp.sol"
