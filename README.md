@@ -170,8 +170,14 @@ Deploys a new KreditsKit that allows to create a new DAO
     or
     $ npm run deploy:kit
 
-`ENS` address is required as environment variable.
-`DAO_FACTORY` can optionally be set as environment variable. (see aragon)
+#### Kredits configuration options:
+
+Configuration options can be set in an environment specific `kredits` object in the `arapp.json` or using a CLI parameter.
+
+* daoFactory: Ethereum address of the used DAO Factory. On public networks we use [official aragon factories](https://github.com/aragon/deployments/tree/master/environments/)
+* apmDomain: the ENS domain of the aragonPM (normally `open.aragonpm.eth`)
+
+(please also see the [arapp.json related configuration options](https://hack.aragon.org/docs/cli-global-confg#the-arappjson-file))
 
 ### new-dao.js
 

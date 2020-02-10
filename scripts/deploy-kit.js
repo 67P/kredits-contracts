@@ -13,9 +13,18 @@ const KreditsKit = artifacts.require('KreditsKit')
 
 const arapp = require('../arapp.json')
 const environment = argv['network'] || argv['environment'] || 'development'
-const apm = arapp.environments[environment].apm || 'open.aragonpm.eth'
-const ensAddr = arapp.environments[environment].registry || process.env.ENS
-const daoFactoryAddress = arapp.environments[environment].daoFactory || process.env.DAO_FACTORY
+
+const kreditsArappConfig = (arapp.environments[environment].kredits || {}
+
+// typically we use the open.aragonpm.eth aragonpm.
+const apm = kreditsArappConfig.apmDomain || argv['apmDomain'] || 'open.aragonpm.eth'
+
+// daoFactory is environment specific.
+// See https://github.com/aragon/deployments/tree/master/environments/ for the official daoFactory
+// Locally we deploy our own daoFactory and no daoFactory is required (`daoFactoryAddress` is null).
+const daoFactoryAddress = kreditsArappConfig.daoFactory || argv['daoFactory']
+
+const ensAddr = arapp.environments[environment].registry || argv['ensAddress']
 
 
 module.exports = async function(callback) {
