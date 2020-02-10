@@ -63,21 +63,26 @@ if you want to increase the block time to 10 seconds you can add
         $ npm run devchain
         $ ipfs daemon
 
-2. Deploy each app to the devchain
+2. Compile contracts
+
+        (compiled contracts will be in `/build`)
+        $ npm run compile-contracts
+
+3. Deploy each app to the devchain
 
         (make sure you've run `npm install` for every app - see installation)
         $ npm run deploy:apps
 
-3. Deploy a new KreditsKit and create a new DAO with the latest app versions
+4. Deploy a new KreditsKit and create a new DAO with the latest app versions
 
         $ npm run deploy:kit
         $ npm run deploy:dao
 
-4. Execute seeds to create demo contributors, contributions, etc. (optional)
+5. Execute seeds to create demo contributors, contributions, etc. (optional)
 
         $ npm run seeds
 
-**Step 2-4 is also summarized in `npm run bootstrap`**
+**Step 2-5 is also summarized in `npm run bootstrap`**
 
 If you want to reset your local setup:
 

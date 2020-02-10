@@ -13,7 +13,7 @@ const KreditsKit = artifacts.require('KreditsKit')
 
 const arapp = require('../arapp.json')
 const environment = argv['network'] || argv['environment'] || 'development'
-const apm = arapp.environments[environment].apm
+const apm = arapp.environments[environment].apm || 'open.aragonpm.eth'
 const ensAddr = arapp.environments[environment].registry || process.env.ENS
 const daoFactoryAddress = arapp.environments[environment].daoFactory || process.env.DAO_FACTORY
 
