@@ -21,8 +21,8 @@ contract('Contributor app', (accounts) => {
     aclBase = await getContract('ACL').new();
     daoFactory = await getContract('DAOFactory').new(kernelBase.address, aclBase.address, ZERO_ADDR);
     r = await daoFactory.newDAO(root);
-    dao = getContract('Kernel').at(r.logs.filter(l => l.event == 'DeployDAO')[0].args.dao);
-    acl = getContract('ACL').at(await dao.acl());
+    dao = await getContract('Kernel').at(r.logs.filter(l => l.event == 'DeployDAO')[0].args.dao);
+    acl = await getContract('ACL').at(await dao.acl());
 
     //create dao mamnager permission for coin owner
     await acl.createPermission(
@@ -63,7 +63,7 @@ contract('Contributor app', (accounts) => {
       root,
       { from: root }
     );
-  
+
   });
 
   describe("Owner default permissions", async () => {
@@ -71,7 +71,7 @@ contract('Contributor app', (accounts) => {
       let manageContributorPermission = await acl.hasPermission(root, contributor.address, await contributor.MANAGE_CONTRIBUTORS_ROLE());
       // eslint-disable-next-line no-undef
       assert.equal(manageContributorPermission, true);
-    });  
+    });
   });
 
   describe("Add contributor", async () => {

@@ -63,21 +63,26 @@ if you want to increase the block time to 10 seconds you can add
         $ npm run devchain
         $ ipfs daemon
 
-2. Deploy each app to the devchain
+2. Compile contracts
+
+        (compiled contracts will be in `/build`)
+        $ npm run compile-contracts
+
+3. Deploy each app to the devchain
 
         (make sure you've run `npm install` for every app - see installation)
         $ npm run deploy:apps
 
-3. Deploy a new KreditsKit and create a new DAO with the latest app versions
+4. Deploy a new KreditsKit and create a new DAO with the latest app versions
 
         $ npm run deploy:kit
         $ npm run deploy:dao
 
-4. Execute seeds to create demo contributors, contributions, etc. (optional)
+5. Execute seeds to create demo contributors, contributions, etc. (optional)
 
         $ npm run seeds
 
-**Step 2-4 is also summarized in `npm run bootstrap`**
+**Step 2-5 is also summarized in `npm run bootstrap`**
 
 If you want to reset your local setup:
 
@@ -165,8 +170,14 @@ Deploys a new KreditsKit that allows to create a new DAO
     or
     $ npm run deploy:kit
 
-`ENS` address is required as environment variable.
-`DAO_FACTORY` can optionally be set as environment variable. (see aragon)
+#### Kredits configuration options:
+
+Configuration options can be set in an environment specific `kredits` object in the `arapp.json` or using a CLI parameter.
+
+* daoFactory: Ethereum address of the used DAO Factory. On public networks we use [official aragon factories](https://github.com/aragon/deployments/tree/master/environments/)
+* apmDomain: the ENS domain of the aragonPM (normally `open.aragonpm.eth`)
+
+(please also see the [arapp.json related configuration options](https://hack.aragon.org/docs/cli-global-confg#the-arappjson-file))
 
 ### new-dao.js
 

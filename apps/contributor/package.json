@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "dependencies": {
-    "@aragon/os": "^4.2.0",
-    "@aragon/cli": "^5.9.6"
+    "@aragon/os": "^4.3.0"
   },
   "devDependencies": {
     "eth-gas-reporter": "^0.2.0",
@@ -26,7 +25,7 @@
     "publish:minor": "aragon apm publish minor",
     "publish:major": "aragon apm publish major",
     "versions": "aragon apm versions",
-    "test": "aragon contracts test"
+    "test": "truffle test"
   },
   "keywords": []
 }
