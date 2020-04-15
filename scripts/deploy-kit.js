@@ -14,7 +14,7 @@ const KreditsKit = artifacts.require('KreditsKit')
 const arapp = require('../arapp.json')
 const environment = argv['network'] || argv['environment'] || 'development'
 
-const kreditsArappConfig = (arapp.environments[environment].kredits || {}
+const kreditsArappConfig = arapp.environments[environment].kredits || {}
 
 // typically we use the open.aragonpm.eth aragonpm.
 const apm = kreditsArappConfig.apmDomain || argv['apmDomain'] || 'open.aragonpm.eth'
