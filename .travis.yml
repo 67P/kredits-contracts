@@ -27,7 +27,11 @@ before_script:
 script:
   - npm run lint:wrapper
   - npm run lint:contract-tests
-  - npm run test
+  - npm run test:contributor
+  - npm run test:contribution
+  - npm run test:proposal
+  # FIXME Fix token tests
+  - npm run test:token
 
 branches:
   only:
