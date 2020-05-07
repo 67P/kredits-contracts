@@ -22,6 +22,7 @@ install:
 
 before_script:
   - npm run devchain &
+  - sleep 10
 
 script:
   - npm run lint:wrapper
