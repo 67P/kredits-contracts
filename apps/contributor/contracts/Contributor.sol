@@ -21,6 +21,19 @@ contract Contributor is AragonApp {
     uint8 hashFunction;
     uint8 hashSize;
     bool exists;
+    // TODO
+    uint256 claimedBalance;
+  }
+
+  // TODO
+  function withdraw() {
+    // look up contributorId for msg.sender address
+    // require msg.sender is contributor
+    uint256 confirmedKredits = Contribution.totalKreditsEarnedByContributor(contributorId, confirmedOnly=true);
+    uint256 claimableAmount = confirmedKredits - contributor.claimedBalance;
+    // require claimableAmount > 0
+    contributor.claimedBalance += claimableAmount;
+    IToken(token).mintFor(msg.sender, amount);
   }
 
   mapping (address => uint32) public contributorIds;
