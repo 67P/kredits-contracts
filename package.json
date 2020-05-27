@@ -47,8 +47,8 @@
     "async-each-series": "^1.1.0",
     "cli-table": "^0.3.1",
     "eslint": "^7.1.0",
-    "eslint-plugin-import": "^2.20.1",
-    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eth-provider": "^0.2.5",
     "homedir": "^0.6.0",
@@ -60,7 +60,7 @@
     "yargs": "^15.0.0"
   },
   "dependencies": {
-    "ethers": "^4.0.46",
+    "ethers": "^4.0.47",
     "ipfs-http-client": "^41.0.1",
     "kosmos-schemas": "^2.2.1",
     "node-fetch": "^2.6.0",
