@@ -11,6 +11,7 @@ const files = [
   'Kernel',
   'Proposal',
   'Token',
+  'Reimbursement',
   'ACL'
 ];
 

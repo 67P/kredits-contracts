@@ -20,8 +20,8 @@ contract Proposal is AragonApp {
 
   bytes32 public constant KERNEL_APP_ADDR_NAMESPACE = 0xd6f028ca0e8edb4a8c9757ca4fdccab25fa1e0317da1188108f7d2dee14902fb;
   // ensure alphabetic order
-  enum Apps { Contribution, Contributor, Proposal, Token }
-  bytes32[4] public appIds;
+  enum Apps { Contribution, Contributor, Proposal, Reimbursement, Token }
+  bytes32[5] public appIds;
 
   struct Proposal {
     address creatorAccount;
@@ -46,7 +46,7 @@ contract Proposal is AragonApp {
   event ProposalVoted(uint32 id, uint32 voterId, uint16 totalVotes);
   event ProposalExecuted(uint32 id, uint32 contributorId, uint32 amount);
 
-  function initialize(bytes32[4] _appIds) public onlyInit {
+  function initialize(bytes32[5] _appIds) public onlyInit {
     appIds = _appIds;
     initialized();
   }

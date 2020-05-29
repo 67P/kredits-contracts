@@ -38,6 +38,8 @@ const contractCalls = [
   ['Contribution', 'add', [{ contributorId: 1, contributorIpfsHash: 'QmWKCYGr2rSf6abUPaTYqf98urvoZxGrb7dbspFZA6oyVF', date: '2019-04-11', amount: 5000, kind: 'dev', description: '[67P/kredits-contracts] Introduce contribution token', url: '' }, { gasLimit: 350000 }]],
   ['Contribution', 'add', [{ contributorId: 2, contributorIpfsHash: 'QmcHzEeAM26HV2zHTf5HnZrCtCtGdEccL5kUtDakAB7ozB', date: '2019-04-11', amount: 1500, kind: 'dev', description: '[67P/kredits-web] Reviewed stuff', url: '' }, { gasLimit: 350000 }]],
   ['Contribution', 'claim', [1, { gasLimit: 300000 }]],
+
+  ['Reimbursement', 'add', [{title: 'Server Hosting', description: 'All the serverz', amount: 1, token: '0xa3048576e296207eb0141f2803590ad044f81928', currency: 'WBTC', date: '2020-05-28'}, { gasLimit: 300000 }]],
 ];
 
 const funds = [
