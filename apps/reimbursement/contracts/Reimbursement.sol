@@ -55,7 +55,7 @@ contract Reimbursement is AragonApp {
     }
   }
 
-  function getReimbursement(uint32 reimbursementId) public view returns (uint32 id, address recipient, uint256 amount, address token, bool claimed, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize, uint256 confirmedAtBlock, bool exists, bool vetoed) {
+  function get(uint32 reimbursementId) public view returns (uint32 id, address recipient, uint256 amount, address token, bool claimed, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize, uint256 confirmedAtBlock, bool exists, bool vetoed) {
     id = reimbursementId;
     ReimbursementData storage r = reimbursements[id];
     return (
