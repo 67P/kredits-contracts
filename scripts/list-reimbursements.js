@@ -15,7 +15,7 @@ module.exports = async function(callback) {
   console.log(`Using Reimbursement at: ${kredits.Reimbursement.contract.address}`);
 
   const table = new Table({
-    head: ['ID', 'Title', 'Description', 'Amount', 'Token', 'Recipent', 'Confirmed?', 'Vetoed?', 'Claimed?', 'IPFS']
+    head: ['ID', 'Amount', 'Token', 'Recipent', 'Confirmed?', 'Vetoed?', 'IPFS', 'Expenses']
   })
 
   try {
@@ -24,21 +24,19 @@ module.exports = async function(callback) {
 
     let kreditsSum = 0;
     console.log(`Current block number: ${blockNumber}`);
-    reimbursements.forEach((r) => {
+    reimbursements.forEach(r => {
       const confirmed = r.confirmedAtBlock <= blockNumber;
 
       table.push([
         r.id.toString(),
-        `${r.title}`,
-        `${r.description}`,
         r.amount.toString(),
         `${r.token}`,
         `${r.recipient}`,
-        `${confirmed} (${r.confirmedAtBlock})`,
-        r.vetoed,
-        r.claimed,
-        r.ipfsHash
-      ])
+        `${confirmed}`,
+        `${r.vetoed}`,
+        `${r.ipfsHash}`,
+        `${r.expenses.length}`
+      ]);
     });
 
     console.log(table.toString());

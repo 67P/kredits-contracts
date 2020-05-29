@@ -60,12 +60,13 @@ contract Reimbursement is AragonApp {
     );
   }
 
-  function add(uint256 amount, address token, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public isInitialized auth(ADD_REIMBURSEMENT_ROLE) {
+  function add(uint256 amount, address token, address recipient, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public isInitialized auth(ADD_REIMBURSEMENT_ROLE) {
     uint32 reimbursementId = reimbursementsCount + 1;
     ReimbursementData storage r = reimbursements[reimbursementId];
     r.exists = true;
     r.amount = amount;
     r.token = token;
+    r.recipient = recipient;
     r.hashDigest = hashDigest;
     r.hashFunction = hashFunction;
     r.hashSize = hashSize;
