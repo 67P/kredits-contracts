@@ -31,7 +31,7 @@ contract Reimbursement is AragonApp {
 
   uint32 public blocksToWait;
 
-  event ReimbursementAdded(uint32 id, address indexed addedByAccont, uint256 amount);
+  event ReimbursementAdded(uint32 id, address indexed addedByAccount, uint256 amount);
   event ReimbursementClaimed(uint32 id, uint256 amount);
   event ReimbursementVetoed(uint32 id, address vetoedByAccount);
 
