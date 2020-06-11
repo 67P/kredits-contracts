@@ -39,8 +39,8 @@ const contractCalls = [
   ['Contribution', 'add', [{ contributorId: 2, contributorIpfsHash: 'QmcHzEeAM26HV2zHTf5HnZrCtCtGdEccL5kUtDakAB7ozB', date: '2019-04-11', amount: 1500, kind: 'dev', description: '[67P/kredits-web] Reviewed stuff', url: '' }, { gasLimit: 350000 }]],
   ['Contribution', 'claim', [1, { gasLimit: 300000 }]],
 
-  ['Reimbursement', 'add', [{amount: 100, recipient: '0x7e8f313c56f809188313aa274fa67ee58c31515d', token: '0xa3048576e296207eb0141f2803590ad044f81928', expenses: [{title: 'Server Hosting', description: 'All the serverz', amount: 100, currency: 'EUR', date: '2020-05-28'}]}, { gasLimit: 300000 }]],
-  ['Reimbursement', 'add', [{amount: 10, recipient: '0xa502eb4021f3b9ab62f75b57a94e1cfbf81fd827', token: '0xa3048576e296207eb0141f2803590ad044f81928', expenses: [{title: 'Domain', description: 'All the domain', amount: 10, currency: 'EUR', date: '2020-05-28'}]}, { gasLimit: 300000 }]],
+  ['Reimbursement', 'add', [{amount: 100, contributorId: 1, token: '0xa3048576e296207eb0141f2803590ad044f81928', expenses: [{title: 'Server Hosting', description: 'All the serverz', amount: 100, currency: 'EUR', date: '2020-05-28'}]}, { gasLimit: 300000 }]],
+  ['Reimbursement', 'add', [{amount: 10, contributorId: 1, token: '0xa3048576e296207eb0141f2803590ad044f81928', expenses: [{title: 'Domain', description: 'All the domain', amount: 10, currency: 'EUR', date: '2020-05-28'}]}, { gasLimit: 300000 }]],
 ];
 
 const funds = [
