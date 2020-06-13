@@ -28,9 +28,7 @@ contract Reimbursement is AragonApp {
   event ReimbursementAdded(uint32 id, address indexed addedByAccount, uint256 amount);
   event ReimbursementVetoed(uint32 id, address vetoedByAccount);
 
-  // TODO: remove _appIds when those are removed from the kreditskit
-  // using the appids to find other apps is wrong according to aragon
-  function initialize(bytes32[5] _appIds) public onlyInit {
+  function initialize() public onlyInit {
     blocksToWait = 40320; // 7 days; 15 seconds block time
     initialized();
   }

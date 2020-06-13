@@ -18,10 +18,8 @@ contract Proposal is AragonApp {
   bytes32 public constant ADD_PROPOSAL_ROLE = keccak256("ADD_PROPOSAL_ROLE");
   bytes32 public constant VOTE_PROPOSAL_ROLE = keccak256("VOTE_PROPOSAL_ROLE");
 
-  bytes32 public constant KERNEL_APP_ADDR_NAMESPACE = 0xd6f028ca0e8edb4a8c9757ca4fdccab25fa1e0317da1188108f7d2dee14902fb;
-  // ensure alphabetic order
-  enum Apps { Contribution, Contributor, Proposal, Reimbursement, Token }
-  bytes32[5] public appIds;
+  IContributor public kreditsContributor;
+  IContribution public kreditsContribution;
 
   struct Proposal {
     address creatorAccount;
@@ -46,18 +44,14 @@ contract Proposal is AragonApp {
   event ProposalVoted(uint32 id, uint32 voterId, uint16 totalVotes);
   event ProposalExecuted(uint32 id, uint32 contributorId, uint32 amount);
 
-  function initialize(bytes32[5] _appIds) public onlyInit {
-    appIds = _appIds;
+  function initialize(address _contributor, address _contribution) public onlyInit {
+    kreditsContributor = IContributor(_contributor);
+    kreditsContribution = IContribution(_contribution);
     initialized();
   }
 
-  function getContract(uint8 appId) public view returns (address) {
-    IKernel k = IKernel(kernel());
-    return k.getApp(KERNEL_APP_ADDR_NAMESPACE, appIds[appId]);
-  }
-
   function addProposal(uint32 contributorId, uint32 amount, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public isInitialized auth(ADD_PROPOSAL_ROLE) {
-    require(IContributor(getContract(uint8(Apps.Contributor))).exists(contributorId), 'CONTRIBUTOR_NOT_FOUND');
+    require(kreditsContributor.exists(contributorId), 'CONTRIBUTOR_NOT_FOUND');
 
     uint32 proposalId = proposalsCount + 1;
     uint16 _votesNeeded = 1; //contributorsContract().coreContributorsCount() / 100 * 75;
@@ -99,7 +93,7 @@ contract Proposal is AragonApp {
   function vote(uint32 proposalId) public isInitialized auth(VOTE_PROPOSAL_ROLE) {
     Proposal storage p = proposals[proposalId];
     require(!p.executed, 'ALREADY_EXECUTED');
-    uint32 voterId = IContributor(getContract(uint8(Apps.Contributor))).getContributorIdByAddress(msg.sender);
+    uint32 voterId = kreditsContributor.getContributorIdByAddress(msg.sender);
     require(p.votes[voterId] != true, 'ALREADY_VOTED');
     p.voterIds.push(voterId);
     p.votes[voterId] = true;
@@ -123,7 +117,7 @@ contract Proposal is AragonApp {
     require(p.votesCount >= p.votesNeeded, 'MISSING_VOTES');
 
     p.executed = true;
-    IContribution(getContract(uint8(Apps.Contribution))).add(p.amount, p.contributorId, p.hashDigest, p.hashFunction, p.hashSize);
+    kreditsContribution.add(p.amount, p.contributorId, p.hashDigest, p.hashFunction, p.hashSize);
     emit ProposalExecuted(proposalId, p.contributorId, p.amount);
   }
 

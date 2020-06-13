@@ -12,8 +12,10 @@ interface IContributionBalance {
 }
 
 contract Contributor is AragonApp {
-  bytes32 public constant KERNEL_APP_ADDR_NAMESPACE = 0xd6f028ca0e8edb4a8c9757ca4fdccab25fa1e0317da1188108f7d2dee14902fb;
   bytes32 public constant MANAGE_CONTRIBUTORS_ROLE = keccak256("MANAGE_CONTRIBUTORS_ROLE");
+
+  ITokenBalance public kreditsToken;
+  IContributionBalance public kreditsContribution;
 
   struct Contributor {
     address account;
@@ -27,23 +29,14 @@ contract Contributor is AragonApp {
   mapping (uint32 => Contributor) public contributors;
   uint32 public contributorsCount;
 
-  // ensure alphabetic order
-  enum Apps { Contribution, Contributor, Proposal, Reimbursement, Token }
-  bytes32[5] public appIds;
-
   event ContributorProfileUpdated(uint32 id, bytes32 oldHashDigest, bytes32 newHashDigest); // what should be logged
   event ContributorAccountUpdated(uint32 id, address oldAccount, address newAccount);
   event ContributorAdded(uint32 id, address account);
 
-  function initialize(address root, bytes32[5] _appIds) public onlyInit {
-    appIds = _appIds;
-
+  function initialize(address _contribution, address _token) public onlyInit {
+    kreditsToken = ITokenBalance(_token);
+    kreditsContribution = IContributionBalance(_contribution);
     initialized();
-  }
-
-  function getContract(uint8 appId) public view returns (address) {
-    IKernel k = IKernel(kernel());
-    return k.getApp(KERNEL_APP_ADDR_NAMESPACE, appIds[appId]);
   }
 
   function coreContributorsCount() public view returns (uint32) {
@@ -132,11 +125,9 @@ contract Contributor is AragonApp {
     hashFunction = c.hashFunction;
     hashSize = c.hashSize;
     isCore = isCoreTeam(id);
-    address token = getContract(uint8(Apps.Token));
-    balance = ITokenBalance(token).balanceOf(c.account);
-    address contribution = getContract(uint8(Apps.Contribution));
-    totalKreditsEarned = IContributionBalance(contribution).totalKreditsEarnedByContributor(_id, true);
-    contributionsCount = IContributionBalance(contribution).balanceOf(c.account);
+    balance = kreditsToken.balanceOf(c.account);
+    totalKreditsEarned = kreditsContribution.totalKreditsEarnedByContributor(_id, true);
+    contributionsCount = kreditsContribution.balanceOf(c.account);
     exists = c.exists;
   }
 

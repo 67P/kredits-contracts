@@ -6,14 +6,9 @@ import "./ERC20Token.sol";
 contract Token is ERC20Token, AragonApp {
   bytes32 public constant MINT_TOKEN_ROLE = keccak256("MINT_TOKEN_ROLE");
 
-  // ensure alphabetic order
-  enum Apps { Contribution, Contributor, Proposal, Reimbursement, Token }
-  bytes32[5] public appIds;
-
   event LogMint(address indexed recipient, uint256 amount, uint32 contributionId);
 
-  function initialize(bytes32[5] _appIds) public onlyInit {
-    appIds = _appIds;
+  function initialize() public onlyInit {
     name = 'Kredits';
     symbol = '₭S';
     decimals = 18;

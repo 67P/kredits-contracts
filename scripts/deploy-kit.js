@@ -55,7 +55,7 @@ module.exports = async function(callback) {
     appIds[contractName] = namehash(`kredits-${app}.${apm}`)
   })
 
-  KreditsKit.new(daoFactory.address, ensAddr, Object.values(appIds)).then((kreditsKit) => {
+  KreditsKit.new(daoFactory.address, ensAddr).then((kreditsKit) => {
     console.log(`Deployed KreditsKit at: ${kreditsKit.address}`);
 
     fileInject(path.join(__dirname, '..', 'lib/addresses/KreditsKit.json'), networkId, kreditsKit.address);

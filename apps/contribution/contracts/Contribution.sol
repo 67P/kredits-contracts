@@ -18,11 +18,8 @@ contract Contribution is AragonApp {
   bytes32 public constant ADD_CONTRIBUTION_ROLE = keccak256("ADD_CONTRIBUTION_ROLE");
   bytes32 public constant VETO_CONTRIBUTION_ROLE = keccak256("VETO_CONTRIBUTION_ROLE");
 
-  bytes32 public constant KERNEL_APP_ADDR_NAMESPACE = 0xd6f028ca0e8edb4a8c9757ca4fdccab25fa1e0317da1188108f7d2dee14902fb;
-
-  // ensure alphabetic order
-  enum Apps { Contribution, Contributor, Proposal, Reimbursement, Token }
-  bytes32[5] public appIds;
+  IToken public kreditsToken;
+  ContributorInterface public kreditsContributor;
 
   struct ContributionData {
     uint32 contributorId;
@@ -54,25 +51,12 @@ contract Contribution is AragonApp {
   event ContributionClaimed(uint32 id, uint32 indexed contributorId, uint32 amount);
   event ContributionVetoed(uint32 id, address vetoedByAccount);
 
-  function initialize(bytes32[5] _appIds) public onlyInit {
-    appIds = _appIds;
+  function initialize(address _token, address _contributor) public onlyInit {
+    kreditsToken = IToken(_token);
+    kreditsContributor = ContributorInterface(_contributor);
+
     blocksToWait = 40320; // 7 days; 15 seconds block time
     initialized();
-  }
-
-  function getContract(uint8 appId) public view returns (address) {
-    IKernel k = IKernel(kernel());
-    return k.getApp(KERNEL_APP_ADDR_NAMESPACE, appIds[appId]);
-  }
-
-  function getContributorIdByAddress(address contributorAccount) public view returns (uint32) {
-    address contributor = getContract(uint8(Apps.Contributor));
-    return ContributorInterface(contributor).getContributorIdByAddress(contributorAccount);
-  }
-
-  function getContributorAddressById(uint32 contributorId) public view returns (address) {
-    address contributor = getContract(uint8(Apps.Contributor));
-    return ContributorInterface(contributor).getContributorAddressById(contributorId);
   }
 
   //
@@ -90,18 +74,18 @@ contract Contribution is AragonApp {
   // Balance is amount of ERC271 tokens, not amount of kredits
   function balanceOf(address owner) public view returns (uint256) {
     require(owner != address(0));
-    uint32 contributorId = getContributorIdByAddress(owner);
+    uint32 contributorId = kreditsContributor.getContributorIdByAddress(owner);
     return ownedContributions[contributorId].length;
   }
 
   function ownerOf(uint32 contributionId) public view returns (address) {
     require(exists(contributionId));
     uint32 contributorId = contributions[contributionId].contributorId;
-    return getContributorAddressById(contributorId);
+    return kreditsContributor.getContributorAddressById(contributorId);
   }
 
   function tokenOfOwnerByIndex(address owner, uint32 index) public view returns (uint32) {
-    uint32 contributorId = getContributorIdByAddress(owner);
+    uint32 contributorId = kreditsContributor.getContributorIdByAddress(owner);
     return ownedContributions[contributorId][index];
   }
 
@@ -193,10 +177,9 @@ contract Contribution is AragonApp {
     require(block.number >= c.confirmedAtBlock, 'NOT_CLAIMABLE');
 
     c.claimed = true;
-    address token = getContract(uint8(Apps.Token));
-    address contributorAccount = getContributorAddressById(c.contributorId);
+    address contributorAccount = kreditsContributor.getContributorAddressById(c.contributorId);
     uint256 amount = uint256(c.amount);
-    IToken(token).mintFor(contributorAccount, amount, contributionId);
+    kreditsToken.mintFor(contributorAccount, amount, contributionId);
     emit ContributionClaimed(contributionId, c.contributorId, c.amount);
   }
 

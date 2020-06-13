@@ -12,17 +12,19 @@ import "../apps/token/contracts/Token.sol";
 import "../apps/proposal/contracts/Proposal.sol";
 import "../apps/reimbursement/contracts/Reimbursement.sol";
 
-contract KreditsKit is KitBase  {
+contract KreditsKit is KitBase {
 
-    // ensure alphabetic order
-    enum Apps { Contribution, Contributor, Proposal, Reimbursement, Token }
-    bytes32[5] public appIds;
+    bytes32 constant internal CONTRIBUTION_APP_ID = 0x09f5274cba299b46c5be722ef672d10eef7a2ef980b612aef529d74fb9da7643;
+    bytes32 constant internal CONTRIBUTOR_APP_ID = 0x8e50972b062e83b48dbb2a68d8a058f2a07227ca183c144dc974e6da3186d7e9;
+    bytes32 constant internal PROPOSAL_APP_ID= 0xb48bc8b4e539823f3be98d67f4130c07b5d29cc998993debcdea15c6faf4cf8a;
+    bytes32 constant internal REIMBURSEMENT_APP_ID = 0x1103c160cab5c23100981f67c020a021d46a894a4f262b6e1180b335a639d3d2;
+    bytes32 constant internal TOKEN_APP_ID = 0x82c0e483537d703bb6f0fc799d2cc60d8f62edcb0f6d26d5571a92be8485b112;
 
     event DeployInstance(address dao);
     event InstalledApp(address dao, address appProxy, bytes32 appId);
 
-    constructor (DAOFactory _fac, ENS _ens, bytes32[5] _appIds) public KitBase(_fac, _ens) {
-      appIds = _appIds;
+    constructor (DAOFactory _fac, ENS _ens) public KitBase(_fac, _ens) {
+    //  appIds = _appIds;
     }
 
     function newInstance() public returns (Kernel dao) {
@@ -32,25 +34,26 @@ contract KreditsKit is KitBase  {
 
         acl.createPermission(this, dao, dao.APP_MANAGER_ROLE(), this);
 
-        Contributor contributor = Contributor(_installApp(dao, appIds[uint8(Apps.Contributor)]));
-        contributor.initialize(root, appIds);
+        Contribution contribution = Contribution(_installApp(dao, CONTRIBUTION_APP_ID));
+        Contributor contributor = Contributor(_installApp(dao, CONTRIBUTOR_APP_ID));
+        Proposal proposal = Proposal(_installApp(dao, PROPOSAL_APP_ID));
+        Reimbursement reimbursement = Reimbursement(_installApp(dao,REIMBURSEMENT_APP_ID));
+        Token token = Token(_installApp(dao, TOKEN_APP_ID));
+
+        token.initialize();
+        contributor.initialize(contribution, token);
+
         acl.createPermission(root, contributor, contributor.MANAGE_CONTRIBUTORS_ROLE(), this);
 
-        Token token = Token(_installApp(dao, appIds[uint8(Apps.Token)]));
-        token.initialize(appIds);
-
-        Contribution contribution = Contribution(_installApp(dao, appIds[uint8(Apps.Contribution)]));
-        contribution.initialize(appIds);
+        contribution.initialize(token, contributor);
 
         acl.createPermission(root, contribution, contribution.ADD_CONTRIBUTION_ROLE(), this);
         acl.createPermission(root, contribution, contribution.VETO_CONTRIBUTION_ROLE(), this);
         acl.grantPermission(proposal, contribution, contribution.ADD_CONTRIBUTION_ROLE());
 
-        Proposal proposal = Proposal(_installApp(dao, appIds[uint8(Apps.Proposal)]));
-        proposal.initialize(appIds);
+        proposal.initialize(contributor, contribution);
 
-        Reimbursement reimbursement = Reimbursement(_installApp(dao, appIds[uint8(Apps.Reimbursement)]));
-        reimbursement.initialize(appIds);
+        reimbursement.initialize();
         acl.createPermission(root, reimbursement, reimbursement.ADD_REIMBURSEMENT_ROLE(), this);
         acl.createPermission(root, reimbursement, reimbursement.VETO_REIMBURSEMENT_ROLE(), this);
 
@@ -79,7 +82,6 @@ contract KreditsKit is KitBase  {
         acl.createPermission(root, token, token.MINT_TOKEN_ROLE(), this);
         acl.grantPermission(contribution, token, token.MINT_TOKEN_ROLE());
         acl.setPermissionManager(root, token, token.MINT_TOKEN_ROLE());
-
 
         cleanupDAOPermissions(dao, acl, root);
 
