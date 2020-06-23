@@ -3,10 +3,10 @@ const deployDAOFactory = require('@aragon/os/scripts/deploy-daofactory.js')
 const fs = require('fs');
 const path = require('path');
 const argv = require('yargs').argv
-const namehash = require('ethers').utils.namehash;
+const ethers = require('ethers');
+const namehash = ethers.utils.namehash;
 
 const fileInject = require('./helpers/file_inject.js')
-const getNetworkId = require('./helpers/networkid.js')
 
 const DAOFactory = artifacts.require('DAOFactory')
 const KreditsKit = artifacts.require('KreditsKit')
@@ -26,9 +26,10 @@ const daoFactoryAddress = kreditsArappConfig.daoFactory || argv['daoFactory']
 
 const ensAddr = arapp.environments[environment].registry || argv['ensAddress']
 
-
 module.exports = async function(callback) {
-  const networkId = await getNetworkId(web3)
+  const provider = new ethers.providers.Web3Provider(web3.currentProvider);
+  const network = await provider.getNetwork();
+  const networkId = network.chainId;
   console.log(`Deploying to networkId: ${networkId}`)
 
   if (!ensAddr) {

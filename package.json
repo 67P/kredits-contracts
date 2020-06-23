@@ -60,7 +60,7 @@
     "yargs": "^15.0.0"
   },
   "dependencies": {
-    "ethers": "^4.0.47",
+    "ethers": "^5.0.2",
     "ipfs-http-client": "^41.0.1",
     "kosmos-schemas": "^2.2.1",
     "node-fetch": "^2.6.0",
