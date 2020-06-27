@@ -8,7 +8,7 @@ contract Reimbursement is AragonApp {
   bytes32 public constant VETO_REIMBURSEMENT_ROLE = keccak256("VETO_REIMBURSEMENT_ROLE");
 
   struct ReimbursementData {
-    address requestedBy;
+    address recordedBy;
     uint32 contributorId;
     uint256 amount;
     address token;
@@ -44,12 +44,12 @@ contract Reimbursement is AragonApp {
     }
   }
 
-  function get(uint32 reimbursementId) public view returns (uint32 id, address requestedBy, uint32 contributorId, uint256 amount, address token, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize, uint256 confirmedAtBlock, bool exists, bool vetoed) {
+  function get(uint32 reimbursementId) public view returns (uint32 id, address recordedBy, uint32 contributorId, uint256 amount, address token, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize, uint256 confirmedAtBlock, bool exists, bool vetoed) {
     id = reimbursementId;
     ReimbursementData storage r = reimbursements[id];
     return (
       id,
-      r.requestedBy,
+      r.recordedBy,
       r.contributorId,
       r.amount,
       r.token,
@@ -65,7 +65,7 @@ contract Reimbursement is AragonApp {
   function add(uint256 amount, address token, uint32 contributorId, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public isInitialized auth(ADD_REIMBURSEMENT_ROLE) {
     uint32 reimbursementId = reimbursementsCount + 1;
     ReimbursementData storage r = reimbursements[reimbursementId];
-    r.requestedBy = msg.sender;
+    r.recordedBy = msg.sender;
     r.exists = true;
     r.amount = amount;
     r.token = token;
