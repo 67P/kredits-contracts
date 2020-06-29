@@ -45,7 +45,7 @@ module.exports = async function(callback) {
   console.log("\nAdding contribution:");
   console.log(contributionAttributes);
 
-  kredits.Contribution.addContribution(contributionAttributes, { gasLimit: 300000 })
+  kredits.Contribution.add(contributionAttributes, { gasLimit: 300000 })
     .then(result => {
       console.log("\n\nResult:");
       console.log(result);
