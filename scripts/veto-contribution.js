@@ -15,7 +15,7 @@ module.exports = async function(callback) {
   console.log(`Recording a veto for contribution #${contributionId}`);
 
   try {
-    kredits.Contribution.functions.veto(contributionId, { gasLimit: 300000 })
+    kredits.Contribution.contract.veto(contributionId, { gasLimit: 300000 })
       .then(result => {
         console.log("\n\nResult:");
         console.log(result);
