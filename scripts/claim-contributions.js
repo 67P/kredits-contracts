@@ -31,7 +31,7 @@ module.exports = async function(callback) {
 
       if (c.contributorId === recipient && confirmed && !c.vetoed && !c.claimed) {
         console.log(`Claiming contribution ID=${c.id}`);
-        return kredits.Contribution.functions.claim(c.id, { gasLimit: 500000 }).then(tx => {
+        return kredits.Contribution.contract.claim(c.id, { gasLimit: 500000 }).then(tx => {
           table.push([
             c.id.toString(),
             `${c.description}`,

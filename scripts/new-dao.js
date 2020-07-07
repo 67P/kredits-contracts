@@ -3,13 +3,15 @@ const path = require('path');
 
 const ethers = require('ethers');
 const fileInject = require('./helpers/file_inject.js');
-const getNetworkId = require('./helpers/networkid.js');
 const KreditsKit = require('../lib/kreditskit');
 
 const addressesPath = path.join(__dirname, '..', 'lib/addresses');
 
 module.exports = async function(callback) {
-  const networkId = await getNetworkId(web3)
+  const provider = new ethers.providers.Web3Provider(web3.currentProvider);
+  const signer = provider.getSigner();
+  const network = await provider.getNetwork();
+  const networkId = network.chainId;
   console.log(`Deploying to networkId: ${networkId}`)
 
   let kitAddresseFile = path.join(addressesPath, 'KreditsKit.json');
@@ -19,9 +21,6 @@ module.exports = async function(callback) {
     callback(new Error("KreditsKit address not found in environment variable KREDITS_KIT"))
   }
   console.log(`Using KreditsKit at: ${kreditsKitAddress}`);
-
-  const provider = new ethers.providers.Web3Provider(web3.currentProvider);
-  let signer = provider.getSigner();
 
   let kit = await new KreditsKit(provider, signer).init()
 
