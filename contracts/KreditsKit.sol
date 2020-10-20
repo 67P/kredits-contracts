@@ -59,6 +59,7 @@ contract KreditsKit is KitBase  {
         acl.grantPermissionP(acl.ANY_ENTITY(), contribution, contribution.ADD_CONTRIBUTION_ROLE(), params);
         acl.grantPermissionP(acl.ANY_ENTITY(), contribution, contribution.VETO_CONTRIBUTION_ROLE(), params);
         acl.grantPermissionP(acl.ANY_ENTITY(), contributor, contributor.MANAGE_CONTRIBUTORS_ROLE(), params);
+        acl.grantPermissionP(acl.ANY_ENTITY(), reimbursement, reimbursement.ADD_REIMBURSEMENT_ROLE(), params);
 
         //acl.setPermissionManager(this, proposal, proposal.VOTE_PROPOSAL_ROLE();
         acl.createPermission(root, proposal, proposal.VOTE_PROPOSAL_ROLE(), this);
