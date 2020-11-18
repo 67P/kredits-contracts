@@ -34,6 +34,9 @@ Aragon CLI and Truffle need to be installed on your sytem as well:
     npm install -g @aragon/cli
     npm install -g truffle
 
+_Note: `@aragon/cli` currently fails to install on node.js 14. Please use
+node.js 12 until the issue has been resolved upstream._
+
 ### Local development chain
 
 For local development it is recommended to use
