@@ -6,6 +6,7 @@ import "@aragon/os/contracts/kernel/IKernel.sol";
 contract Reimbursement is AragonApp {
   bytes32 public constant ADD_REIMBURSEMENT_ROLE = keccak256("ADD_REIMBURSEMENT_ROLE");
   bytes32 public constant VETO_REIMBURSEMENT_ROLE = keccak256("VETO_REIMBURSEMENT_ROLE");
+  // bytes32 public constant MANAGE_APPS_ROLE = keccak256("MANAGE_APPS_ROLE");
 
   struct ReimbursementData {
     uint32 recipientId;
@@ -27,12 +28,13 @@ contract Reimbursement is AragonApp {
   event ReimbursementAdded(uint32 id, address indexed addedByAccount, uint256 amount);
   event ReimbursementVetoed(uint32 id, address vetoedByAccount);
 
-  // TODO: remove _appIds when those are removed from the kreditskit
-  // using the appids to find other apps is wrong according to aragon
-  function initialize(bytes32[5] _appIds) public onlyInit {
+  function initialize() public onlyInit {
     blocksToWait = 40320; // 7 days; 15 seconds block time
     initialized();
   }
+
+  // function setApps() public isInitialized auth(MANAGE_APPS_ROLE) {
+  // }
 
   function totalAmount(bool confirmedOnly) public view returns (uint256 amount) {
     for (uint32 i = 1; i <= reimbursementsCount; i++) {

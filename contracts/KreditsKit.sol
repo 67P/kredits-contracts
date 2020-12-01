@@ -50,7 +50,7 @@ contract KreditsKit is KitBase  {
         proposal.initialize(appIds);
 
         Reimbursement reimbursement = Reimbursement(_installApp(dao, appIds[uint8(Apps.Reimbursement)]));
-        reimbursement.initialize(appIds);
+        reimbursement.initialize();
         acl.createPermission(root, reimbursement, reimbursement.ADD_REIMBURSEMENT_ROLE(), this);
         acl.createPermission(root, reimbursement, reimbursement.VETO_REIMBURSEMENT_ROLE(), this);
 
