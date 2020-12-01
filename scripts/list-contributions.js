@@ -41,8 +41,8 @@ module.exports = async function(callback) {
 
     console.log(table.toString());
 
-    let totalKreditsEarnedUnConfirmed = await kredits.Contribution.functions.totalKreditsEarned(false);
-    let totalKreditsEarnedConfirmed = await kredits.Contribution.functions.totalKreditsEarned(true);
+    let totalKreditsEarnedUnConfirmed = await kredits.Contribution.contract.totalKreditsEarned(false);
+    let totalKreditsEarnedConfirmed = await kredits.Contribution.contract.totalKreditsEarned(true);
     console.log(`Total Kredits: ${totalKreditsEarnedConfirmed} (confirmed) | ${totalKreditsEarnedUnConfirmed} (including unconfirmed)`);
   } catch (err) {
     console.log(err);

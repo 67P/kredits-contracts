@@ -17,7 +17,7 @@ module.exports = async function(callback) {
 
       method = await promptly.prompt('Function: ');
     }
-    if (!contractWrapper[method] && !contractWrapper.functions[method]) {
+    if (!contractWrapper[method] && !contractWrapper.contract[method]) {
       callback(new Error(`Method ${method} is not defined on ${contractName}`));
       return;
     }
@@ -33,7 +33,7 @@ module.exports = async function(callback) {
     if (contractWrapper[method]) {
       func = contractWrapper[method];
     } else {
-      func = contractWrapper.functions[method];
+      func = contractWrapper.contract[method];
     }
     func.apply(contractWrapper, args).then((result) => {
       console.log("\nResult:");

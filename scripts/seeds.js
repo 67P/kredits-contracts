@@ -38,7 +38,7 @@ module.exports = async function(callback) {
     if (contractWrapper[method]) {
       func = contractWrapper[method];
     } else {
-      func = contractWrapper.functions[method];
+      func = contractWrapper.contract[method];
     }
     func.apply(contractWrapper, args).then((result) => {
       console.log(`[OK] kredits.${contractName}.${method}(${JSON.stringify(args)}) => ${result.hash}`);

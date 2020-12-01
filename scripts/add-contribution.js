@@ -19,10 +19,10 @@ module.exports = async function(callback) {
   let contributorAccount;
   if (contributor.length < 5) {
     contributorId = contributor;
-    contributorAccount = await kredits.Contributor.functions.getContributorAddressById(contributor);
+    contributorAccount = await kredits.Contributor.contract.getContributorAddressById(contributor);
   } else {
     contributorAccount = contributor;
-    contributorId = await kredits.Contributor.functions.getContributorIdByAddress(contributor);
+    contributorId = await kredits.Contributor.contract.getContributorIdByAddress(contributor);
   }
 
   console.log(`Creating a contribution for contributor account ${contributorAccount} ID: ${contributorId}`);
@@ -45,7 +45,7 @@ module.exports = async function(callback) {
   console.log("\nAdding contribution:");
   console.log(contributionAttributes);
 
-  kredits.Contribution.addContribution(contributionAttributes, { gasLimit: 300000 })
+  kredits.Contribution.add(contributionAttributes, { gasLimit: 300000 })
     .then(result => {
       console.log("\n\nResult:");
       console.log(result);
