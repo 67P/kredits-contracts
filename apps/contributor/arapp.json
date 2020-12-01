@@ -4,6 +4,11 @@
       "name": "Manage contributors",
       "id": "MANAGE_CONTRIBUTORS_ROLE",
       "params": []
+    },
+    {
+      "name": "Manage connected apps",
+      "id": "MANAGE_APPS_ROLE",
+      "params": []
     }
   ],
   "environments": {

@@ -17,6 +17,7 @@ interface ContributorInterface {
 contract Contribution is AragonApp {
   bytes32 public constant ADD_CONTRIBUTION_ROLE = keccak256("ADD_CONTRIBUTION_ROLE");
   bytes32 public constant VETO_CONTRIBUTION_ROLE = keccak256("VETO_CONTRIBUTION_ROLE");
+  bytes32 public constant MANAGE_APPS_ROLE = keccak256("MANAGE_APPS_ROLE");
 
   IToken public kreditsToken;
   ContributorInterface public kreditsContributor;
@@ -57,6 +58,11 @@ contract Contribution is AragonApp {
 
     blocksToWait = 40320; // 7 days; 15 seconds block time
     initialized();
+  }
+
+  function setApps(address _token, address _contributor) public isInitialized auth(MANAGE_APPS_ROLE) {
+    kreditsToken = IToken(_token);
+    kreditsContributor = ContributorInterface(_contributor);
   }
 
   //

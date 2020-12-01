@@ -17,6 +17,7 @@ contract Proposal is AragonApp {
 
   bytes32 public constant ADD_PROPOSAL_ROLE = keccak256("ADD_PROPOSAL_ROLE");
   bytes32 public constant VOTE_PROPOSAL_ROLE = keccak256("VOTE_PROPOSAL_ROLE");
+  bytes32 public constant MANAGE_APPS_ROLE = keccak256("MANAGE_APPS_ROLE");
 
   IContributor public kreditsContributor;
   IContribution public kreditsContribution;
@@ -48,6 +49,11 @@ contract Proposal is AragonApp {
     kreditsContributor = IContributor(_contributor);
     kreditsContribution = IContribution(_contribution);
     initialized();
+  }
+
+  function setApps(address _contributor, address _contribution) public isInitialized auth(MANAGE_APPS_ROLE) {
+    kreditsContributor = IContributor(_contributor);
+    kreditsContribution = IContribution(_contribution);
   }
 
   function addProposal(uint32 contributorId, uint32 amount, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public isInitialized auth(ADD_PROPOSAL_ROLE) {

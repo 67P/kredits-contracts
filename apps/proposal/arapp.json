@@ -9,6 +9,11 @@
       "name": "Vote proposals",
       "id": "VOTE_PROPOSAL_ROLE",
       "params": []
+    },
+    {
+      "name": "Manage connected apps",
+      "id": "MANAGE_APPS_ROLE",
+      "params": []
     }
   ],
   "environments": {

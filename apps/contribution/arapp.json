@@ -14,6 +14,11 @@
       "name": "Veto contributions",
       "id": "VETO_CONTRIBUTION_ROLE",
       "params": []
+    },
+    {
+      "name": "Manage connected apps",
+      "id": "MANAGE_APPS_ROLE",
+      "params": []
     }
   ],
   "environments": {

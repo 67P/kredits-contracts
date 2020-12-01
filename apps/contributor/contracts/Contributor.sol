@@ -13,6 +13,7 @@ interface IContributionBalance {
 
 contract Contributor is AragonApp {
   bytes32 public constant MANAGE_CONTRIBUTORS_ROLE = keccak256("MANAGE_CONTRIBUTORS_ROLE");
+  bytes32 public constant MANAGE_APPS_ROLE = keccak256("MANAGE_APPS_ROLE");
 
   ITokenBalance public kreditsToken;
   IContributionBalance public kreditsContribution;
@@ -37,6 +38,11 @@ contract Contributor is AragonApp {
     kreditsToken = ITokenBalance(_token);
     kreditsContribution = IContributionBalance(_contribution);
     initialized();
+  }
+
+  function setApps(address _contribution, address _token) public isInitialized auth(MANAGE_APPS_ROLE) {
+    kreditsToken = ITokenBalance(_token);
+    kreditsContribution = IContributionBalance(_contribution);
   }
 
   function coreContributorsCount() public view returns (uint32) {
