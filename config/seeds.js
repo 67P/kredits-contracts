@@ -41,7 +41,7 @@ const contractCalls = [
     { title: 'Server rent', description: 'Dedicated server: andromeda.kosmos.org, April 2020', amount: 61, currency: 'EUR', date: '2020-05-28' },
     { title: 'Server rent', description: 'Dedicated server: centaurus.kosmos.org, April 2020', amount: 32, currency: 'EUR', date: '2020-05-28' }
   ]}, { gasLimit: 300000 }]],
-  ['Reimbursement', 'add', [{amount: 166800, contributorId: 2, token: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599', expenses: [
+  ['Reimbursement', 'add', [{amount: 166800, recipientId: 2, token: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599', expenses: [
     { title: 'Domain kosmos.chat', description: 'Yearly registration fee for domain kosmos.chat', amount: 13.90, currency: 'EUR', date: '2020-05-30' }
   ]}, { gasLimit: 300000 }]],
 ];

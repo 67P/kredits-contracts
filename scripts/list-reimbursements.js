@@ -15,7 +15,7 @@ module.exports = async function(callback) {
   console.log(`Using Reimbursement at: ${kredits.Reimbursement.contract.address}`);
 
   const table = new Table({
-    head: ['ID', 'Amount', 'Token', 'ContributorId', 'Confirmed?', 'Vetoed?', 'IPFS', 'Expenses']
+    head: ['ID', 'Amount', 'Token', 'recipientId', 'Confirmed?', 'Vetoed?', 'IPFS', 'Expenses']
   })
 
   try {
@@ -31,7 +31,7 @@ module.exports = async function(callback) {
         r.id.toString(),
         r.amount.toString(),
         `${r.token}`,
-        `${r.contributorId}`,
+        `${r.recipientId}`,
         `${confirmed}`,
         `${r.vetoed}`,
         `${r.ipfsHash}`,
