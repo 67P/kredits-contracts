@@ -1,3 +1,5 @@
+/*
+
 const ANY_ADDRESS = '0xffffffffffffffffffffffffffffffffffffffff'
 
 const setOpenPermission = async (acl, appAddress, role, rootAddress) => {
@@ -15,3 +17,5 @@ const setOpenPermission = async (acl, appAddress, role, rootAddress) => {
 module.exports = {
   setOpenPermission
 }
+
+*/
