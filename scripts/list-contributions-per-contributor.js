@@ -25,16 +25,25 @@ module.exports = async function(callback) {
     let confirmedBeforeBlock = await promptly.prompt('Before block: ');
     let confirmedAfterBlock = await promptly.prompt('After block: ');
 
+    let tokens = {};
+    let contributors = await kredits.Contributor.all();
+    contributors.forEach(c => {
+      tokens[c.id] = { amount: 0, contributor: c };
+    });
+
     let contributionId = await kredits.Contribution.contract.contributionsCount();
     let nextContribution = true;
-
-    let contributors = {};
 
     while (nextContribution) {
       console.log(`Getting contribution: ${contributionId}`);
       let contribution = await kredits.Contribution.getById(contributionId);
       contributionId = contributionId - 1;
 
+      // if no conribution is found
+      if (!contribution.exists) {
+        nextContribution = false;
+        break;
+      }
       // check if the contribution is older
       // in that case we assume all other contributions now are older
       if (contribution.confirmedAtBlock < confirmedAfterBlock) {
@@ -44,27 +53,21 @@ module.exports = async function(callback) {
       // if the contribution is within the range count it
       if (!contribution.vetoed && contribution.confirmedAtBlock < confirmedBeforeBlock && contribution.confirmedAtBlock > confirmedAfterBlock) {
         // init
-        if (!contributors[contribution.conributorId]) {
-          contributors[contribution.contributorId] = 0;
-        }
-        contributors[contribution.contributorId] += contribution.amount;
+        tokens[contribution.contributorId].amount = tokens[contribution.contributorId].amount + contribution.amount;
       }
     }
-    console.log(contributors);
-    const promise = Object.keys(contributors).map((contributorId) => {
-      return kredits.Contributor.getById(contributorId).then(contributorId => {
-        table.push([
-          contributorId,
-          `${contributor.name}`,
-          `${contributors[conributorId]}`
-        ]);
-      });
+
+    Object.keys(tokens).forEach((contributorId) => {
+      table.push([
+        contributorId,
+        `${tokens[contributorId].contributor.name}`,
+        `${tokens[contributorId].amount}`
+      ]);
     });
 
-    Promise.all(promise).then(() => {
-      console.log(`Total Kredits: ${Object.values(contributors).reduce((a,b) => {return a+b},0)}`);
-      console.log(table.toString());
-    });
+    const total = Object.keys(tokens).map(cid => { return tokens[cid].amount}).reduce((a,b) => { return a+b }, 0);
+    console.log(`Total confirmed Kredits: ${total} between block ${confirmedAfterBlock} and ${confirmedBeforeBlock}`);
+    console.log(table.toString());
   } catch (err) {
     console.log(err);
   }
