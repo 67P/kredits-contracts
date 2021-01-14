@@ -164,7 +164,7 @@ contract Contribution is AragonApp {
     if (contributionId < 10) {
       c.confirmedAtBlock = block.number;
     } else {
-      c.confirmedAtBlock = block.number + blocksToWait;
+      c.confirmedAtBlock = block.number + 1 + blocksToWait;
     }
 
     contributionsCount++;
