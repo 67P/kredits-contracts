@@ -175,7 +175,7 @@ contract Contribution is AragonApp {
     emit ContributionAdded(contributionId, contributorId, amount);
   }
 
-  function veto(uint32 contributionId) public isInitialized {
+  function veto(uint32 contributionId) public isInitialized auth(VETO_CONTRIBUTION_ROLE) {
     ContributionData storage c = contributions[contributionId];
     require(c.exists, 'NOT_FOUND');
     require(!c.claimed, 'ALREADY_CLAIMED');
