@@ -66,13 +66,13 @@ contract Contribution is AragonApp {
   }
 
   function getContributorIdByAddress(address contributorAccount) public view returns (uint32) {
-    address contributor = getContract(uint8(Apps.Contributor));
-    return ContributorInterface(contributor).getContributorIdByAddress(contributorAccount);
+    address contributorContract = getContract(uint8(Apps.Contributor));
+    return ContributorInterface(contributorContract).getContributorIdByAddress(contributorAccount);
   }
 
   function getContributorAddressById(uint32 contributorId) public view returns (address) {
-    address contributor = getContract(uint8(Apps.Contributor));
-    return ContributorInterface(contributor).getContributorAddressById(contributorId);
+    address contributorContract = getContract(uint8(Apps.Contributor));
+    return ContributorInterface(contributorContract).getContributorAddressById(contributorId);
   }
 
   //
@@ -175,7 +175,7 @@ contract Contribution is AragonApp {
     emit ContributionAdded(contributionId, contributorId, amount);
   }
 
-  function veto(uint32 contributionId) public isInitialized auth(VETO_CONTRIBUTION_ROLE) {
+  function veto(uint32 contributionId) public isInitialized {
     ContributionData storage c = contributions[contributionId];
     require(c.exists, 'NOT_FOUND');
     require(!c.claimed, 'ALREADY_CLAIMED');
@@ -193,10 +193,10 @@ contract Contribution is AragonApp {
     require(block.number >= c.confirmedAtBlock, 'NOT_CLAIMABLE');
 
     c.claimed = true;
-    address token = getContract(uint8(Apps.Token));
+    address tokenContract = getContract(uint8(Apps.Token));
     address contributorAccount = getContributorAddressById(c.contributorId);
     uint256 amount = uint256(c.amount);
-    IToken(token).mintFor(contributorAccount, amount, contributionId);
+    IToken(tokenContract).mintFor(contributorAccount, amount, contributionId);
     emit ContributionClaimed(contributionId, c.contributorId, c.amount);
   }
 
