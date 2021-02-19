@@ -1,5 +1,16 @@
 # Kredits deployment
 
+
+## 2021-01-14
+
+apps/contribution@master  » aragon dao upgrade 0xc34edf7d11b7f8433d597f0bb0697acdff55ef14 kredits-contribution.open.aragonpm.eth --environment=rinkeby
+eth-provider | Invalid provider preset/location: "local"
+  ✔ Fetching kredits-contribution.open.aragonpm.eth@latest
+  ✔ Fetching kredits-contribution.open.aragonpm.eth@latest
+  ✔ Upgrading app
+
+✔ Successfully executed: "Upgrade 'kredits-contribution.open.aragonpm.eth' app instances to v7.0.0"
+
 ## 2019-04-25 canPerfom fix
 
 aragon dao upgrade 0xc34edf7d11b7f8433d597f0bb0697acdff55ef14 kredits-contributor.open.aragonpm.eth --environment=rinkeby

@@ -2,6 +2,36 @@
 
 aragon apm publish major --environment=rinkeby"
 
+## 20212-01-14 
+
+apps/contribution@master  » aragon apm publish major --environment=rinkeby
+eth-provider | Invalid provider preset/location: "local"
+  ✔ Start IPFS
+  ✔ Applying version bump (major)
+  ↓ Building frontend [skipped]
+    → build script not defined in package.json
+  ✔ Deploy contract
+  ✔ Determine contract address for version
+  ✔ Prepare files for publishing
+  ✔ Generate application artifact
+  ✔ Publish intent
+
+⚠ Publishing files from the project's root folder is not recommended. Consider using the distribution folder of your project: "--files <folder>".
+
+ The following information will be published:
+ Contract address: 0x914Da982ef17B56D2e868E3a67E923EbED1aE017
+ Content (ipfs): QmdVrY2R48NFqwLopd8ix1anAK1d6WafDGauou3ZJrB9gf
+
+? Publish to kredits-contribution.open.aragonpm.eth repo Yes
+
+  ✔ Publish kredits-contribution.open.aragonpm.eth
+
+ Successfully published kredits-contribution.open.aragonpm.eth v7.0.0 :
+
+Transaction hash: 0xb817b2e80e90a6be60b45dd39987498e3132c9962c0501feb7549ad30186c6d5
+
+
+
 ## 2019-04-24 update balances
 
  ✔ Successfully published kredits-contribution.open.aragonpm.eth v6.0.0: 
