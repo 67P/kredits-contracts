@@ -37,7 +37,7 @@ const contractCalls = [
   ['Contribution', 'add', [{ contributorId: 1, contributorIpfsHash: 'QmWKCYGr2rSf6abUPaTYqf98urvoZxGrb7dbspFZA6oyVF', date: '2019-04-11', amount: 1500, kind: 'dev', description: '[67P/kredits-contracts] Introduce contribution token', url: '' }, { gasLimit: 350000 }]],
   ['Contribution', 'add', [{ contributorId: 2, contributorIpfsHash: 'QmcHzEeAM26HV2zHTf5HnZrCtCtGdEccL5kUtDakAB7ozB', date: '2019-04-11', amount: 5000, kind: 'dev', description: '[67P/kredits-web] Expense UI, first draft', url: '' }, { gasLimit: 350000 }]],
 
-  ['Reimbursement', 'add', [{amount: 1116000, contributorId: 1, token: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599', expenses: [
+  ['Reimbursement', 'add', [{amount: 1116000, recipientId: 1, token: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599', expenses: [
     { title: 'Server rent', description: 'Dedicated server: andromeda.kosmos.org, April 2020', amount: 61, currency: 'EUR', date: '2020-05-28' },
     { title: 'Server rent', description: 'Dedicated server: centaurus.kosmos.org, April 2020', amount: 32, currency: 'EUR', date: '2020-05-28' }
   ]}, { gasLimit: 300000 }]],
