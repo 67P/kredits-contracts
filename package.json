@@ -51,6 +51,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eth-provider": "^0.2.5",
+    "ethereum-block-by-date": "^1.4.0",
     "homedir": "^0.6.0",
     "promptly": "^3.0.3",
     "solc": "^0.6.8",
