@@ -33,14 +33,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/67P/truffle-kredits.git"
+    "url": "git+https://github.com/67P/kredits-contracts.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/67P/truffle-kredits/issues"
+    "url": "https://github.com/67P/kredits-contracts/issues"
   },
-  "homepage": "https://github.com/67P/truffle-kredits#readme",
+  "homepage": "https://github.com/67P/kredits-contracts#readme",
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.2",
     "@nomiclabs/hardhat-waffle": "^2.0.0",
@@ -60,7 +60,6 @@
     "hardhat-deploy-ethers": "^0.3.0-beta.7",
     "homedir": "^0.6.0",
     "promptly": "^3.0.3",
-    "solc": "^0.6.8",
     "solhint": "^2.3.1",
     "yargs": "^15.0.0"
   },
