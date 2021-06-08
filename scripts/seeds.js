@@ -1,29 +1,22 @@
 const path = require('path');
 const each = require('async-each-series');
-const ethers = require('ethers');
 
-const initKredits = require('./helpers/init_kredits.js');
 const seeds = require(path.join(__dirname, '..', '/config/seeds.js'));
 
-module.exports = async function(callback) {
-  let kredits;
-  try {
-    kredits = await initKredits(web3);
-  } catch(e) {
-    callback(e);
-    return;
-  }
+const { ethers } = require("hardhat");
+const Kredits = require('../lib/kredits');
 
-  let fundingAmount = 2;
+async function main() {
+  kredits = new Kredits(hre.ethers.provider, hre.ethers.provider.getSigner())
+  await kredits.init();
+
+  let fundingAmount = '2';
   each(seeds.funds, (address, next) => {
     console.log(`funding ${address} with 2 ETH`);
     try {
-      web3.eth.personal.getAccounts().then(accounts => {
-        web3.eth.personal.sendTransaction({
-          to: address,
-          from: accounts[0],
-          value: web3.utils.toWei(new web3.utils.BN(fundingAmount))
-        });
+      hre.ethers.provider.getSigner().sendTransaction({
+        to: address,
+        value: hre.ethers.utils.parseEther(fundingAmount)
       });
     } catch(e) {
       console.log('FAILED:', e);
@@ -51,3 +44,5 @@ module.exports = async function(callback) {
   }, () => { console.log("\nDone!") });
 
 }
+
+main();

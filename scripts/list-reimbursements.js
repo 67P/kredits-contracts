@@ -1,16 +1,12 @@
 const promptly = require('promptly');
 const Table = require('cli-table');
 
-const initKredits = require('./helpers/init_kredits.js');
+const { ethers } = require("hardhat");
+const Kredits = require('../lib/kredits');
 
-module.exports = async function(callback) {
-  let kredits;
-  try {
-    kredits = await initKredits(web3);
-  } catch(e) {
-    callback(e);
-    return;
-  }
+async function main() {
+  kredits = new Kredits(hre.ethers.provider, hre.ethers.provider.getSigner())
+  await kredits.init();
 
   console.log(`Using Reimbursement at: ${kredits.Reimbursement.contract.address}`);
 
@@ -18,35 +14,31 @@ module.exports = async function(callback) {
     head: ['ID', 'Amount', 'Token', 'recipientId', 'Confirmed?', 'Vetoed?', 'IPFS', 'Expenses']
   })
 
-  try {
-    let blockNumber = await kredits.provider.getBlockNumber();
-    let reimbursements = await kredits.Reimbursement.all({page: {size: 1000}});
+  let blockNumber = await kredits.provider.getBlockNumber();
+  let reimbursements = await kredits.Reimbursement.all({page: {size: 1000}});
 
-    let kreditsSum = 0;
-    console.log(`Current block number: ${blockNumber}`);
-    reimbursements.forEach(r => {
-      const confirmed = r.confirmedAtBlock <= blockNumber;
+  let kreditsSum = 0;
+  console.log(`Current block number: ${blockNumber}`);
+  reimbursements.forEach(r => {
+    const confirmed = r.confirmedAtBlock <= blockNumber;
 
-      table.push([
-        r.id.toString(),
-        r.amount.toString(),
-        `${r.token}`,
-        `${r.recipientId}`,
-        `${confirmed}`,
-        `${r.vetoed}`,
-        `${r.ipfsHash}`,
-        `${r.expenses.length}`
-      ]);
-    });
+    table.push([
+      r.id.toString(),
+      r.amount.toString(),
+      `${r.token}`,
+      `${r.recipientId}`,
+      `${confirmed}`,
+      `${r.vetoed}`,
+      `${r.ipfsHash}`,
+      `${r.expenses.length}`
+    ]);
+  });
 
-    console.log(table.toString());
+  console.log(table.toString());
 
-    let totalAmountUnconfirmed = await kredits.Reimbursement.functions.totalAmount(false);
-    let totalAmountConfirmed = await kredits.Reimbursement.functions.totalAmount(true);
-    console.log(`Total: ${totalAmountConfirmed} (confirmed) | ${totalAmountUnconfirmed} (including unconfirmed)`);
-  } catch (err) {
-    console.log(err);
-  }
-
-  callback();
+  let totalAmountUnconfirmed = await kredits.Reimbursement.functions.totalAmount(false);
+  let totalAmountConfirmed = await kredits.Reimbursement.functions.totalAmount(true);
+  console.log(`Total: ${totalAmountConfirmed} (confirmed) | ${totalAmountUnconfirmed} (including unconfirmed)`);
 }
+
+main();
