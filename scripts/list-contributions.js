@@ -1,16 +1,13 @@
 const promptly = require('promptly');
 const Table = require('cli-table');
 
-const initKredits = require('./helpers/init_kredits.js');
+const { ethers } = require("hardhat");
+const Kredits = require('../lib/kredits');
 
-module.exports = async function(callback) {
+async function main() {
   let kredits;
-  try {
-    kredits = await initKredits(web3);
-  } catch(e) {
-    callback(e);
-    return;
-  }
+  kredits = new Kredits(hre.ethers.provider, hre.ethers.provider.getSigner())
+  await kredits.init();
 
   console.log(`Using Contribution at: ${kredits.Contribution.contract.address}`);
 
@@ -47,6 +44,6 @@ module.exports = async function(callback) {
   } catch (err) {
     console.log(err);
   }
-
-  callback();
 }
+
+main();

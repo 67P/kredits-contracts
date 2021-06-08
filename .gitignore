@@ -6,3 +6,7 @@ node_modules
 .tm_properties
 yarn-error.log
 .DS_Store
+
+cache
+artifacts
+.openzeppelin
