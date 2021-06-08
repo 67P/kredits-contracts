@@ -2,8 +2,14 @@ require("@nomiclabs/hardhat-waffle");
 require('hardhat-deploy');
 require("hardhat-deploy-ethers");
 require('@openzeppelin/hardhat-upgrades');
+const Kredits = require('./lib/kredits');
 
 const promptly = require('promptly');
+
+extendEnvironment(async (hre) => {
+  hre.kredits = new Kredits(hre.ethers.provider, hre.ethers.provider.getSigner())
+  await hre.kredits.init();
+});
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
