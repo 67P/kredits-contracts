@@ -59,6 +59,10 @@ module.exports = {
   networks: {
     hardhat: {
       chainId: 1337
+    },
+    rsk: {
+      url: "https://public-node.testnet.rsk.co",
+      accounts: [process.env.DEPLOY_KEY],
     }
   },
   namedAccounts: {
