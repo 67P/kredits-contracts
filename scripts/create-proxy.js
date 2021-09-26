@@ -1,7 +1,7 @@
 const { ethers, upgrades } = require("hardhat");
 
-const path = require('path');
-const fileInject = require('./helpers/file_inject.js');
+const path = require("path");
+const fileInject = require("./helpers/file_inject.js");
 
 async function main() {
   const network = await hre.ethers.provider.getNetwork();
@@ -16,25 +16,38 @@ async function main() {
   const contributor = await upgrades.deployProxy(Contributor, []);
   await contributor.deployed();
   console.log("Contributor deployed to:", contributor.address);
+  console.log("...waiting for 1 confirmation");
+  await contributor.deployTransaction.wait();
 
   const blocksToWait = 40320; // 7 days; 15 seconds block time
   const contribution = await upgrades.deployProxy(Contribution, [blocksToWait]);
   await contribution.deployed();
   console.log("Contribution deployed to:", contribution.address);
+  console.log("...waiting for 1 confirmation");
+  await contribution.deployTransaction.wait();
 
   const token = await upgrades.deployProxy(Token, []);
   await token.deployed();
   console.log("Token deployed to:", token.address);
+  console.log("...waiting for 1 confirmation");
+  await token.deployTransaction.wait();
 
   const reimbursement = await upgrades.deployProxy(Reimbursement, []);
   await reimbursement.deployed();
   console.log("Reimbursement deployed to:", reimbursement.address);
+  console.log("...waiting for 1 confirmation");
+  await reimbursement.deployTransaction.wait();
 
   await contributor.setTokenContract(token.address);
   await contributor.setContributionContract(contribution.address);
 
   await contribution.setTokenContract(token.address);
   await contribution.setContributorContract(contributor.address);
+
+  await token.setContributionContract(contribution.address);
+  await token.setContributorContract(contributor.address);
+
+  await reimbursement.setContributorContract(contributor.address);
 
   const c = await contributor.contributionContract();
   console.log(c);
@@ -43,11 +56,11 @@ async function main() {
     Contributor: contributor.address,
     Contribution: contribution.address,
     Token: token.address,
-    Reimbursement: reimbursement.address
+    Reimbursement: reimbursement.address,
   };
 
-  const libPath = path.join(__dirname, '..', 'lib');
-  fileInject(path.join(libPath, 'addresses.json'), networkId, addresses);
+  const libPath = path.join(__dirname, "..", "lib");
+  fileInject(path.join(libPath, "addresses.json"), networkId, addresses);
 }
 
 main();

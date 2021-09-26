@@ -11,6 +11,7 @@ interface IContributionBalance {
 }
 
 contract Contributor is Initializable {
+  address deployer;
   IContributionBalance public contributionContract;
   ITokenBalance public tokenContract;
 
@@ -30,18 +31,22 @@ contract Contributor is Initializable {
   event ContributorAccountUpdated(uint32 id, address oldAccount, address newAccount);
   event ContributorAdded(uint32 id, address account);
 
-
-  function initialize() public initializer {
-
+  modifier onlyCore {
+    require(addressIsCore(msg.sender), "Core only");
+    _;
   }
 
-  // TODO who can call this when?
-  function setContributionContract(address contribution) public {
+  function initialize() public initializer {
+    deployer = msg.sender;
+  }
+
+  function setContributionContract(address contribution) public onlyCore {
+    require(address(contributionContract) == address(0) || addressIsCore(msg.sender), "Core only");
     contributionContract = IContributionBalance(contribution);
   }
 
-  // TODO who can call this when?
-  function setTokenContract(address token) public {
+  function setTokenContract(address token) public onlyCore {
+    require(address(tokenContract) == address(0) || addressIsCore(msg.sender), "Core only");
     tokenContract = ITokenBalance(token);
   }
 
@@ -55,7 +60,7 @@ contract Contributor is Initializable {
     return count;
   }
 
-  function updateContributorAccount(uint32 id, address oldAccount, address newAccount) public {
+  function updateContributorAccount(uint32 id, address oldAccount, address newAccount) public onlyCore {
     require(newAccount != address(0), "invalid new account address");
     require(getContributorAddressById(id) == oldAccount, "contributor does not exist");
 
@@ -65,7 +70,7 @@ contract Contributor is Initializable {
     emit ContributorAccountUpdated(id, oldAccount, newAccount);
   }
 
-  function updateContributorProfileHash(uint32 id, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public {
+  function updateContributorProfileHash(uint32 id, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public onlyCore {
     Contributor storage c = contributors[id];
     bytes32 oldHashDigest = c.hashDigest;
     c.hashDigest = hashDigest;
@@ -75,7 +80,7 @@ contract Contributor is Initializable {
     ContributorProfileUpdated(id, oldHashDigest, c.hashDigest);
   }
 
-  function addContributor(address account, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public {
+  function addContributor(address account, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public onlyCore {
     require(!addressExists(account));
     uint32 _id = contributorsCount + 1;
     assert(!contributors[_id].exists); // this can not be acually
@@ -94,7 +99,7 @@ contract Contributor is Initializable {
   function isCoreTeam(uint32 id) view public returns (bool) {
     // TODO: for simplicity we simply define the first contributors as core
     // later this needs to be changed to something more dynamic
-    return id < 7;
+    return id > 1 && id < 7 || msg.sender == deployer;
   }
 
   function exists(uint32 id) view public returns (bool) {
@@ -137,16 +142,4 @@ contract Contributor is Initializable {
     exists = c.exists;
   }
 
-  function canPerform(address _who, address _where, bytes32 _what, uint256[] memory _how) public returns (bool) {
-    address sender = _who;
-    if (sender == address(0)) {
-      sender = tx.origin;
-    }
-    // _what == keccak256('VOTE_PROPOSAL_ROLE')
-    if (_what == 0xd61216798314d2fc33e42ff2021d66707b1e38517d3f7166798a9d3a196a9c96) {
-      return contributorIds[sender] != uint256(0);
-    }
-
-    return addressIsCore(sender);
-  }
 }

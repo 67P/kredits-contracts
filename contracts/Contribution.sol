@@ -9,6 +9,7 @@ interface IToken {
 interface ContributorInterface {
   function getContributorAddressById(uint32 contributorId) external view returns (address);
   function getContributorIdByAddress(address contributorAccount) external view returns (uint32);
+  function addressIsCore(address sender) external view returns (bool);
   // TODO Maybe use for validation
   // function exists(uint32 contributorId) public view returns (bool);
 }
@@ -16,11 +17,6 @@ interface ContributorInterface {
 contract Contribution is Initializable {
   ContributorInterface public contributorContract;
   IToken public tokenContract;
-
-  bytes32 public constant ADD_CONTRIBUTION_ROLE = keccak256("ADD_CONTRIBUTION_ROLE");
-  bytes32 public constant VETO_CONTRIBUTION_ROLE = keccak256("VETO_CONTRIBUTION_ROLE");
-
-  bytes32 public constant KERNEL_APP_ADDR_NAMESPACE = 0xd6f028ca0e8edb4a8c9757ca4fdccab25fa1e0317da1188108f7d2dee14902fb;
 
   struct ContributionData {
     uint32 contributorId;
@@ -52,17 +48,22 @@ contract Contribution is Initializable {
   event ContributionClaimed(uint32 id, uint32 indexed contributorId, uint32 amount);
   event ContributionVetoed(uint32 id, address vetoedByAccount);
 
+  modifier onlyCore {
+    require(contributorContract.addressIsCore(msg.sender), "Core only");
+    _;
+  }
+
   function initialize(uint32 blocksToWait_) public initializer {
     blocksToWait = blocksToWait_;
   }
 
-  // TODO who can call this when?
   function setTokenContract(address token) public {
+    require(address(tokenContract) == address(0) || contributorContract.addressIsCore(msg.sender), "Core only");
     tokenContract = IToken(token);
   }
 
-  // TODO who can call this when?
   function setContributorContract(address contributor) public {
+    require(address(contributorContract) == address(0) || contributorContract.addressIsCore(msg.sender), "Core only");
     contributorContract = ContributorInterface(contributor);
   }
 
@@ -151,6 +152,7 @@ contract Contribution is Initializable {
 
   function add(uint32 amount, uint32 contributorId, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public{
     //require(canPerform(msg.sender, ADD_CONTRIBUTION_ROLE, new uint32[](0)), 'nope');
+    require(balanceOf(msg.sender) > 0, "Must have Kredits");
     uint32 contributionId = contributionsCount + 1;
     ContributionData storage c = contributions[contributionId];
     c.exists = true;
@@ -174,7 +176,8 @@ contract Contribution is Initializable {
     emit ContributionAdded(contributionId, contributorId, amount);
   }
 
-  function veto(uint32 contributionId) public {
+  function veto(uint32 contributionId) public onlyCore {
+
     ContributionData storage c = contributions[contributionId];
     require(c.exists, 'NOT_FOUND');
     require(!c.claimed, 'ALREADY_CLAIMED');
@@ -201,4 +204,5 @@ contract Contribution is Initializable {
   function exists(uint32 contributionId) public view returns (bool) {
     return contributions[contributionId].exists;
   }
+
 }

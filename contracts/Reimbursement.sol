@@ -2,10 +2,16 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
+interface ContributorInterface {
+  function getContributorAddressById(uint32 contributorId) external view returns (address);
+  function getContributorIdByAddress(address contributorAccount) external view returns (uint32);
+  function addressIsCore(address sender) external view returns (bool);
+  // TODO Maybe use for validation
+  // function exists(uint32 contributorId) public view returns (bool);
+}
+
 contract Reimbursement is Initializable {
-  bytes32 public constant ADD_REIMBURSEMENT_ROLE = keccak256("ADD_REIMBURSEMENT_ROLE");
-  bytes32 public constant VETO_REIMBURSEMENT_ROLE = keccak256("VETO_REIMBURSEMENT_ROLE");
-  // bytes32 public constant MANAGE_APPS_ROLE = keccak256("MANAGE_APPS_ROLE");
+  ContributorInterface public contributorContract;
 
   struct ReimbursementData {
     uint32 recipientId;
@@ -29,6 +35,24 @@ contract Reimbursement is Initializable {
 
   function initialize() public initializer {
     blocksToWait = 40320; // 7 days; 15 seconds block time
+  }
+
+  modifier onlyCore {
+    require(contributorContract.addressIsCore(msg.sender), "Core only");
+    _;
+  }
+
+  function setContributorContract(address contributor) public {
+    require(address(contributorContract) == address(0) || contributorContract.addressIsCore(msg.sender), "Core only");
+    contributorContract = ContributorInterface(contributor);
+  }
+
+  function getContributorIdByAddress(address contributorAccount) public view returns (uint32) {
+    return contributorContract.getContributorIdByAddress(contributorAccount);
+  }
+
+  function getContributorAddressById(uint32 contributorId) public view returns (address) {
+    return contributorContract.getContributorAddressById(contributorId);
   }
 
   function totalAmount(bool confirmedOnly) public view returns (uint256 amount) {
@@ -57,7 +81,7 @@ contract Reimbursement is Initializable {
     );
   }
 
-  function add(uint256 amount, address token, uint32 recipientId, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public {
+  function add(uint256 amount, address token, uint32 recipientId, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public onlyCore {
     uint32 reimbursementId = reimbursementsCount + 1;
     ReimbursementData storage r = reimbursements[reimbursementId];
     r.exists = true;
@@ -74,7 +98,7 @@ contract Reimbursement is Initializable {
     emit ReimbursementAdded(reimbursementId, msg.sender, amount);
   }
 
-  function veto(uint32 reimbursementId) public {
+  function veto(uint32 reimbursementId) public onlyCore {
     ReimbursementData storage r = reimbursements[reimbursementId];
     require(r.exists, 'NOT_FOUND');
     require(block.number < r.confirmedAtBlock, 'VETO_PERIOD_ENDED');
