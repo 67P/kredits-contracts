@@ -1,13 +1,16 @@
 require("@nomiclabs/hardhat-waffle");
-require('hardhat-deploy');
+require("hardhat-deploy");
 require("hardhat-deploy-ethers");
-require('@openzeppelin/hardhat-upgrades');
-const Kredits = require('./lib/kredits');
+require("@openzeppelin/hardhat-upgrades");
+const Kredits = require("./lib/kredits");
 
-const promptly = require('promptly');
+const promptly = require("promptly");
 
 extendEnvironment(async (hre) => {
-  hre.kredits = new Kredits(hre.ethers.provider, hre.ethers.provider.getSigner())
+  hre.kredits = new Kredits(
+    hre.ethers.provider,
+    hre.ethers.provider.getSigner()
+  );
   await hre.kredits.init();
 });
 
@@ -21,29 +24,32 @@ task("accounts", "Prints the list of accounts", async () => {
   }
 });
 
-task('fund', "Send eth to an address", async () => {
-  const to = await promptly.prompt('Address:');
-  const value = await promptly.prompt('Value:');
+task("fund", "Send eth to an address", async () => {
+  const to = await promptly.prompt("Address:");
+  const value = await promptly.prompt("Value:");
 
   const signer = await ethers.getSigners();
 
-  const fundTransaction = await signer[0].sendTransaction({to: to, value: ethers.utils.parseEther(value)});
+  const fundTransaction = await signer[0].sendTransaction({
+    to: to,
+    value: ethers.utils.parseEther(value),
+  });
   console.log(fundTransaction);
 });
 
 task("create-wallet", "Creates a new wallet json", async () => {
   const wallet = ethers.Wallet.createRandom();
 
-  console.log('New wallet:');
+  console.log("New wallet:");
   console.log(`Address: ${wallet.address}`);
   console.log(`Public key: ${wallet.publicKey}`);
   console.log(`Private key: ${wallet.privateKey}`);
   console.log(`Mnemonic: ${JSON.stringify(wallet.mnemonic)}`);
 
-  const password = await promptly.prompt('Encryption password: ')
+  const password = await promptly.prompt("Encryption password: ");
   const encryptedJSON = await wallet.encrypt(password);
 
-  console.log('Encrypted wallet JSON:');
+  console.log("Encrypted wallet JSON:");
   console.log(encryptedJSON);
 });
 
@@ -58,16 +64,19 @@ module.exports = {
   // defaultNetwork: 'localhost',
   networks: {
     hardhat: {
-      chainId: 1337
+      chainId: 1337,
     },
     rsk: {
-      url: "https://public-node.testnet.rsk.co",
-      accounts: [process.env.DEPLOY_KEY],
-    }
+      url: "http://10.1.1.136:4444/",
+      accounts: [
+        process.env.DEPLOY_KEY ||
+          "0xffb4230bdf9b1f1dd48f0bc54e4007436733f225a4f163d4f7e58e620ae329eb",
+      ],
+    },
   },
   namedAccounts: {
     deployer: {
-      default: 0
-    }
-  }
+      default: 0,
+    },
+  },
 };
