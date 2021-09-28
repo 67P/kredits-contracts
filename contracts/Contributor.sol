@@ -32,7 +32,7 @@ contract Contributor is Initializable {
   event ContributorAdded(uint32 id, address account);
 
   modifier onlyCore {
-    require(addressIsCore(msg.sender), "Core only");
+    require(addressIsCore(tx.origin), "Core only");
     _;
   }
 

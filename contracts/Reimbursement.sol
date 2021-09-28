@@ -38,7 +38,7 @@ contract Reimbursement is Initializable {
   }
 
   modifier onlyCore {
-    require(contributorContract.addressIsCore(msg.sender), "Core only");
+    require(contributorContract.addressIsCore(tx.origin), "Core only");
     _;
   }
 

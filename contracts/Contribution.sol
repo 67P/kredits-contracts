@@ -49,7 +49,7 @@ contract Contribution is Initializable {
   event ContributionVetoed(uint32 id, address vetoedByAccount);
 
   modifier onlyCore {
-    require(contributorContract.addressIsCore(msg.sender), "Core only");
+    require(contributorContract.addressIsCore(tx.origin), "Core only");
     _;
   }
 
@@ -150,7 +150,7 @@ contract Contribution is Initializable {
     );
   }
 
-  function add(uint32 amount, uint32 contributorId, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public{
+  function add(uint32 amount, uint32 contributorId, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public {
     //require(canPerform(msg.sender, ADD_CONTRIBUTION_ROLE, new uint32[](0)), 'nope');
     require(balanceOf(msg.sender) > 0, "Must have Kredits");
     uint32 contributionId = contributionsCount + 1;
