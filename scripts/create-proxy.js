@@ -38,19 +38,30 @@ async function main() {
   console.log("...waiting for 1 confirmation");
   await reimbursement.deployTransaction.wait();
 
-  await contributor.setTokenContract(token.address);
-  await contributor.setContributionContract(contribution.address);
+  await contributor
+    .setTokenContract(token.address)
+    .then((response) => response.wait());
+  await contributor
+    .setContributionContract(contribution.address)
+    .then((response) => response.wait());
 
-  await contribution.setTokenContract(token.address);
-  await contribution.setContributorContract(contributor.address);
+  await contribution
+    .setTokenContract(token.address)
+    .then((response) => response.wait());
+  await contribution
+    .setContributorContract(contributor.address)
+    .then((response) => response.wait());
 
-  await token.setContributionContract(contribution.address);
-  await token.setContributorContract(contributor.address);
+  await token
+    .setContributionContract(contribution.address)
+    .then((response) => response.wait());
+  await token
+    .setContributorContract(contributor.address)
+    .then((response) => response.wait());
 
-  await reimbursement.setContributorContract(contributor.address);
-
-  const c = await contributor.contributionContract();
-  console.log(c);
+  await reimbursement
+    .setContributorContract(contributor.address)
+    .then((response) => response.wait());
 
   const addresses = {
     Contributor: contributor.address,
@@ -59,8 +70,10 @@ async function main() {
     Reimbursement: reimbursement.address,
   };
 
+  console.log("Writing addresses.json");
   const libPath = path.join(__dirname, "..", "lib");
   fileInject(path.join(libPath, "addresses.json"), networkId, addresses);
+  console.log("DONE!");
 }
 
 main();
