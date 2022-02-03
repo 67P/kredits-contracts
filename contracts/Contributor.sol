@@ -99,7 +99,7 @@ contract Contributor is Initializable {
   function isCoreTeam(uint32 id) view public returns (bool) {
     // TODO: for simplicity we simply define the first contributors as core
     // later this needs to be changed to something more dynamic
-    return id > 1 && id < 7 || msg.sender == deployer;
+    return id > 0 && id < 7;
   }
 
   function exists(uint32 id) view public returns (bool) {
@@ -107,6 +107,10 @@ contract Contributor is Initializable {
   }
 
   function addressIsCore(address account) view public returns (bool) {
+    // the deployer is always core
+    if(account == deployer) {
+      return true;
+    }
     uint32 id = getContributorIdByAddress(account);
     return isCoreTeam(id);
   }
