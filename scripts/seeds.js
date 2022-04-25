@@ -1,10 +1,7 @@
 const path = require("path");
-const each = require("async-each-series");
-
-const seeds = require(path.join(__dirname, "..", "/config/seeds.js"));
-
 const { ethers } = require("hardhat");
 const Kredits = require("../lib/kredits");
+const seeds = require(path.join(__dirname, "..", "/config/seeds.js"));
 
 async function main() {
   kredits = new Kredits(hre.ethers.provider, hre.ethers.provider.getSigner());
@@ -14,56 +11,47 @@ async function main() {
   console.log(`Sender account: ${address}`);
 
   let fundingAmount = "2";
-  each(seeds.funds, (address, next) => {
-    console.log(`funding ${address} with 2 ETH`);
+
+  for (const address of seeds.funds) {
+    console.log(`Funding ${address} with 2 ETH`);
+
     try {
-      hre.ethers.provider.getSigner().sendTransaction({
+      await hre.ethers.provider.getSigner().sendTransaction({
         to: address,
         value: hre.ethers.utils.parseEther(fundingAmount),
       });
+      console.log('Done');
     } catch (e) {
       console.log("FAILED:", e);
     }
-    next();
-  });
+  }
 
-  each(
-    seeds.contractCalls,
-    (call, next) => {
-      let [contractName, method, args] = call;
-      let contractWrapper = kredits[contractName];
-      let func;
-      if (contractWrapper[method]) {
-        func = contractWrapper[method];
-      } else {
-        func = contractWrapper.contract[method];
-      }
-      func
-        .apply(contractWrapper, args)
-        .then((result) => {
-          console.log(
-            `[OK] kredits.${contractName}.${method}(${JSON.stringify(
-              args
-            )}) => ${result.hash}`
-          );
-          result.wait().then((r) => {
-            next();
-          });
-        })
-        .catch((error) => {
-          console.log(
-            `[FAILED] kredits.${contractName}.${method}(${JSON.stringify(
-              args
-            )})`
-          );
-          console.log(`Error: ${error.message}`);
-          next();
-        });
-    },
-    () => {
-      console.log("\nDone!");
+  console.log(`Running seeds (${seeds.contractCalls.length} contract calls)...\n`)
+
+  for (const call of seeds.contractCalls) {
+    const [contractName, method, args] = call;
+    const contractWrapper = kredits[contractName];
+    const func = contractWrapper[method] ?
+                 contractWrapper[method] :
+                 contractWrapper.contract[method];
+
+    try {
+      // console.log('trying', func);
+      const result = await func.apply(contractWrapper, args);
+      // console.log('result:', result);
+      await result.wait();
+      console.log(
+        `[OK] kredits.${contractName}.${method}(${JSON.stringify(
+          args
+        )}) => ${result.hash}`
+      );
+    } catch(error) {
+      console.log(
+        `[FAILED] kredits.${contractName}.${method}(${JSON.stringify(args)})`
+      );
+      console.log(`Error: ${error.message}`);
     }
-  );
+  }
 }
 
-main();
+main().then(() => console.log("Bravo, all done!"));
