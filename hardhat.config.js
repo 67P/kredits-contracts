@@ -60,7 +60,7 @@ task("create-wallet", "Creates a new wallet json", async () => {
  * @type import('hardhat/config').HardhatUserConfig
  */
 module.exports = {
-  solidity: "0.8.0",
+  solidity: "0.8.2",
   // defaultNetwork: 'localhost',
   networks: {
     hardhat: {
