@@ -62,7 +62,7 @@
     "yargs": "^15.0.0"
   },
   "dependencies": {
-    "@kosmos/schemas": "^3.0.0",
+    "@kosmos/schemas": "^3.1.0",
     "ethers": "^5.4.7",
     "ipfs-http-client": "^41.0.1",
     "multihashes": "^4.0.3",
