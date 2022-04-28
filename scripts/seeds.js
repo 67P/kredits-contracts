@@ -1,5 +1,4 @@
 const path = require("path");
-const { ethers } = require("hardhat");
 const Kredits = require("../lib/kredits");
 const seeds = require(path.join(__dirname, "..", "/config/seeds.js"));
 
