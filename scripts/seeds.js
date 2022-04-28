@@ -1,13 +1,16 @@
 const path = require("path");
+const colors = require('colors/safe');
 const Kredits = require("../lib/kredits");
 const seeds = require(path.join(__dirname, "..", "/config/seeds.js"));
+
+let somethingFailed = false;
 
 async function main() {
   kredits = new Kredits(hre.ethers.provider, hre.ethers.provider.getSigner());
   await kredits.init();
 
   const address = await hre.ethers.provider.getSigner().getAddress();
-  console.log(`Sender account: ${address}`);
+  console.log(`Sender account: ${address}\n`);
 
   let fundingAmount = "2";
 
@@ -19,13 +22,14 @@ async function main() {
         to: address,
         value: hre.ethers.utils.parseEther(fundingAmount),
       });
-      console.log('Done');
+      console.log(colors.green('Done'));
     } catch (e) {
-      console.log("FAILED:", e);
+      somethingFailed = true;
+      console.log(colors.red("FAILED:", e));
     }
   }
 
-  console.log(`Running seeds (${seeds.contractCalls.length} contract calls)...\n`)
+  console.log(`\nRunning seeds (${seeds.contractCalls.length} contract calls)...\n`)
 
   for (const call of seeds.contractCalls) {
     const [contractName, method, args] = call;
@@ -40,17 +44,24 @@ async function main() {
       // console.log('result:', result);
       await result.wait();
       console.log(
-        `[OK] kredits.${contractName}.${method}(${JSON.stringify(
+        `${colors.green('[OK]')} kredits.${contractName}.${method}(${JSON.stringify(
           args
         )}) => ${result.hash}`
       );
     } catch(error) {
+      somethingFailed = true;
       console.log(
-        `[FAILED] kredits.${contractName}.${method}(${JSON.stringify(args)})`
+        `${colors.red('[FAILED]')} kredits.${contractName}.${method}(${JSON.stringify(args)})`
       );
-      console.log(`Error: ${error.message}`);
+      console.log(`Reason: ${error.message}`);
     }
   }
 }
 
-main().then(() => console.log("Bravo, all done!"));
+main().then(() => {
+  if (somethingFailed) {
+    console.log("\nSomething went wrong while running the seeds. Please check the log output above.");
+  } else {
+    console.log("\nBravo, all done!");
+  }
+});
