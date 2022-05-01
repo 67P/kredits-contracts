@@ -1,11 +1,7 @@
-const promptly = require('promptly');
 const Table = require('cli-table');
-
-const { ethers } = require("hardhat");
 const Kredits = require('../lib/kredits');
 
 async function main() {
-  let kredits;
   kredits = new Kredits(hre.ethers.provider, hre.ethers.provider.getSigner())
   await kredits.init();
 

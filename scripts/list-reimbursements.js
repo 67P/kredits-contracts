@@ -1,7 +1,4 @@
-const promptly = require("promptly");
 const Table = require("cli-table");
-
-const { ethers } = require("hardhat");
 const Kredits = require("../lib/kredits");
 
 async function main() {
@@ -13,25 +10,14 @@ async function main() {
   );
 
   const table = new Table({
-    head: [
-      "ID",
-      "Amount",
-      "Token",
-      "recipientId",
-      "Confirmed?",
-      "Vetoed?",
-      "IPFS",
-      "Expenses",
-    ],
+    head: ["ID", "Amount", "Token", "recipientId", "Confirmed?", "Vetoed?", "IPFS", "Expenses"],
   });
 
-  let blockNumber = await kredits.provider.getBlockNumber();
-  let reimbursements = await kredits.Reimbursement.all({
-    page: { size: 1000 },
-  });
+  const blockNumber = await kredits.provider.getBlockNumber();
+  const reimbursements = await kredits.Reimbursement.all();
 
-  let kreditsSum = 0;
   console.log(`Current block number: ${blockNumber}`);
+
   reimbursements.forEach((r) => {
     const confirmed = r.confirmedAtBlock <= blockNumber;
 
@@ -49,10 +35,10 @@ async function main() {
 
   console.log(table.toString());
 
-  let totalAmountUnconfirmed = await kredits.Reimbursement.contract.totalAmount(
+  const totalAmountUnconfirmed = await kredits.Reimbursement.contract.totalAmount(
     false
   );
-  let totalAmountConfirmed = await kredits.Reimbursement.contract.totalAmount(
+  const totalAmountConfirmed = await kredits.Reimbursement.contract.totalAmount(
     true
   );
   console.log(
