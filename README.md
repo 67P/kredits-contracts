@@ -66,10 +66,10 @@ if you want to increase the block time to 10 seconds you can add
         $ npm run devchain
         $ ipfs daemon
 
-2.  Compile contracts
+2.  Compile contracts and build ABIs
 
         (compiled artifacts will be in `/artifacts`)
-        $ npm run compile-contracts
+        $ npm run build
 
 3.  Deploy a new KreditsKit and create a new DAO with the latest app versions
 
