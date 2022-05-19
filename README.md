@@ -2,13 +2,8 @@
 
 # Kredits Contracts
 
-This repository contains the Solidity smart contracts organized as
-[Aragon](https://hack.aragon.org/) apps and JavaScript API wrapper for [Kosmos
+This repository contains the Solidity smart contracts and the JavaScript API wrapper for [Kosmos
 Kredits](https://wiki.kosmos.org/Kredits).
-
-It is based on [aragonOS](https://hack.aragon.org/docs/aragonos-intro.html) and
-follows the aragonOS conventions. Aragon itself uses the [Truffle
-framework](http://truffleframework.com/) for some things.
 
 ## Development
 
@@ -20,44 +15,14 @@ All requirements are defined in `package.json`.
 
     $ npm install
 
-Each of the aragon apps are separate packages:
-
-    $ cd apps/[app]
-    $ npm install
-
-You can use `npm run install-all` to install all app dependencies at once.
-
-#### Sytem dependencies
-
-Aragon CLI and Truffle need to be installed on your sytem as well:
-
-    npm install -g @aragon/cli
-    npm install -g truffle
-
-_Note: `@aragon/cli` currently fails to install on node.js 14. Please use
-node.js 12 until the issue has been resolved upstream._
-
 ### Local development chain
 
-For local development it is recommended to use
-[ganache](http://truffleframework.com/ganache/) to run a local development
-chain. When using the ganache simulator, no full Ethereum node is required.
+We use [hardhat](https://hardhat.org/) as development environment for the
+smart contracts.
 
-We use the default aragon-cli devchain command to configure and run a local
-development ganache.
+To run a local development chain run:
 
-    $ npm run devchain (or aragon devchain --port 7545)
-
-To clear/reset the chain use (e.g. if you run out of funds on your devchain)
-
-    $ npm run devchain --
-
-We default to port 7545 for development to not get in conflict with the default
-Ethereum RPC port.
-
-You can also set certain ganache options to configure the devchain, for example
-if you want to increase the block time to 10 seconds you can add
-`--block-time=10`.
+    $ npm run devchain # or: hardhat node --network hardhat
 
 ### Bootstrap
 
@@ -71,7 +36,7 @@ if you want to increase the block time to 10 seconds you can add
         (compiled artifacts will be in `/artifacts`)
         $ npm run build
 
-3.  Deploy a new KreditsKit and create a new DAO with the latest app versions
+3.  Deploy new upgradable contract proxies
 
         $ npm run deploy:dao
 
@@ -84,6 +49,12 @@ if you want to increase the block time to 10 seconds you can add
 5.  Show contract addresses
 
         $ cat lib/addresses.json
+
+## Fund a local development account
+
+If you need to fund development accounts with devchain coins:
+
+    $ npm run fund # or hardhat fund --network localhost
 
 ## Contract architecture
 
@@ -104,7 +75,7 @@ Some scripts are also defined as npm script, see package.json.
 
 Call any function on any contract:
 
-    $ truffle exec scripts/cli.js
+    $ hardhat run scripts/cli.js
 
 ### repl.js
 
