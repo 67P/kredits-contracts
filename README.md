@@ -71,12 +71,6 @@ To run these scripts use `hardhat run`. For example: `hardhat run scripts/list-c
 
 Some scripts are also defined as npm script, see package.json.
 
-### cli.js
-
-Call any function on any contract:
-
-    $ hardhat run scripts/cli.js
-
 ### repl.js
 
 Similar to cli.js but only provides a REPL with an initialized `kredits`
