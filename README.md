@@ -71,7 +71,7 @@ To run these scripts use `hardhat run`. For example: `hardhat run scripts/list-c
 
 Some scripts are also defined as npm script, see package.json.
 
-### repl.js
+### repl/console
 
 Similar to cli.js but only provides a REPL with an initialized `kredits`
 instance.
@@ -107,6 +107,9 @@ All contract addresses are stored in `lib/addresses.json`
 We use OpenZeppelin for an upgradeable contracts: [https://www.npmjs.com/package/@openzeppelin/hardhat-upgrades](https://www.npmjs.com/package/@openzeppelin/hardhat-upgrades)
 
 Refer to the OpenZeppelin README and `scripts/create-proxy.js`
+
+For an upgrade example checkout `scripts/upgrade-example.js`
+
 
 ## Known Issues
 
