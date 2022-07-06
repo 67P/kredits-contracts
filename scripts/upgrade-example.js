@@ -9,7 +9,7 @@ async function main() {
   const ContributorV2 = await ethers.getContractFactory("Contributor");
   const contributor = await upgrades.upgradeProxy(kredits.Contributor.address, ContributorV2);
   console.log("Contributor upgraded");
-  console.log(`Contirbutor address: ${contributor.address}`);
+  console.log(`Contributor address: ${contributor.address}`);
 
   await contributor.deployTransaction.wait();
 
