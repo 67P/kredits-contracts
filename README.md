@@ -108,6 +108,8 @@ We use OpenZeppelin for an upgradeable contracts: [https://www.npmjs.com/package
 
 Refer to the OpenZeppelin README and `scripts/create-proxy.js`
 
+[OpenZeppelin Step by Step guide](https://forum.openzeppelin.com/t/openzeppelin-upgrades-step-by-step-tutorial-for-hardhat/3580)
+
 For an upgrade example checkout `scripts/upgrade-example.js`
 
 

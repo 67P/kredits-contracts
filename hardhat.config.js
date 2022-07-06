@@ -66,8 +66,15 @@ module.exports = {
     hardhat: {
       chainId: 1337,
     },
+    rinkeby: {
+      url: "https://rinkeby.infura.io/v3/2e73045db2e84711912f8d0e5968f309",
+      accounts: [
+        process.env.DEPLOY_KEY ||
+          "0xffb4230bdf9b1f1dd48f0bc54e4007436733f225a4f163d4f7e58e620ae329eb",
+      ],
+    },
     rsk: {
-      url: "http://10.1.1.136:4444/",
+      url: "https://rsk-testnet.kosmos.org",
       accounts: [
         process.env.DEPLOY_KEY ||
           "0xffb4230bdf9b1f1dd48f0bc54e4007436733f225a4f163d4f7e58e620ae329eb",
