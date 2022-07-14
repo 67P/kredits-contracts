@@ -1,6 +1,7 @@
 const promptly = require('promptly');
 
-const initKredits = require('./helpers/init_kredits.js');
+const { ethers } = require("hardhat");
+const Kredits = require('../lib/kredits');
 
 async function prompt(message, options) {
   if (!options) {
@@ -8,15 +9,9 @@ async function prompt(message, options) {
   }
   return await promptly.prompt(message, options);
 }
-
-module.exports = async function(callback) {
-  let kredits;
-  try {
-    kredits = await initKredits(web3);
-  } catch(e) {
-    callback(e);
-    return;
-  }
+async function main() {
+  kredits = new Kredits(hre.ethers.provider, hre.ethers.provider.getSigner())
+  await kredits.init();
 
   console.log(`Using contributors at: ${kredits.Contributor.contract.address}`);
 
@@ -36,9 +31,10 @@ module.exports = async function(callback) {
   kredits.Contributor.add(contributorAttributes, { gasLimit: 350000 }).then((result) => {
     console.log("\n\nResult:");
     console.log(result);
-    callback();
   }).catch((error) => {
     console.log('Failed to create contributor');
-    callback(error);
+    console.log(error);
   });
 }
+
+main();

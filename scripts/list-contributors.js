@@ -1,17 +1,9 @@
-const promptly = require('promptly');
 const Table = require('cli-table');
-const ethers = require('ethers');
+const Kredits = require('../lib/kredits');
 
-const initKredits = require('./helpers/init_kredits.js');
-
-module.exports = async function(callback) {
-  let kredits;
-  try {
-    kredits = await initKredits(web3);
-  } catch(e) {
-    callback(e);
-    return;
-  }
+async function main() {
+  kredits = new Kredits(hre.ethers.provider, hre.ethers.provider.getSigner())
+  await kredits.init();
 
   console.log(`Using Contributor at: ${kredits.Contributor.contract.address}`);
 
@@ -19,27 +11,22 @@ module.exports = async function(callback) {
     head: ['ID', 'Account', 'Name', 'Core?', 'Balance', 'Kredits earned', 'Contributions count', 'IPFS']
   })
 
-  try {
-    const contributors = await kredits.Contributor.all()
+  const contributors = await kredits.Contributor.all()
 
-    contributors.forEach((c) => {
-      table.push([
-        c.id.toString(),
-        c.account,
-        `${c.name}`,
-        c.isCore,
-        c.balanceInt.toString(),
-        c.totalKreditsEarned.toString(),
-        c.contributionsCount.toString(),
-        c.ipfsHash
-      ])
-    })
+  contributors.forEach((c) => {
+    table.push([
+      c.id.toString(),
+      c.account,
+      `${c.name}`,
+      c.isCore,
+      c.balanceInt.toString(),
+      c.totalKreditsEarned.toString(),
+      c.contributionsCount.toString(),
+      c.ipfsHash
+    ])
+  });
 
-    console.log(table.toString())
-  } catch(e) {
-    callback(e);
-    return;
-  }
-
-  callback()
+  console.log(table.toString());
 }
+
+main();

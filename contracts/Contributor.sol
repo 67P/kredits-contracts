@@ -1,19 +1,19 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.8.0;
 
-import "@aragon/os/contracts/apps/AragonApp.sol";
-import "@aragon/os/contracts/kernel/IKernel.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 interface ITokenBalance {
-  function balanceOf(address contributorAccount) public view returns (uint256);
+  function balanceOf(address contributorAccount) external view returns (uint256);
 }
 interface IContributionBalance {
-  function totalKreditsEarnedByContributor(uint32 contributorId, bool confirmedOnly) public view returns (uint32 amount);
-  function balanceOf(address owner) public view returns (uint256);
+  function totalKreditsEarnedByContributor(uint32 contributorId, bool confirmedOnly) external view returns (uint32 amount);
+  function balanceOf(address owner) external view returns (uint256);
 }
 
-contract Contributor is AragonApp {
-  bytes32 public constant KERNEL_APP_ADDR_NAMESPACE = 0xd6f028ca0e8edb4a8c9757ca4fdccab25fa1e0317da1188108f7d2dee14902fb;
-  bytes32 public constant MANAGE_CONTRIBUTORS_ROLE = keccak256("MANAGE_CONTRIBUTORS_ROLE");
+contract Contributor is Initializable {
+  address deployer;
+  IContributionBalance public contributionContract;
+  ITokenBalance public tokenContract;
 
   struct Contributor {
     address account;
@@ -27,23 +27,27 @@ contract Contributor is AragonApp {
   mapping (uint32 => Contributor) public contributors;
   uint32 public contributorsCount;
 
-  // ensure alphabetic order
-  enum Apps { Contribution, Contributor, Proposal, Reimbursement, Token }
-  bytes32[5] public appIds;
-
   event ContributorProfileUpdated(uint32 id, bytes32 oldHashDigest, bytes32 newHashDigest); // what should be logged
   event ContributorAccountUpdated(uint32 id, address oldAccount, address newAccount);
   event ContributorAdded(uint32 id, address account);
 
-  function initialize(address root, bytes32[5] _appIds) public onlyInit {
-    appIds = _appIds;
-
-    initialized();
+  modifier onlyCore {
+    require(addressIsCore(tx.origin), "Core only");
+    _;
   }
 
-  function getContract(uint8 appId) public view returns (address) {
-    IKernel k = IKernel(kernel());
-    return k.getApp(KERNEL_APP_ADDR_NAMESPACE, appIds[appId]);
+  function initialize() public initializer {
+    deployer = msg.sender;
+  }
+
+  function setContributionContract(address contribution) public onlyCore {
+    require(address(contributionContract) == address(0) || addressIsCore(msg.sender), "Core only");
+    contributionContract = IContributionBalance(contribution);
+  }
+
+  function setTokenContract(address token) public onlyCore {
+    require(address(tokenContract) == address(0) || addressIsCore(msg.sender), "Core only");
+    tokenContract = ITokenBalance(token);
   }
 
   function coreContributorsCount() public view returns (uint32) {
@@ -56,7 +60,7 @@ contract Contributor is AragonApp {
     return count;
   }
 
-  function updateContributorAccount(uint32 id, address oldAccount, address newAccount) public auth(MANAGE_CONTRIBUTORS_ROLE) {
+  function updateContributorAccount(uint32 id, address oldAccount, address newAccount) public onlyCore {
     require(newAccount != address(0), "invalid new account address");
     require(getContributorAddressById(id) == oldAccount, "contributor does not exist");
 
@@ -66,7 +70,7 @@ contract Contributor is AragonApp {
     emit ContributorAccountUpdated(id, oldAccount, newAccount);
   }
 
-  function updateContributorProfileHash(uint32 id, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public isInitialized auth(MANAGE_CONTRIBUTORS_ROLE) {
+  function updateContributorProfileHash(uint32 id, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public onlyCore {
     Contributor storage c = contributors[id];
     bytes32 oldHashDigest = c.hashDigest;
     c.hashDigest = hashDigest;
@@ -76,7 +80,7 @@ contract Contributor is AragonApp {
     ContributorProfileUpdated(id, oldHashDigest, c.hashDigest);
   }
 
-  function addContributor(address account, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public isInitialized auth(MANAGE_CONTRIBUTORS_ROLE) {
+  function addContributor(address account, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public onlyCore {
     require(!addressExists(account));
     uint32 _id = contributorsCount + 1;
     assert(!contributors[_id].exists); // this can not be acually
@@ -95,7 +99,7 @@ contract Contributor is AragonApp {
   function isCoreTeam(uint32 id) view public returns (bool) {
     // TODO: for simplicity we simply define the first contributors as core
     // later this needs to be changed to something more dynamic
-    return id < 7;
+    return id > 0 && id < 7;
   }
 
   function exists(uint32 id) view public returns (bool) {
@@ -103,6 +107,10 @@ contract Contributor is AragonApp {
   }
 
   function addressIsCore(address account) view public returns (bool) {
+    // the deployer is always core
+    if(account == deployer) {
+      return true;
+    }
     uint32 id = getContributorIdByAddress(account);
     return isCoreTeam(id);
   }
@@ -119,7 +127,7 @@ contract Contributor is AragonApp {
     return contributors[id].account;
   }
 
-  function getContributorByAddress(address account) internal view returns (Contributor) {
+  function getContributorByAddress(address account) internal view returns (Contributor memory) {
     uint32 id = contributorIds[account];
     return contributors[id];
   }
@@ -132,24 +140,10 @@ contract Contributor is AragonApp {
     hashFunction = c.hashFunction;
     hashSize = c.hashSize;
     isCore = isCoreTeam(id);
-    address token = getContract(uint8(Apps.Token));
-    balance = ITokenBalance(token).balanceOf(c.account);
-    address contribution = getContract(uint8(Apps.Contribution));
-    totalKreditsEarned = IContributionBalance(contribution).totalKreditsEarnedByContributor(_id, true);
-    contributionsCount = IContributionBalance(contribution).balanceOf(c.account);
+    balance = tokenContract.balanceOf(c.account);
+    totalKreditsEarned = contributionContract.totalKreditsEarnedByContributor(_id, true);
+    contributionsCount = contributionContract.balanceOf(c.account);
     exists = c.exists;
   }
 
-  function canPerform(address _who, address _where, bytes32 _what, uint256[] memory _how) public returns (bool) {
-    address sender = _who;
-    if (sender == address(-1)) {
-      sender = tx.origin;
-    }
-    // _what == keccak256('VOTE_PROPOSAL_ROLE')
-    if (_what == 0xd61216798314d2fc33e42ff2021d66707b1e38517d3f7166798a9d3a196a9c96) {
-      return contributorIds[sender] != uint256(0);
-    }
-
-    return addressIsCore(sender);
-  }
 }

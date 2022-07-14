@@ -1,28 +1,22 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.8.0;
 
-import "@aragon/os/contracts/apps/AragonApp.sol";
-import "@aragon/os/contracts/kernel/IKernel.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 interface IToken {
-  function mintFor(address contributorAccount, uint256 amount, uint32 contributionId) public;
+  function mintFor(address contributorAccount, uint256 amount, uint32 contributionId) external;
 }
 
 interface ContributorInterface {
-  function getContributorAddressById(uint32 contributorId) public view returns (address);
-  function getContributorIdByAddress(address contributorAccount) public view returns (uint32);
+  function getContributorAddressById(uint32 contributorId) external view returns (address);
+  function getContributorIdByAddress(address contributorAccount) external view returns (uint32);
+  function addressIsCore(address sender) external view returns (bool);
   // TODO Maybe use for validation
   // function exists(uint32 contributorId) public view returns (bool);
 }
 
-contract Contribution is AragonApp {
-  bytes32 public constant ADD_CONTRIBUTION_ROLE = keccak256("ADD_CONTRIBUTION_ROLE");
-  bytes32 public constant VETO_CONTRIBUTION_ROLE = keccak256("VETO_CONTRIBUTION_ROLE");
-
-  bytes32 public constant KERNEL_APP_ADDR_NAMESPACE = 0xd6f028ca0e8edb4a8c9757ca4fdccab25fa1e0317da1188108f7d2dee14902fb;
-
-  // ensure alphabetic order
-  enum Apps { Contribution, Contributor, Proposal, Reimbursement, Token }
-  bytes32[5] public appIds;
+contract Contribution is Initializable {
+  ContributorInterface public contributorContract;
+  IToken public tokenContract;
 
   struct ContributionData {
     uint32 contributorId;
@@ -54,36 +48,42 @@ contract Contribution is AragonApp {
   event ContributionClaimed(uint32 id, uint32 indexed contributorId, uint32 amount);
   event ContributionVetoed(uint32 id, address vetoedByAccount);
 
-  function initialize(bytes32[5] _appIds) public onlyInit {
-    appIds = _appIds;
-    blocksToWait = 40320; // 7 days; 15 seconds block time
-    initialized();
+  modifier onlyCore {
+    require(contributorContract.addressIsCore(tx.origin), "Core only");
+    _;
   }
 
-  function getContract(uint8 appId) public view returns (address) {
-    IKernel k = IKernel(kernel());
-    return k.getApp(KERNEL_APP_ADDR_NAMESPACE, appIds[appId]);
+  function initialize(uint32 blocksToWait_) public initializer {
+    blocksToWait = blocksToWait_;
+  }
+
+  function setTokenContract(address token) public {
+    require(address(tokenContract) == address(0) || contributorContract.addressIsCore(msg.sender), "Core only");
+    tokenContract = IToken(token);
+  }
+
+  function setContributorContract(address contributor) public {
+    require(address(contributorContract) == address(0) || contributorContract.addressIsCore(msg.sender), "Core only");
+    contributorContract = ContributorInterface(contributor);
   }
 
   function getContributorIdByAddress(address contributorAccount) public view returns (uint32) {
-    address contributorContract = getContract(uint8(Apps.Contributor));
-    return ContributorInterface(contributorContract).getContributorIdByAddress(contributorAccount);
+    return contributorContract.getContributorIdByAddress(contributorAccount);
   }
 
   function getContributorAddressById(uint32 contributorId) public view returns (address) {
-    address contributorContract = getContract(uint8(Apps.Contributor));
-    return ContributorInterface(contributorContract).getContributorAddressById(contributorId);
+    return contributorContract.getContributorAddressById(contributorId);
   }
 
   //
   // Token standard functions (ERC 721)
   //
 
-  function name() external view returns (string) {
+  function name() external view returns (string memory) {
     return name_;
   }
 
-  function symbol() external view returns (string) {
+  function symbol() external view returns (string memory) {
     return symbol_;
   }
 
@@ -105,7 +105,7 @@ contract Contribution is AragonApp {
     return ownedContributions[contributorId][index];
   }
 
-  function tokenMetadata(uint32 contributionId) public view returns (string) {
+  function tokenMetadata(uint32 contributionId) public view returns (string memory) {
     return contributions[contributionId].tokenMetadataURL;
   }
 
@@ -150,8 +150,9 @@ contract Contribution is AragonApp {
     );
   }
 
-  function add(uint32 amount, uint32 contributorId, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public isInitialized auth(ADD_CONTRIBUTION_ROLE) {
+  function add(uint32 amount, uint32 contributorId, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public {
     //require(canPerform(msg.sender, ADD_CONTRIBUTION_ROLE, new uint32[](0)), 'nope');
+    require(balanceOf(msg.sender) > 0 || contributorContract.addressIsCore(msg.sender), 'must have kredits or core');
     uint32 contributionId = contributionsCount + 1;
     ContributionData storage c = contributions[contributionId];
     c.exists = true;
@@ -175,7 +176,8 @@ contract Contribution is AragonApp {
     emit ContributionAdded(contributionId, contributorId, amount);
   }
 
-  function veto(uint32 contributionId) public isInitialized auth(VETO_CONTRIBUTION_ROLE) {
+  function veto(uint32 contributionId) public onlyCore {
+
     ContributionData storage c = contributions[contributionId];
     require(c.exists, 'NOT_FOUND');
     require(!c.claimed, 'ALREADY_CLAIMED');
@@ -185,7 +187,7 @@ contract Contribution is AragonApp {
     emit ContributionVetoed(contributionId, msg.sender);
   }
 
-  function claim(uint32 contributionId) public isInitialized {
+  function claim(uint32 contributionId) public {
     ContributionData storage c = contributions[contributionId];
     require(c.exists, 'NOT_FOUND');
     require(!c.claimed, 'ALREADY_CLAIMED');
@@ -193,14 +195,14 @@ contract Contribution is AragonApp {
     require(block.number >= c.confirmedAtBlock, 'NOT_CLAIMABLE');
 
     c.claimed = true;
-    address tokenContract = getContract(uint8(Apps.Token));
     address contributorAccount = getContributorAddressById(c.contributorId);
     uint256 amount = uint256(c.amount);
-    IToken(tokenContract).mintFor(contributorAccount, amount, contributionId);
+    tokenContract.mintFor(contributorAccount, amount, contributionId);
     emit ContributionClaimed(contributionId, c.contributorId, c.amount);
   }
 
   function exists(uint32 contributionId) public view returns (bool) {
     return contributions[contributionId].exists;
   }
+
 }
