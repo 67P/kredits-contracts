@@ -2,8 +2,8 @@
 
 # Kredits Contracts
 
-This repository contains the Solidity smart contracts and the JavaScript API wrapper for [Kosmos
-Kredits](https://wiki.kosmos.org/Kredits).
+This repository contains the Solidity smart contracts and the JavaScript API
+wrapper for [Kosmos Kredits](https://wiki.kosmos.org/Kredits).
 
 ## Development
 
@@ -58,18 +58,23 @@ If you need to fund development accounts with devchain coins:
 
 ## Contract architecture
 
-We use the [OpenZeppelin hardhat proxy](https://www.npmjs.com/package/@openzeppelin/hardhat-upgrades) for deploying and managing upgradeable contracts. (see `scripts/create-proxy.js`)
+We use the [OpenZeppelin hardhat
+proxy](https://www.npmjs.com/package/@openzeppelin/hardhat-upgrades) for
+deploying and managing upgradeable contracts. (see `scripts/create-proxy.js`)
 
-Each contract is independent and is connected to its dependencies by storing the addresses of the other contracts.
+Each contract is independent and is connected to its dependencies by storing
+the addresses of the other contracts.
 
 ## Helper scripts
 
 `scripts/` contains some helper scripts to interact with the contracts from the
 CLI. _At some point these should be moved into a real nice CLI._
 
-To run these scripts use `hardhat run`. For example: `hardhat run scripts/list-contributors.js --network localhost`. (NOTE: add `--network localhost` or the network you want to use)
+To run these scripts use `hardhat run`. For example: `hardhat run
+scripts/list-contributors.js --network localhost`. (NOTE: add `--network
+localhost` or the network you want to use)
 
-Some scripts are also defined as npm script, see package.json.
+Some scripts are also defined as npm script, see `package.json`.
 
 ### repl/console
 
@@ -104,14 +109,14 @@ All contract addresses are stored in `lib/addresses.json`
 
 ## Upgradeable contracts
 
-We use OpenZeppelin for an upgradeable contracts: [https://www.npmjs.com/package/@openzeppelin/hardhat-upgrades](https://www.npmjs.com/package/@openzeppelin/hardhat-upgrades)
+We use OpenZeppelin for an upgradeable contracts:
+[https://www.npmjs.com/package/@openzeppelin/hardhat-upgrades](https://www.npmjs.com/package/@openzeppelin/hardhat-upgrades)
 
 Refer to the OpenZeppelin README and `scripts/create-proxy.js`
 
 [OpenZeppelin Step by Step guide](https://forum.openzeppelin.com/t/openzeppelin-upgrades-step-by-step-tutorial-for-hardhat/3580)
 
 For an upgrade example checkout `scripts/upgrade-example.js`
-
 
 ## Known Issues
 
