@@ -113,6 +113,33 @@ Refer to the OpenZeppelin README and `scripts/create-proxy.js`
 For an upgrade example checkout `scripts/upgrade-example.js`
 
 
+## Deployment to other networks
+
+Deployable networks are configured in the `hardhat.config.js`.
+
+To deploy to those networks provide the `--network` argument to the hardhat commands, e.g. `--network rsk`.
+
+Please note that some npm scripts combine multiple hardhat commands. In those cases the hardhat commands needs to be run manually with the `--network` argument. (=> don't use `npm run bootstrap`)
+
+Set a `DEPLOY_KEY` environment variable with the private key (HEX) which will be used as a root/deploy account
+
+Typical deployment flow:
+
+```js
+npm run build
+hardhat run scripts/create-proxy.js --network rsk
+// OR with deploy key:
+DEPLOY_KEY=0xsomething hardhat run scripts/create-proxy.js --network rsk
+// commit the new addresses in the addresses.json file if needed
+```
+
+To run the console on one of the non localhost networks you can also just pass on the --network argument.
+
+```js
+hardhat console --network rsk
+```
+
+
 ## Known Issues
 
 When resetting ganache Metamask might have an invalid transaction nonce and
