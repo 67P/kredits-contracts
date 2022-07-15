@@ -1,72 +1,74 @@
-const { ethers, upgrades } = require("hardhat");
-const path = require("path");
-const fileInject = require("./helpers/file_inject.js");
+const { ethers, upgrades } = require("hardhat"); const path = require("path"); const fileInject = require("./helpers/file_inject.js");
+
+function handleError(error) {
+  console.error(error.message);
+  process.exit(1);
+}
 
 async function main() {
   const network = await hre.ethers.provider.getNetwork();
   const networkId = network.chainId;
   console.log(`Deploying to network #${networkId}`);
 
-  const Contributor = await ethers.getContractFactory("Contributor");
-  const Contribution = await ethers.getContractFactory("Contribution");
-  const Token = await ethers.getContractFactory("Token");
-  const Reimbursement = await ethers.getContractFactory("Reimbursement");
+  const contractFactories = {};
+  const contracts = {};
 
-  const contributor = await upgrades.deployProxy(Contributor, []);
-  await contributor.deployed();
-  console.log("Contributor deployed to:", contributor.address);
-  console.log("...waiting for 1 confirmation");
-  await contributor.deployTransaction.wait();
+  contractFactories.Contributor   = await ethers.getContractFactory("Contributor");
+  contractFactories.Contribution  = await ethers.getContractFactory("Contribution");
+  contractFactories.Token         = await ethers.getContractFactory("Token");
+  contractFactories.Reimbursement = await ethers.getContractFactory("Reimbursement");
 
-  const blocksToWait = 40320; // 7 days; 15 seconds block time
-  const contribution = await upgrades.deployProxy(Contribution, [blocksToWait]);
-  await contribution.deployed();
-  console.log("Contribution deployed to:", contribution.address);
-  console.log("...waiting for 1 confirmation");
-  await contribution.deployTransaction.wait();
+  async function deployContractProxy (contractName, params=[]) {
+    let contract = await upgrades.deployProxy(contractFactories[contractName], params)
+                                 .catch(handleError);
 
-  const token = await upgrades.deployProxy(Token, []);
-  await token.deployed();
-  console.log("Token deployed to:", token.address);
-  console.log("...waiting for 1 confirmation");
-  await token.deployTransaction.wait();
+    contracts[contractName.toLowerCase()] = contract;
 
-  const reimbursement = await upgrades.deployProxy(Reimbursement, []);
-  await reimbursement.deployed();
-  console.log("Reimbursement deployed to:", reimbursement.address);
-  console.log("...waiting for 1 confirmation");
-  await reimbursement.deployTransaction.wait();
+    await contract.deployed().then(() => {
+      console.log(`${contractName} deployed to:`, contract.address);
+      console.log("...waiting for 1 confirmation");
+    }).catch(handleError);
 
-  await contributor
-    .setTokenContract(token.address)
-    .then((response) => response.wait());
-  await contributor
-    .setContributionContract(contribution.address)
-    .then((response) => response.wait());
+    await contract.deployTransaction.wait().catch(handleError);
+  }
 
-  await contribution
-    .setTokenContract(token.address)
-    .then((response) => response.wait());
-  await contribution
-    .setContributorContract(contributor.address)
-    .then((response) => response.wait());
+  const blocksVetoPeriod = 40320; // 7 days; 15 seconds block time
 
-  await token
-    .setContributionContract(contribution.address)
-    .then((response) => response.wait());
-  await token
-    .setContributorContract(contributor.address)
-    .then((response) => response.wait());
+  await deployContractProxy('Contributor');
+  await deployContractProxy('Contribution', [ blocksVetoPeriod ]);
+  await deployContractProxy('Token');
+  await deployContractProxy('Reimbursement');
 
-  await reimbursement
-    .setContributorContract(contributor.address)
-    .then((response) => response.wait());
+  await contracts.Contributor
+    .setTokenContract(contracts.Token.address)
+    .then(res => res.wait()).catch(handleError);
+  await contracts.Contributor
+    .setContributionContract(contracts.Contribution.address)
+    .then(res => res.wait()).catch(handleError);
+
+  await contracts.Contribution
+    .setTokenContract(contracts.Token.address)
+    .then(res => res.wait()).catch(handleError);
+  await contracts.Contribution
+    .setContributorContract(contracts.Contributor.address)
+    .then(res => res.wait()).catch(handleError);
+
+  await contracts.Token
+    .setContributionContract(contracts.Contribution.address)
+    .then(res => res.wait()).catch(handleError);
+  await contracts.Token
+    .setContributorContract(contracts.Contributor.address)
+    .then(res => res.wait()).catch(handleError);
+
+  await contracts.Reimbursement
+    .setContributorContract(contracts.Contributor.address)
+    .then(res => res.wait()).catch(handleError);
 
   const addresses = {
-    Contributor: contributor.address,
-    Contribution: contribution.address,
-    Token: token.address,
-    Reimbursement: reimbursement.address,
+    Contributor: contracts.Contributor.address,
+    Contribution: contracts.Contribution.address,
+    Token: contracts.Token.address,
+    Reimbursement: contracts.Reimbursement.address,
   };
 
   console.log("Writing addresses.json");
