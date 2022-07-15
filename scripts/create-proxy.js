@@ -34,35 +34,36 @@ async function main() {
 
   const blocksVetoPeriod = 40320; // 7 days; 15 seconds block time
 
-  await deployContractProxy('Contributor');
-  await deployContractProxy('Contribution', [ blocksVetoPeriod ]);
+  // await deployContractProxy('Contributor');
+  // await deployContractProxy('Contribution', [ blocksVetoPeriod ]);
   await deployContractProxy('Token');
-  await deployContractProxy('Reimbursement');
+  // await deployContractProxy('Reimbursement');
 
-  await contracts.Contributor
-    .setTokenContract(contracts.Token.address)
-    .then(res => res.wait()).catch(handleError);
-  await contracts.Contributor
-    .setContributionContract(contracts.Contribution.address)
-    .then(res => res.wait()).catch(handleError);
+  // await contracts.Contributor
+  //   .setTokenContract(contracts.Token.address)
+  //   .then(res => res.wait()).catch(handleError);
+  // await contracts.Contributor
+  //   .setContributionContract(contracts.Contribution.address)
+  //   .then(res => res.wait()).catch(handleError);
+  //
+  // await contracts.Contribution
+  //   .setTokenContract(contracts.Token.address)
+  //   .then(res => res.wait()).catch(handleError);
+  // await contracts.Contribution
+  //   .setContributorContract(contracts.Contributor.address)
+  //   .then(res => res.wait()).catch(handleError);
 
-  await contracts.Contribution
-    .setTokenContract(contracts.Token.address)
-    .then(res => res.wait()).catch(handleError);
-  await contracts.Contribution
-    .setContributorContract(contracts.Contributor.address)
-    .then(res => res.wait()).catch(handleError);
-
+  // await contracts.Token
+  //   .setContributionContract(contracts.Contribution.address)
+  //   .then(res => res.wait()).catch(handleError);
   await contracts.Token
-    .setContributionContract(contracts.Contribution.address)
-    .then(res => res.wait()).catch(handleError);
-  await contracts.Token
-    .setContributorContract(contracts.Contributor.address)
+    // .setContributorContract(contracts.Contributor.address)
+    .setContributorContract('0xEb4100b5939E243f69873A8E463eDa0aE84e43E8')
     .then(res => res.wait()).catch(handleError);
 
-  await contracts.Reimbursement
-    .setContributorContract(contracts.Contributor.address)
-    .then(res => res.wait()).catch(handleError);
+  // await contracts.Reimbursement
+  //   .setContributorContract(contracts.Contributor.address)
+  //   .then(res => res.wait()).catch(handleError);
 
   const addresses = {
     Contributor: contracts.Contributor.address,
