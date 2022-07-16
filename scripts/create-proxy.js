@@ -22,7 +22,7 @@ async function main() {
     let contract = await upgrades.deployProxy(contractFactories[contractName], params)
                                  .catch(handleError);
 
-    contracts[contractName.toLowerCase()] = contract;
+    contracts[contractName] = contract;
 
     await contract.deployed().then(() => {
       console.log(`${contractName} deployed to:`, contract.address);
@@ -39,30 +39,63 @@ async function main() {
   await deployContractProxy('Token');
   await deployContractProxy('Reimbursement');
 
-  await contracts.Contributor
+  console.log('Calling Contributor#setTokenContract')
+  await contracts.Contributor.functions
     .setTokenContract(contracts.Token.address)
-    .then(res => res.wait()).catch(handleError);
-  await contracts.Contributor
-    .setContributionContract(contracts.Contribution.address)
-    .then(res => res.wait()).catch(handleError);
+    .then(res => {
+      console.log(`...transaction published: ${res.hash}`);
+      return res.wait();
+    }).catch(handleError);
 
-  await contracts.Contribution
+  console.log('Calling Contributor#setContributionContract')
+  await contracts.Contributor.functions
+    .setContributionContract(contracts.Contribution.address)
+    .then(res => {
+      console.log(`...transaction published: ${res.hash}`);
+      return res.wait();
+    }).catch(handleError);
+
+
+  console.log('Calling Contribution#setTokenContract')
+  await contracts.Contribution.functions
     .setTokenContract(contracts.Token.address)
-    .then(res => res.wait()).catch(handleError);
-  await contracts.Contribution
-    .setContributorContract(contracts.Contributor.address)
-    .then(res => res.wait()).catch(handleError);
+    .then(res => {
+      console.log(`...transaction published: ${res.hash}`);
+      return res.wait();
+    }).catch(handleError);
 
-  await contracts.Token
+
+  console.log('Calling Contribution#setContributorContract')
+  await contracts.Contribution.functions
+    .setContributorContract(contracts.Contributor.address)
+    .then(res => {
+      console.log(`...transaction published: ${res.hash}`);
+      return res.wait();
+    }).catch(handleError);
+
+  console.log('Calling Token#setContributionContract')
+  await contracts.Token.functions
     .setContributionContract(contracts.Contribution.address)
-    .then(res => res.wait()).catch(handleError);
-  await contracts.Token
-    .setContributorContract(contracts.Contributor.address)
-    .then(res => res.wait()).catch(handleError);
+    .then(res => {
+      console.log(`...transaction published: ${res.hash}`);
+      return res.wait();
+    }).catch(handleError);
 
-  await contracts.Reimbursement
+  console.log('Calling Token#setContributorContract')
+  await contracts.Token.functions
     .setContributorContract(contracts.Contributor.address)
-    .then(res => res.wait()).catch(handleError);
+    .then(res => {
+      console.log(`...transaction published: ${res.hash}`);
+      return res.wait();
+    }).catch(handleError);
+
+  console.log('Calling Reimbursement#setContributorContract')
+  await contracts.Reimbursement.functions
+    .setContributorContract(contracts.Contributor.address)
+    .then(res => {
+      console.log(`...transaction published: ${res.hash}`);
+      return res.wait();
+    }).catch(handleError);
 
   const addresses = {
     Contributor: contracts.Contributor.address,
