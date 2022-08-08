@@ -1,0 +1,14 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: test
+  image: gitea.kosmos.org/kredits/docker-ci:latest
+  commands:
+  - cp -r /app/node_modules /drone/src/node_modules
+  - chown -R drone:drone /drone/src
+  - su drone -c 'npm install'
+  - su drone -c 'npm run devchain' &
+  - sleep 5
+  - su drone -c 'npm test'
