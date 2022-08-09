@@ -21,6 +21,14 @@ steps:
   - su drone -c 'npm run lint:contracts'
   depends_on:
   - setup
+- name: build contracts
+  image: gitea.kosmos.org/kredits/docker-ci:latest
+  commands:
+  - su drone -c 'npm run devchain' &
+  - sleep 5
+  - su drone -c 'npm run build'
+  depends_on:
+  - setup
 - name: test
   image: gitea.kosmos.org/kredits/docker-ci:latest
   commands:
@@ -29,3 +37,4 @@ steps:
   - su drone -c 'npm test'
   depends_on:
   - setup
+  - build contracts
