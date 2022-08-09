@@ -3,12 +3,17 @@ type: docker
 name: default
 
 steps:
-- name: test
+- name: setup
   image: gitea.kosmos.org/kredits/docker-ci:latest
   commands:
   - cp -r /app/node_modules /drone/src/node_modules
   - chown -R drone:drone /drone/src
   - su drone -c 'npm install'
+- name: test
+  image: gitea.kosmos.org/kredits/docker-ci:latest
+  commands:
   - su drone -c 'npm run devchain' &
   - sleep 5
   - su drone -c 'npm test'
+  depends_on:
+  - setup
