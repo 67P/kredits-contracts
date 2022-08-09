@@ -17,3 +17,15 @@ steps:
   - su drone -c 'npm test'
   depends_on:
   - setup
+- name: lint-js
+  image: gitea.kosmos.org/kredits/docker-ci:latest
+  commands:
+  - su drone -c 'npm run lint:wrapper'
+  depends_on:
+  - setup
+- name: lint-contracts
+  image: gitea.kosmos.org/kredits/docker-ci:latest
+  commands:
+  - su drone -c 'npm run lint:contracts'
+  depends_on:
+  - setup
