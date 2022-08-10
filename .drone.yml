@@ -3,12 +3,38 @@ type: docker
 name: default
 
 steps:
-- name: test
+- name: setup
   image: gitea.kosmos.org/kredits/docker-ci:latest
   commands:
   - cp -r /app/node_modules /drone/src/node_modules
   - chown -R drone:drone /drone/src
   - su drone -c 'npm install'
+- name: lint js
+  image: gitea.kosmos.org/kredits/docker-ci:latest
+  commands:
+  - su drone -c 'npm run lint:wrapper'
+  depends_on:
+  - setup
+# - name: lint contracts
+#   image: gitea.kosmos.org/kredits/docker-ci:latest
+#   commands:
+#   - su drone -c 'npm run lint:contracts'
+#   depends_on:
+#   - setup
+- name: build contracts
+  image: gitea.kosmos.org/kredits/docker-ci:latest
+  commands:
+  - su drone -c 'npm run devchain' &
+  - sleep 5
+  - su drone -c 'npm run build'
+  depends_on:
+  - setup
+- name: test
+  image: gitea.kosmos.org/kredits/docker-ci:latest
+  commands:
   - su drone -c 'npm run devchain' &
   - sleep 5
   - su drone -c 'npm test'
+  depends_on:
+  - setup
+  - build contracts
