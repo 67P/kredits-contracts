@@ -28,6 +28,11 @@ describe("Contribution contract", async function () {
     it("sets the data migration flag", async function () {
       expect(await Contribution.migrationDone()).to.equal(false);
     });
+
+    it("sets the deployer address", async function () {
+      expect(await Contribution.deployer()).to.equal(owner.address);
+      expect(await Contribution.deployer()).to.not.equal(addr1.address);
+    });
   });
 
   describe("Data migration", function () {
