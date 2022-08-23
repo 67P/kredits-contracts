@@ -16,10 +16,6 @@ async function main() {
       setTimeout(async () => {
         console.log(`Loading contribution #${i}`);
         await kredits.Contribution.contract.getContribution(i).then(contractData => {
-          if (contractData.vetoed) {
-            console.log(`Ignoring vetoed contribution #${contractData.id}`);
-            resolve();
-          }
           backup[i] = {
             amount: contractData.amount,
             contributorId: contractData.contributorId,
@@ -28,6 +24,7 @@ async function main() {
             hashSize: contractData.hashSize,
             confirmedAtBlock: contractData.confirmedAtBlock,
             confirmed: contractData.confirmedAtBlock <= currentBlockHeight,
+            vetoed: contractData.vetoed,
             id: contractData.id,
           }
           resolve();
