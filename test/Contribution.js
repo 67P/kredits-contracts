@@ -1,5 +1,6 @@
 const { expect } = require("chai");
 const { ethers, upgrades } = require("hardhat");
+const { anyValue } = require("@nomicfoundation/hardhat-chai-matchers/withArgs");
 let owner, addr1, addr2, addr3, addr4, addr5, addr6, addr7;
 let Contribution, Contributor;
 
@@ -14,7 +15,7 @@ describe("Contribution contract", async function () {
     }
   });
 
-  describe("Deployment", function () {
+  describe("initialize()", function () {
     before(async function () {
       // const [owner] = await ethers.getSigners();
       const contributionFactory = await ethers.getContractFactory("Contribution");
@@ -35,7 +36,7 @@ describe("Contribution contract", async function () {
     });
   });
 
-  describe("Data migration", function () {
+  describe("finishMigration()", function () {
     before(async function () {
       const contributionFactory = await ethers.getContractFactory("Contribution");
       Contribution = await upgrades.deployProxy(contributionFactory, [40321]);
@@ -50,6 +51,55 @@ describe("Contribution contract", async function () {
     it("allows the deployer to mark the migration as finished", async function () {
       await Contribution.finishMigration();
       expect(await Contribution.migrationDone()).to.equal(true);
+    });
+  });
+
+  describe("add()", function () {
+    before(async function () {
+      const contributionFactory = await ethers.getContractFactory("Contribution");
+      Contribution = await upgrades.deployProxy(contributionFactory, [40321]);
+      await Contribution.setContributorContract(Contributor.address).then(res => res.wait())
+    });
+
+    it("does not allow non-contributors to add a contribution", async function () {
+      await expect(Contribution.connect(addr7).add(
+        500, 1,
+        "0xe794f010e617449719c64076546254129f63a6d16cf200031afa646aeb35777f",
+        18, 32
+      )).to.be.revertedWith("requires kredits or core status");
+      expect(await Contribution.contributionsCount()).to.equal(0);
+    });
+
+    it("allows core contributors to add a contribution", async function () {
+      await Contribution.connect(addr2).add(
+        2001, 1,
+        "0xe794f010e617449719c64076546254129f63a6d16cf200031afa646aeb35777f",
+        18, 32
+      );
+      expect(await Contribution.contributionsCount()).to.equal(1);
+    });
+
+    it("allows contributors to add a contribution", async function () {
+      // Issue some kredits for new contributor #8 (addr7)
+      await Contribution.connect(addr1).add(
+        5000, 8,
+        "0xe794f010e617449719c64076546254129f63a6d16cf200031afa646aeb35777f",
+        18, 32
+      );
+      await Contribution.connect(addr7).add(
+        1500, 1,
+        "0xe794f010e617449719c64076546254129f63a6d16cf200031afa646aeb35777f",
+        18, 32
+      );
+      expect(await Contribution.contributionsCount()).to.equal(3);
+    });
+
+    it("emits a ContributionAdded event", async function () {
+      await expect(Contribution.connect(addr1).add(
+        2001, 1,
+        "0xe794f010e617449719c64076546254129f63a6d16cf200031afa646aeb35777f",
+        18, 32
+      )).to.emit(Contribution, "ContributionAdded").withArgs(anyValue, 1, 2001);
     });
   });
 

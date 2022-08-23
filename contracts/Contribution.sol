@@ -169,8 +169,9 @@ contract Contribution is Initializable {
   }
 
   function add(uint32 amount, uint32 contributorId, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public {
-    //require(canPerform(msg.sender, ADD_CONTRIBUTION_ROLE, new uint32[](0)), 'nope');
-    require(balanceOf(msg.sender) > 0 || contributorContract.addressIsCore(msg.sender), 'must have kredits or core');
+    // require(canPerform(msg.sender, ADD_CONTRIBUTION_ROLE, new uint32[](0)), 'nope');
+    // TODO hubot neither has kredits nor a core account
+    require(balanceOf(msg.sender) > 0 || contributorContract.addressIsCore(msg.sender), 'requires kredits or core status');
     uint32 contributionId = contributionsCount + 1;
     ContributionData storage c = contributions[contributionId];
     c.exists = true;
