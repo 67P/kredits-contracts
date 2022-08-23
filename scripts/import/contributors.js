@@ -1,3 +1,4 @@
+const fs = require('fs');
 const Kredits = require('../../lib/kredits');
 
 async function main() {
@@ -6,21 +7,27 @@ async function main() {
 
   console.log(`Using Contributor at: ${kredits.Contributor.contract.address}`);
 
-  const data = fs.readFileSync("./data/contributors.json");
-  const contributors = JSON.parse(data);
+  try {
+    const data = fs.readFileSync("./data/contributors.json");
+    const contributors = JSON.parse(data);
+    const ids = Object.keys(contributors)
+                      .map(k => parseInt(k))
+                      .sort(function(a, b){return a-b});
 
-  const ids = Object.keys(contributors).map(k => parseInt(k)).sort();
-  for (const contributorId of ids) {
-    const contributor = contributors[contributorId.toString()];
-    const result = kredits.Contributor.contract.addContributor({
-      account: contributor.account,
-      hashDigest: contirbutor.hashDigest,
-      hashFunction: contributor.hashFunction,
-      hashSize: contributr.hashSize,
-    });
-    // await result.wait();
-    console.log(`Added contributor #${id}: ${result.hash}`);
-  };
+    for (const contributorId of ids) {
+      const contributor = contributors[contributorId.toString()];
+      const result = await kredits.Contributor.contract.addContributor(
+        contributor.account,
+        contributor.hashDigest,
+        contributor.hashFunction,
+        contributor.hashSize,
+      );
+      // await result.wait();
+      console.log(`Added contributor #${contributorId}: ${result.hash}`);
+    };
+  } catch(e) {
+    console.log(e);
+  }
 }
 
 main();
