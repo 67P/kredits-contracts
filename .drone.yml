@@ -24,7 +24,7 @@ steps:
 - name: build contracts
   image: gitea.kosmos.org/kredits/docker-ci:latest
   commands:
-  - su drone -c 'npm run devchain' &
+  - su drone -c 'npm run devchain -- --silent' &
   - sleep 5
   - su drone -c 'npm run build'
   depends_on:
@@ -32,7 +32,7 @@ steps:
 - name: test
   image: gitea.kosmos.org/kredits/docker-ci:latest
   commands:
-  - su drone -c 'npm run devchain' &
+  - su drone -c 'npm run devchain -- --silent' &
   - sleep 5
   - su drone -c 'npm test'
   depends_on:
