@@ -168,10 +168,12 @@ contract Contribution is Initializable {
     );
   }
 
-  function add(uint32 amount, uint32 contributorId, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public {
+  function add(uint32 amount, uint32 contributorId, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize, uint256 confirmedAtBlock, bool vetoed) public {
     // require(canPerform(msg.sender, ADD_CONTRIBUTION_ROLE, new uint32[](0)), 'nope');
     // TODO hubot neither has kredits nor a core account
+    require((confirmedAtBlock == 0 && vetoed == false) || migrationDone == false, 'extra arguments during migration only');
     require(balanceOf(msg.sender) > 0 || contributorContract.addressIsCore(msg.sender), 'requires kredits or core status');
+
     uint32 contributionId = contributionsCount + 1;
     ContributionData storage c = contributions[contributionId];
     c.exists = true;
@@ -181,11 +183,14 @@ contract Contribution is Initializable {
     c.hashDigest = hashDigest;
     c.hashFunction = hashFunction;
     c.hashSize = hashSize;
-    if (contributionId < 10) {
-      c.confirmedAtBlock = block.number;
+
+    if (confirmedAtBlock > 0) {
+      c.confirmedAtBlock = confirmedAtBlock;
     } else {
       c.confirmedAtBlock = block.number + 1 + blocksToWait;
     }
+
+    if (vetoed) { c.vetoed = true; }
 
     contributionsCount++;
 
@@ -196,7 +201,6 @@ contract Contribution is Initializable {
   }
 
   function veto(uint32 contributionId) public onlyCore {
-
     ContributionData storage c = contributions[contributionId];
     require(c.exists, 'NOT_FOUND');
     require(!c.claimed, 'ALREADY_CLAIMED');
