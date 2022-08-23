@@ -42,7 +42,14 @@ contract Contribution is Initializable {
   mapping(uint32 => ContributionData) public contributions;
   uint32 public contributionsCount;
 
+  // Confirmation veto period
   uint32 public blocksToWait;
+
+  // The address that deployed the contract
+  address public deployer;
+
+  // Data migration flag
+  bool public migrationDone;
 
   event ContributionAdded(uint32 id, uint32 indexed contributorId, uint32 amount);
   event ContributionClaimed(uint32 id, uint32 indexed contributorId, uint32 amount);
@@ -53,8 +60,19 @@ contract Contribution is Initializable {
     _;
   }
 
+  modifier onlyDeployer {
+    require(msg.sender == deployer, "Deployer only");
+    _;
+  }
+
   function initialize(uint32 blocksToWait_) public initializer {
+    deployer = msg.sender;
+    migrationDone = false;
     blocksToWait = blocksToWait_;
+  }
+
+  function finishMigration() public onlyDeployer {
+    migrationDone = true;
   }
 
   function setTokenContract(address token) public {
