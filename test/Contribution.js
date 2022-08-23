@@ -1,12 +1,12 @@
 const { expect } = require("chai");
 const { ethers, upgrades } = require("hardhat");
-let owner, addr1, addr2, addr3, addr4, addr5, addr6;
+let owner, addr1, addr2, addr3, addr4, addr5, addr6, addr7;
 let Contribution, Contributor;
 
 describe("Contribution contract", async function () {
   before(async function () {
-    [owner, addr1, addr2, addr3, addr4, addr5, addr6] = await ethers.getSigners();
-    let accounts = [owner, addr1, addr2, addr3, addr4, addr5, addr6];
+    [owner, addr1, addr2, addr3, addr4, addr5, addr6, addr7] = await ethers.getSigners();
+    let accounts = [owner, addr1, addr2, addr3, addr4, addr5, addr6, addr7];
     const contributorFactory = await ethers.getContractFactory("Contributor");
     Contributor = await upgrades.deployProxy(contributorFactory);
     for (const account of accounts) {

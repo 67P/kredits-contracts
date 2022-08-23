@@ -99,7 +99,7 @@ contract Contributor is Initializable {
   function isCoreTeam(uint32 id) view public returns (bool) {
     // TODO: for simplicity we simply define the first contributors as core
     // later this needs to be changed to something more dynamic
-    return id > 0 && id < 6;
+    return id > 0 && id < 7;
   }
 
   function exists(uint32 id) view public returns (bool) {
