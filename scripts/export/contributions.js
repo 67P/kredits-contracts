@@ -14,7 +14,7 @@ async function main() {
   for (let i = 1; i <= count; i++) {
     promises.push(new Promise((resolve, reject) => {
       setTimeout(async () => {
-        console.log(`Loading contribution ${i}`);
+        console.log(`Loading contribution #${i}`);
         await kredits.Contribution.contract.getContribution(i).then(contractData => {
           if (contractData.vetoed) {
             console.log(`Ignoring vetoed contribution #${contractData.id}`);

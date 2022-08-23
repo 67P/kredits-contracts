@@ -14,7 +14,7 @@ async function main() {
   for (let i = 1; i <= count; i++) {
     promises.push(new Promise((resolve, reject) => {
       setTimeout(async () => {
-        console.log(`Loading contributor ${i}`);
+        console.log(`Loading contributor #${i}`);
         await kredits.Contributor.contract.getContributorById(i).then(contractData => {
           backup[i] = {
             account: contractData.account,
