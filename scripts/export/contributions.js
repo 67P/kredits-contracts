@@ -18,7 +18,7 @@ async function main() {
         await kredits.Contribution.contract.getContribution(i).then(contractData => {
           if (contractData.vetoed) {
             console.log(`Ignoring vetoed contribution #${contractData.id}`);
-            return;
+            resolve();
           }
           backup[i] = {
             amount: contractData.amount,
