@@ -154,5 +154,4 @@ describe("Contribution contract", async function () {
       });
     });
   });
-
 });
