@@ -12,7 +12,7 @@ async function main() {
   console.log(`Using Contribution at: ${kredits.Contribution.contract.address}`);
 
   const table = new Table({
-    head: ['ID', 'Contributor ID', 'Description', 'Amount', 'Confirmed?', 'Vetoed?', 'Claimed?', 'IPFS']
+    head: ['ID', 'Contributor ID', 'Description', 'Amount', 'Confirmed?', 'Vetoed?', 'IPFS']
   })
 
   try {
@@ -31,7 +31,6 @@ async function main() {
         c.amount.toString(),
         `${confirmed} (${c.confirmedAtBlock})`,
         c.vetoed,
-        c.claimed,
         c.ipfsHash
       ])
     });

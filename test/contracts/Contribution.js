@@ -128,7 +128,7 @@ describe("Contribution contract", async function () {
       before(async function () {
         const contributionFactory = await ethers.getContractFactory("Contribution");
         Contribution = await upgrades.deployProxy(contributionFactory, [40321]);
-        await Contribution.setContributorContract(Contributor.address).then(res => res.wait())
+        await Contribution.setContributorContract(Contributor.address);
       });
 
       it("allows to add a contribution with custom confirmedAtBlock", async function () {

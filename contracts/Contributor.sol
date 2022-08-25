@@ -2,7 +2,8 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-interface ITokenBalance {
+interface IToken {
+  function mintFor(address contributorAccount, uint256 amount) external;
   function balanceOf(address contributorAccount) external view returns (uint256);
 }
 interface IContributionBalance {
@@ -11,9 +12,9 @@ interface IContributionBalance {
 }
 
 contract Contributor is Initializable {
-  address deployer;
+  address public deployer;
   IContributionBalance public contributionContract;
-  ITokenBalance public tokenContract;
+  IToken public tokenContract;
 
   struct Contributor {
     address account;
@@ -21,6 +22,7 @@ contract Contributor is Initializable {
     uint8 hashFunction;
     uint8 hashSize;
     bool exists;
+    uint256 kreditsWithdrawn;
   }
 
   mapping (address => uint32) public contributorIds;
@@ -36,6 +38,11 @@ contract Contributor is Initializable {
     _;
   }
 
+  modifier onlyContributors {
+    require(addressExists(msg.sender) && contributionContract.balanceOf(msg.sender) > 0, "Contributors only");
+    _;
+  }
+
   function initialize() public initializer {
     deployer = msg.sender;
   }
@@ -47,7 +54,7 @@ contract Contributor is Initializable {
 
   function setTokenContract(address token) public onlyCore {
     require(address(tokenContract) == address(0) || addressIsCore(msg.sender), "Core only");
-    tokenContract = ITokenBalance(token);
+    tokenContract = IToken(token);
   }
 
   function coreContributorsCount() public view returns (uint32) {
@@ -81,7 +88,7 @@ contract Contributor is Initializable {
   }
 
   function addContributor(address account, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public onlyCore {
-    require(!addressExists(account));
+    require(!addressExists(account), "Address already in use");
     uint32 _id = contributorsCount + 1;
     assert(!contributors[_id].exists); // this can not be acually
     Contributor storage c = contributors[_id];
@@ -90,6 +97,7 @@ contract Contributor is Initializable {
     c.hashFunction = hashFunction;
     c.hashSize = hashSize;
     c.account = account;
+    c.kreditsWithdrawn = 0;
     contributorIds[account] = _id;
 
     contributorsCount += 1;
@@ -132,7 +140,7 @@ contract Contributor is Initializable {
     return contributors[id];
   }
 
-  function getContributorById(uint32 _id) public view returns (uint32 id, address account, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize, bool isCore, uint256 balance, uint32 totalKreditsEarned, uint256 contributionsCount, bool exists ) {
+  function getContributorById(uint32 _id) view public returns (uint32 id, address account, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize, bool isCore, uint256 balance, uint32 totalKreditsEarned, uint256 contributionsCount, bool exists, uint256 kreditsWithdrawn) {
     id = _id;
     Contributor storage c = contributors[_id];
     account = c.account;
@@ -144,6 +152,19 @@ contract Contributor is Initializable {
     totalKreditsEarned = contributionContract.totalKreditsEarnedByContributor(_id, true);
     contributionsCount = contributionContract.balanceOf(c.account);
     exists = c.exists;
+    kreditsWithdrawn = c.kreditsWithdrawn;
   }
 
+  function withdraw() public onlyContributors {
+    uint32 id = getContributorIdByAddress(msg.sender);
+    Contributor storage c = contributors[id];
+
+    // TODO check if we need a failsafe for unconfirmed or malicious txs
+    uint256 confirmedKredits = contributionContract.totalKreditsEarnedByContributor(id, true);
+    uint256 amountWithdrawable = confirmedKredits - c.kreditsWithdrawn;
+    require (amountWithdrawable > 0, "No kredits available");
+
+    c.kreditsWithdrawn += amountWithdrawable;
+    tokenContract.mintFor(msg.sender, amountWithdrawable);
+  }
 }
