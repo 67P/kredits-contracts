@@ -97,6 +97,8 @@ describe("Contributor contract", async function () {
       c = await Contributor.getContributorById(2);
       // TODO Are we required to use Wei for ERC20 tokens?
       expect(c['balance'].toString()).to.equal("6500000000000000000000");
+      // FIXME This is also a BigNumber (uint256), but stored at Wei reolution
+      expect(c['kreditsWithdrawn'].toString()).to.equal('6500');
     });
 
     it("requires the withdrawable amount to be larger than 0", async function () {
