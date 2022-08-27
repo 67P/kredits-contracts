@@ -22,7 +22,7 @@ contract Contributor is Initializable {
     uint8 hashFunction;
     uint8 hashSize;
     bool exists;
-    uint256 kreditsWithdrawn;
+    uint32 kreditsWithdrawn;
   }
 
   mapping (address => uint32) public contributorIds;
@@ -160,8 +160,8 @@ contract Contributor is Initializable {
     Contributor storage c = contributors[id];
 
     // TODO check if we need a failsafe for unconfirmed or malicious txs
-    uint256 confirmedKredits = contributionContract.totalKreditsEarnedByContributor(id, true);
-    uint256 amountWithdrawable = confirmedKredits - c.kreditsWithdrawn;
+    uint32 confirmedKredits = contributionContract.totalKreditsEarnedByContributor(id, true);
+    uint32 amountWithdrawable = confirmedKredits - c.kreditsWithdrawn;
     require (amountWithdrawable > 0, "No kredits available");
 
     c.kreditsWithdrawn += amountWithdrawable;
