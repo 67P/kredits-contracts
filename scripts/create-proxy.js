@@ -57,27 +57,9 @@ async function main() {
       return res.wait();
     }).catch(handleError);
 
-
-  console.log('Calling Contribution#setTokenContract')
-  await contracts.Contribution.functions
-    .setTokenContract(contracts.Token.address)
-    .then(res => {
-      console.log(`...transaction published: ${res.hash}`);
-      return res.wait();
-    }).catch(handleError);
-
-
   console.log('Calling Contribution#setContributorContract')
   await contracts.Contribution.functions
     .setContributorContract(contracts.Contributor.address)
-    .then(res => {
-      console.log(`...transaction published: ${res.hash}`);
-      return res.wait();
-    }).catch(handleError);
-
-  console.log('Calling Token#setContributionContract')
-  await contracts.Token.functions
-    .setContributionContract(contracts.Contribution.address)
     .then(res => {
       console.log(`...transaction published: ${res.hash}`);
       return res.wait();
