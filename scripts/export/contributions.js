@@ -7,7 +7,7 @@ async function main() {
   console.log(`Using Contribution at: ${kredits.Contribution.contract.address}`);
 
   const count = await kredits.Contribution.count;
-  const currentBlockHeight = await XMLHttpRequest.ethers.provider.getBlockNumber();
+  const currentBlockHeight = await hre.ethers.provider.getBlockNumber();
 
   const backup = {};
   const promises = [];
