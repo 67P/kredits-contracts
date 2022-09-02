@@ -18,7 +18,11 @@ contract Token is Initializable, ERC20Upgradeable {
   event KreditsMinted(address indexed recipient, uint256 amount);
 
   function initialize() public virtual initializer {
-    __ERC20_init('Kredits', 'KS');
+    __ERC20_init("Kredits", "KS");
+  }
+
+  function decimals() public view virtual override returns (uint8) {
+    return 0;
   }
 
   function setContributorContract(address contributor) public {
@@ -31,8 +35,7 @@ contract Token is Initializable, ERC20Upgradeable {
     require(contributorContractAddress == msg.sender, "Only Contributor");
     require(amount > 0, "INVALID_AMOUNT");
 
-    uint256 amountInWei = amount.mul(1 ether);
-    _mint(contributorAccount, amountInWei);
+    _mint(contributorAccount, amount);
     emit KreditsMinted(contributorAccount, amount);
   }
 }

@@ -95,7 +95,7 @@ describe("Contributor contract", async function () {
       expect(c['balance']).to.equal(0);
       await Contributor.connect(addr1).withdraw();
       c = await Contributor.getContributorById(2);
-      expect(c['balance'].toString()).to.equal("6500000000000000000000");
+      expect(c['balance']).to.equal(6500);
       expect(c['kreditsWithdrawn']).to.equal(6500);
     });
 
