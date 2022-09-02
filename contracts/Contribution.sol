@@ -2,10 +2,6 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-interface IToken {
-  function mintFor(address contributorAccount, uint256 amount, uint32 contributionId) external;
-}
-
 interface ContributorInterface {
   function getContributorAddressById(uint32 contributorId) external view returns (address);
   function getContributorIdByAddress(address contributorAccount) external view returns (uint32);
@@ -16,12 +12,10 @@ interface ContributorInterface {
 
 contract Contribution is Initializable {
   ContributorInterface public contributorContract;
-  IToken public tokenContract;
 
   struct ContributionData {
     uint32 contributorId;
     uint32 amount;
-    bool claimed;
     bytes32 hashDigest;
     uint8 hashFunction;
     uint8 hashSize;
@@ -42,10 +36,16 @@ contract Contribution is Initializable {
   mapping(uint32 => ContributionData) public contributions;
   uint32 public contributionsCount;
 
+  // Confirmation veto period
   uint32 public blocksToWait;
 
+  // The address that deployed the contract
+  address public deployer;
+
+  // Data migration flag
+  bool public migrationDone;
+
   event ContributionAdded(uint32 id, uint32 indexed contributorId, uint32 amount);
-  event ContributionClaimed(uint32 id, uint32 indexed contributorId, uint32 amount);
   event ContributionVetoed(uint32 id, address vetoedByAccount);
 
   modifier onlyCore {
@@ -53,13 +53,19 @@ contract Contribution is Initializable {
     _;
   }
 
+  modifier onlyDeployer {
+    require(msg.sender == deployer, "Deployer only");
+    _;
+  }
+
   function initialize(uint32 blocksToWait_) public initializer {
+    deployer = msg.sender;
+    migrationDone = false;
     blocksToWait = blocksToWait_;
   }
 
-  function setTokenContract(address token) public {
-    require(address(tokenContract) == address(0) || contributorContract.addressIsCore(msg.sender), "Core only");
-    tokenContract = IToken(token);
+  function finishMigration() public onlyDeployer {
+    migrationDone = true;
   }
 
   function setContributorContract(address contributor) public {
@@ -133,14 +139,13 @@ contract Contribution is Initializable {
     }
   }
 
-  function getContribution(uint32 contributionId) public view returns (uint32 id, uint32 contributorId, uint32 amount, bool claimed, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize, uint256 confirmedAtBlock, bool exists, bool vetoed) {
+  function getContribution(uint32 contributionId) public view returns (uint32 id, uint32 contributorId, uint32 amount, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize, uint256 confirmedAtBlock, bool exists, bool vetoed) {
     id = contributionId;
     ContributionData storage c = contributions[id];
     return (
       id,
       c.contributorId,
       c.amount,
-      c.claimed,
       c.hashDigest,
       c.hashFunction,
       c.hashSize,
@@ -150,23 +155,28 @@ contract Contribution is Initializable {
     );
   }
 
-  function add(uint32 amount, uint32 contributorId, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public {
-    //require(canPerform(msg.sender, ADD_CONTRIBUTION_ROLE, new uint32[](0)), 'nope');
-    require(balanceOf(msg.sender) > 0 || contributorContract.addressIsCore(msg.sender), 'must have kredits or core');
+  function add(uint32 amount, uint32 contributorId, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize, uint256 confirmedAtBlock, bool vetoed) public {
+    // require(canPerform(msg.sender, ADD_CONTRIBUTION_ROLE, new uint32[](0)), 'nope');
+    // TODO hubot neither has kredits nor a core account
+    require((confirmedAtBlock == 0 && vetoed == false) || migrationDone == false, 'extra arguments during migration only');
+    require(balanceOf(msg.sender) > 0 || contributorContract.addressIsCore(msg.sender), 'requires kredits or core status');
+
     uint32 contributionId = contributionsCount + 1;
     ContributionData storage c = contributions[contributionId];
     c.exists = true;
     c.amount = amount;
-    c.claimed = false;
     c.contributorId = contributorId;
     c.hashDigest = hashDigest;
     c.hashFunction = hashFunction;
     c.hashSize = hashSize;
-    if (contributionId < 10) {
-      c.confirmedAtBlock = block.number;
+
+    if (confirmedAtBlock > 0) {
+      c.confirmedAtBlock = confirmedAtBlock;
     } else {
       c.confirmedAtBlock = block.number + 1 + blocksToWait;
     }
+
+    if (vetoed) { c.vetoed = true; }
 
     contributionsCount++;
 
@@ -177,32 +187,15 @@ contract Contribution is Initializable {
   }
 
   function veto(uint32 contributionId) public onlyCore {
-
     ContributionData storage c = contributions[contributionId];
     require(c.exists, 'NOT_FOUND');
-    require(!c.claimed, 'ALREADY_CLAIMED');
     require(block.number < c.confirmedAtBlock, 'VETO_PERIOD_ENDED');
     c.vetoed = true;
 
     emit ContributionVetoed(contributionId, msg.sender);
   }
 
-  function claim(uint32 contributionId) public {
-    ContributionData storage c = contributions[contributionId];
-    require(c.exists, 'NOT_FOUND');
-    require(!c.claimed, 'ALREADY_CLAIMED');
-    require(!c.vetoed, 'VETOED');
-    require(block.number >= c.confirmedAtBlock, 'NOT_CLAIMABLE');
-
-    c.claimed = true;
-    address contributorAccount = getContributorAddressById(c.contributorId);
-    uint256 amount = uint256(c.amount);
-    tokenContract.mintFor(contributorAccount, amount, contributionId);
-    emit ContributionClaimed(contributionId, c.contributorId, c.amount);
-  }
-
   function exists(uint32 contributionId) public view returns (bool) {
     return contributions[contributionId].exists;
   }
-
 }
