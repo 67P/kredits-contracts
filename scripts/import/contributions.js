@@ -6,6 +6,8 @@ async function main() {
   await kredits.init();
 
   console.log(`Using Contribution at: ${kredits.Contribution.contract.address}`);
+  const count = await kredits.Contribution.count;
+  console.log(`Currently ${count} entries`);
 
   try {
     const data = fs.readFileSync("./data/contributions.json");
@@ -28,11 +30,11 @@ async function main() {
         c.hashDigest, c.hashFunction, c.hashSize,
         confirmedAtBlock, c.vetoed
       );
-      // await result.wait();
-      console.log(`Added contribution #${contributionId}: ${result.hash}`);
+      console.log(`Adding contribution #${contributionId}: ${result.hash}`);
+      await result.wait();
     };
   } catch(e) {
-    console.log(e);
+    console.error(e);
   }
 }
 

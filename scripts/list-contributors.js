@@ -6,6 +6,8 @@ async function main() {
   await kredits.init();
 
   console.log(`Using Contributor at: ${kredits.Contributor.contract.address}`);
+  const count = await kredits.Contributors.count;
+  console.log(`Currently ${count} entries`);
 
   const table = new Table({
     head: ['ID', 'Account', 'Name', 'Core?', 'Balance', 'Kredits earned', 'Contributions count', 'IPFS']

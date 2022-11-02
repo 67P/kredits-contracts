@@ -6,7 +6,8 @@ async function main() {
   await kredits.init();
 
   console.log(`Using Contributor at: ${kredits.Contributor.contract.address}`);
-
+  const count = await kredits.Contributor.count;
+  console.log(`Currently ${count} entries`);
   try {
     const data = fs.readFileSync("./data/contributors.json");
     const contributors = JSON.parse(data);
@@ -22,11 +23,11 @@ async function main() {
         contributor.hashFunction,
         contributor.hashSize,
       );
-      // await result.wait();
-      console.log(`Added contributor #${contributorId}: ${result.hash}`);
+      console.log(`Adding contributor #${contributorId}: ${result.hash}`);
+      await result.wait();
     };
   } catch(e) {
-    console.log(e);
+    console.error(e);
   }
 }
 
