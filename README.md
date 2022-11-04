@@ -26,7 +26,7 @@ To run a local development chain run:
 
 ### Bootstrap
 
-1.  Run an Ethereum node and ipfs
+1.  Run an EVM node and ipfs
 
         $ npm run devchain
         $ ipfs daemon
@@ -145,12 +145,3 @@ To run the console on one of the non localhost networks you can also just pass
 on the --network argument.
 
     $ hardhat console --network rsk
-
-
-## Known Issues
-
-When resetting ganache Metamask might have an invalid transaction nonce and
-transactions get rejected. Nonces in Ethereum must be incrementing and have no
-gap.
-
-To solve this reset the metamask account (Account -> Settings -> Reset Account)
