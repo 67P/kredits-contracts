@@ -16,6 +16,7 @@ contract Reimbursement is Initializable {
   struct ReimbursementData {
     uint32 recipientId;
     uint256 amount;
+    // TODO remove token entirely
     address token;
     bytes32 hashDigest;
     uint8 hashFunction;
