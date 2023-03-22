@@ -1,4 +1,5 @@
 [![npm](https://img.shields.io/npm/v/@kredits/contracts.svg)](https://www.npmjs.com/package/@kredits/contracts)
+[![Build Status](https://drone.kosmos.org/api/badges/kredits/contracts/status.svg)](https://drone.kosmos.org/kredits/contracts)
 
 # Kredits Contracts
 
@@ -26,27 +27,27 @@ To run a local development chain run:
 
 ### Bootstrap
 
-1.  Run an EVM node and ipfs
+1. Run an EVM node and ipfs
 
         $ npm run devchain
         $ ipfs daemon
 
-2.  Compile contracts and build ABIs
+2. Compile contracts and build ABIs
 
         (compiled artifacts will be in `/artifacts`)
         $ npm run build
 
-3.  Deploy new upgradable contract proxies
+3. Deploy new upgradable contract proxies
 
         $ npm run deploy:dao
 
-4.  Execute seeds to create demo contributors, contributions, etc. (optional)
+4. Execute seeds to create demo contributors, contributions, etc. (optional)
 
         $ npm run seeds
 
 **Step 2-4 is also summarized in `npm run bootstrap`**
 
-5.  Show contract addresses
+5. Show contract addresses
 
         $ cat lib/addresses.json
 
@@ -55,6 +56,16 @@ To run a local development chain run:
 If you need to fund development accounts with devchain coins:
 
     $ npm run fund # or hardhat fund --network localhost
+
+## Specs / Testing
+
+With a local development chain running:
+
+    $ hardhat test
+
+If you add or change contract code, please make sure to add and/or adapt tests
+accordingly. Don't worry, it's easy! You can use existing tests as a template
+for new ones.
 
 ## Contract architecture
 
