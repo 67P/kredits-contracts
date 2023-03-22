@@ -1,14 +1,14 @@
 const { expect } = require("chai");
 const { ethers, upgrades } = require("hardhat");
-let owner, addr1, addr2, addr3, addr4, addr5, addr6, addr7;
+let owner, addr1, addr2, addr3, addr4, addr5, addr6, addr7, addr8;
 let Contribution, Contributor, Token;
 
 describe("Contributor contract", async function () {
   before(async function () {
-    [owner, addr1, addr2, addr3, addr4, addr5, addr6, addr7] = await ethers.getSigners();
+    [owner, addr1, addr2, addr3, addr4, addr5, addr6, addr7, addr8] = await ethers.getSigners();
 
     const contributorFactory = await ethers.getContractFactory("Contributor");
-    Contributor = await upgrades.deployProxy(contributorFactory);
+    Contributor = await upgrades.deployProxy(contributorFactory, [addr8.address]);
     const contributionFactory = await ethers.getContractFactory("Contribution");
     Contribution = await upgrades.deployProxy(contributionFactory, [40321]);
     const tokenFactory = await ethers.getContractFactory("Token");
@@ -30,6 +30,10 @@ describe("Contributor contract", async function () {
       expect(await Contributor.deployer()).to.equal(owner.address);
       expect(await Contributor.deployer()).to.not.equal(addr1.address);
     });
+
+    it("sets a profile manager address", async function () {
+      expect(await Contributor.profileManager()).to.equal(addr8.address);
+    });
   });
 
   describe("add()", function () {
@@ -38,7 +42,7 @@ describe("Contributor contract", async function () {
         "0x608FD4b95116Ea616990Aaeb1d4f1ce07612f261",
         "0x1d9de6de5c72eedca6d7a5e8a9159e2f5fe676506aece3000acefcc821723429",
         18, 32
-      )).to.be.revertedWith("Core only");
+      )).to.be.revertedWith("Only core and profile manager");
       expect(await Contributor.contributorsCount()).to.equal(8);
     });
 
@@ -70,6 +74,18 @@ describe("Contributor contract", async function () {
         18, 32
       )).to.emit(Contributor, "ContributorAdded").withArgs(10, "0x765E88b4F9a59C3a3b300C6eFF9E6E9fDDf9FbD9");
     });
+
+    it("allows the profile manager account to create a contributor profile", async function () {
+      await Contributor.connect(addr8).addContributor(
+        "0x954712B8703Df5255A219B139ba7BFC256E72a15",
+        "0x1d9de6de5c72eedca6d7a5e8a9159e2f5fe676506aece3000acefcc821723429",
+        18, 32
+      );
+      expect(await Contributor.contributorsCount()).to.equal(11);
+      const c = await Contributor.getContributorById(11);
+      expect(c['account']).to.equal("0x954712B8703Df5255A219B139ba7BFC256E72a15");
+    });
+
   });
 
   describe("withdraw()", function () {

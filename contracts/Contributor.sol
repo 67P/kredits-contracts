@@ -13,6 +13,7 @@ interface IContributionBalance {
 
 contract Contributor is Initializable {
   address public deployer;
+  address public profileManager;
   IContributionBalance public contributionContract;
   IToken public tokenContract;
 
@@ -43,8 +44,9 @@ contract Contributor is Initializable {
     _;
   }
 
-  function initialize() public initializer {
+  function initialize(address profileManagerAddress) public initializer {
     deployer = msg.sender;
+    profileManager = profileManagerAddress;
   }
 
   function setContributionContract(address contribution) public onlyCore {
@@ -87,8 +89,9 @@ contract Contributor is Initializable {
     ContributorProfileUpdated(id, oldHashDigest, c.hashDigest);
   }
 
-  function addContributor(address account, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public onlyCore {
+  function addContributor(address account, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public {
     require(!addressExists(account), "Address already in use");
+    require((msg.sender == profileManager) || addressIsCore(msg.sender), "Only core and profile manager");
     uint32 _id = contributorsCount + 1;
     assert(!contributors[_id].exists); // this can not be acually
     Contributor storage c = contributors[_id];
