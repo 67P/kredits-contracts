@@ -15,7 +15,7 @@ const contractCalls = [
     name: 'raucao',
     kind: 'person',
     url: '',
-    github_username: 'skddc',
+    github_username: 'raucao',
     github_uid: 842,
     gitea_username: 'raucao',
     wiki_username: 'Basti',
