@@ -9,7 +9,7 @@ describe("Contribution contract", async function () {
     [owner, addr1, addr2, addr3, addr4, addr5, addr6, addr7] = await ethers.getSigners();
     let accounts = [owner, addr1, addr2, addr3, addr4, addr5, addr6, addr7];
     const contributorFactory = await ethers.getContractFactory("Contributor");
-    Contributor = await upgrades.deployProxy(contributorFactory);
+    Contributor = await upgrades.deployProxy(contributorFactory, ["0x2946fFfd31096435cb0fc927D306E1C006C5D1aF"]);
     for (const account of accounts) {
       await Contributor.addContributor(account.address, "0x99b8afd7b266e19990924a8be9099e81054b70c36b20937228a77a5cf75723b8", 18, 32);
     }
