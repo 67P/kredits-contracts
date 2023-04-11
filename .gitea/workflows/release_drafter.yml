@@ -1,0 +1,11 @@
+name: Release Drafter
+on:
+  pull_request:
+    types: [closed]
+jobs:
+  release_drafter_job:
+    name: Update release notes draft
+    runs-on: ubuntu-latest
+    steps:
+      - name: Release Drafter
+        uses: https://github.com/raucao/gitea-release-drafter@dev
