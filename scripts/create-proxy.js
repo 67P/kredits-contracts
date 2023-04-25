@@ -36,7 +36,7 @@ async function main() {
 
   const blocksVetoPeriod = 40320; // 7 days; 15 seconds block time
 
-  await deployContractProxy('Contributor');
+  await deployContractProxy('Contributor', [ '0x0000000000000000000000000000000000000000' ] );
   await deployContractProxy('Contribution', [ blocksVetoPeriod ]);
   await deployContractProxy('Token');
   await deployContractProxy('Reimbursement');
