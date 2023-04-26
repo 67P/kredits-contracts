@@ -86,7 +86,7 @@ contract Contributor is Initializable {
     c.hashFunction = hashFunction;
     c.hashSize = hashSize;
 
-    ContributorProfileUpdated(id, oldHashDigest, c.hashDigest);
+    emit ContributorProfileUpdated(id, oldHashDigest, c.hashDigest);
   }
 
   function addContributor(address account, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public {
