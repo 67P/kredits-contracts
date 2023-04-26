@@ -33,7 +33,7 @@ const contractCalls = [
 
   ['Contribution', 'add', [{ contributorId: 1, contributorIpfsHash: 'QmWKCYGr2rSf6abUPaTYqf98urvoZxGrb7dbspFZA6oyVF', date: '2019-04-11', amount: 500, kind: 'dev', description: '[67P/kredits-contracts] Test this thing', url: '' }, { gasLimit: 350000 }]],
   ['Contribution', 'add', [{ contributorId: 2, contributorIpfsHash: 'QmcHzEeAM26HV2zHTf5HnZrCtCtGdEccL5kUtDakAB7ozB', date: '2019-04-11', amount: 1500, kind: 'dev', description: '[67P/kredits-web] Reviewed stuff', url: '' }, { gasLimit: 350000 }]],
-  ['Contribution', 'add', [{ contributorId: 1, contributorIpfsHash: 'QmWKCYGr2rSf6abUPaTYqf98urvoZxGrb7dbspFZA6oyVF', date: '2019-04-11', amount: 1500, kind: 'dev', description: '[67P/kredits-contracts] Add tests', url: '' }, { gasLimit: 350000 }]],
+  ['Contribution', 'add', [{ contributorId: 1, contributorIpfsHash: 'QmWKCYGr2rSf6abUPaTYqf98urvoZxGrb7dbspFZA6oyVF', date: '2019-04-11', amount: 5000, kind: 'dev', description: '[67P/kredits-contracts] Add tests', url: '' }, { gasLimit: 350000 }]],
   ['Contribution', 'add', [{ contributorId: 1, contributorIpfsHash: 'QmWKCYGr2rSf6abUPaTYqf98urvoZxGrb7dbspFZA6oyVF', date: '2019-04-11', amount: 1500, kind: 'dev', description: '[67P/kredits-contracts] Introduce contribution token', url: '' }, { gasLimit: 350000 }]],
   ['Contribution', 'add', [{ contributorId: 2, contributorIpfsHash: 'QmcHzEeAM26HV2zHTf5HnZrCtCtGdEccL5kUtDakAB7ozB', date: '2019-04-11', amount: 5000, kind: 'dev', description: '[67P/kredits-web] Expense UI, first draft', url: '' }, { gasLimit: 350000 }]],
 
