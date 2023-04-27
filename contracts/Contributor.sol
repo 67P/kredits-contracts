@@ -13,7 +13,6 @@ interface IContributionBalance {
 
 contract Contributor is Initializable {
   address public deployer;
-  address public profileManager;
   IContributionBalance public contributionContract;
   IToken public tokenContract;
 
@@ -29,6 +28,8 @@ contract Contributor is Initializable {
   mapping (address => uint32) public contributorIds;
   mapping (uint32 => Contributor) public contributors;
   uint32 public contributorsCount;
+
+  address public profileManager;
 
   event ContributorProfileUpdated(uint32 id, bytes32 oldHashDigest, bytes32 newHashDigest); // what should be logged
   event ContributorAccountUpdated(uint32 id, address oldAccount, address newAccount);
