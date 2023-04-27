@@ -1,3 +1,4 @@
+const fs = require('fs');
 const Kredits = require('../../lib/kredits');
 
 async function main() {
