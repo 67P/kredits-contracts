@@ -42,7 +42,7 @@
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.3",
     "@nomiclabs/hardhat-ethers": "^2.0.2",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
-    "@openzeppelin/contracts-upgradeable": "^4.3.2",
+    "@openzeppelin/contracts-upgradeable": "^4.8.3",
     "@openzeppelin/hardhat-upgrades": "^1.10.0",
     "async-each-series": "^1.1.0",
     "chai": "^4.3.6",

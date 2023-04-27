@@ -50,6 +50,10 @@ contract Contributor is Initializable {
     profileManager = profileManagerAddress;
   }
 
+  function reinitialize(address profileManagerAddress) public reinitializer(2) {
+    profileManager = profileManagerAddress;
+  }
+
   function setContributionContract(address contribution) public onlyCore {
     require(address(contributionContract) == address(0) || addressIsCore(msg.sender), "Core only");
     contributionContract = IContributionBalance(contribution);
