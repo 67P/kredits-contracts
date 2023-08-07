@@ -4,6 +4,6 @@
     "solhint:recommended"
   ],
   "rules": {
-    "indent": "2"
+    "max-line-length": "warn"
   }
 }

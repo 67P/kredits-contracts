@@ -101,8 +101,8 @@ contract Reimbursement is Initializable {
 
   function veto(uint32 reimbursementId) public onlyCore {
     ReimbursementData storage r = reimbursements[reimbursementId];
-    require(r.exists, 'NOT_FOUND');
-    require(block.number < r.confirmedAtBlock, 'VETO_PERIOD_ENDED');
+    require(r.exists, "NOT_FOUND");
+    require(block.number < r.confirmedAtBlock, "VETO_PERIOD_ENDED");
     r.vetoed = true;
 
     emit ReimbursementVetoed(reimbursementId, msg.sender);
