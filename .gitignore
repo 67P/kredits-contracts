@@ -10,3 +10,4 @@ data
 cache
 artifacts
 .openzeppelin
+.env
