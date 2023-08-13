@@ -13,14 +13,18 @@ async function main() {
     const data = fs.readFileSync("./data/contributions.json");
     const contributions = JSON.parse(data);
     const ids = Object.keys(contributions)
-                      .map(k => parseInt(k))
-                      .sort(function(a, b){return a-b});
+      .map(k => parseInt(k))
+      .sort(function(a, b) { return a - b });
 
     const currentBlockHeight = await kredits.provider.getBlockNumber();
     const confirmationPeriod = 40320 // blocks
     const unconfirmedHeight = currentBlockHeight + confirmationPeriod;
 
+    const startId = parseInt(process.env.START_AT || "0");
     for (const contributionId of ids) {
+      if (contributionId < startId) {
+        continue;
+      }
       const c = contributions[contributionId.toString()];
 
       const confirmedAtBlock = c.confirmed ? currentBlockHeight : unconfirmedHeight;
@@ -33,7 +37,7 @@ async function main() {
       console.log(`Adding contribution #${contributionId}: ${result.hash}`);
       await result.wait();
     };
-  } catch(e) {
+  } catch (e) {
     console.error(e);
   }
 }
