@@ -22,10 +22,6 @@
     "lint:contract-tests": "eslint apps/*/test",
     "lint:wrapper": "eslint lib/",
     "test": "hardhat test",
-    "test:token": "cd apps/token && npm run test",
-    "test:contributor": "cd apps/contributor && npm run test",
-    "test:contribution": "cd apps/contribution && npm run test",
-    "test:proposal": "cd apps/proposal && npm run test",
     "setup-git-hooks": "sh scripts/git-hooks/install"
   },
   "repository": {
