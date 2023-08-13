@@ -95,13 +95,13 @@ contract Contribution is Initializable {
 
   // Balance is amount of ERC271 tokens, not amount of kredits
   function balanceOf(address owner) public view returns (uint256) {
-    require(owner != address(0));
+    require(owner != address(0), "Address invalid");
     uint32 contributorId = getContributorIdByAddress(owner);
     return ownedContributions[contributorId].length;
   }
 
   function ownerOf(uint32 contributionId) public view returns (address) {
-    require(exists(contributionId));
+    require(exists(contributionId), "Contribution does not exist");
     uint32 contributorId = contributions[contributionId].contributorId;
     return getContributorAddressById(contributorId);
   }
@@ -156,10 +156,8 @@ contract Contribution is Initializable {
   }
 
   function add(uint32 amount, uint32 contributorId, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize, uint256 confirmedAtBlock, bool vetoed) public {
-    // require(canPerform(msg.sender, ADD_CONTRIBUTION_ROLE, new uint32[](0)), 'nope');
-    // TODO hubot neither has kredits nor a core account
-    require((confirmedAtBlock == 0 && vetoed == false) || migrationDone == false, 'extra arguments during migration only');
-    require(balanceOf(msg.sender) > 0 || contributorContract.addressIsCore(msg.sender), 'requires kredits or core status');
+    require((confirmedAtBlock == 0 && vetoed == false) || migrationDone == false, "Extra arguments not allowed");
+    require(balanceOf(msg.sender) > 0 || contributorContract.addressIsCore(msg.sender), "Requires kredits or core status");
 
     uint32 contributionId = contributionsCount + 1;
     ContributionData storage c = contributions[contributionId];
@@ -188,8 +186,8 @@ contract Contribution is Initializable {
 
   function veto(uint32 contributionId) public onlyCore {
     ContributionData storage c = contributions[contributionId];
-    require(c.exists, 'NOT_FOUND');
-    require(block.number < c.confirmedAtBlock, 'VETO_PERIOD_ENDED');
+    require(c.exists, "NOT_FOUND");
+    require(block.number < c.confirmedAtBlock, "VETO_PERIOD_ENDED");
     c.vetoed = true;
 
     emit ContributionVetoed(contributionId, msg.sender);

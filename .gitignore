@@ -9,4 +9,5 @@ data
 
 cache
 artifacts
-.openzeppelin
+.openzeppelin/unknown-1337.json
+.env

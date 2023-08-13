@@ -112,17 +112,17 @@ contract Contributor is Initializable {
     emit ContributorAdded(_id, account);
   }
 
-  function isCoreTeam(uint32 id) view public returns (bool) {
+  function isCoreTeam(uint32 id) public view returns (bool) {
     // TODO: for simplicity we simply define the first contributors as core
     // later this needs to be changed to something more dynamic
     return id > 0 && id < 7;
   }
 
-  function exists(uint32 id) view public returns (bool) {
+  function exists(uint32 id) public view returns (bool) {
     return contributors[id].exists;
   }
 
-  function addressIsCore(address account) view public returns (bool) {
+  function addressIsCore(address account) public view returns (bool) {
     // the deployer is always core
     if(account == deployer) {
       return true;
@@ -131,15 +131,15 @@ contract Contributor is Initializable {
     return isCoreTeam(id);
   }
 
-  function addressExists(address account) view public returns (bool) {
+  function addressExists(address account) public view returns (bool) {
     return getContributorByAddress(account).exists;
   }
 
-  function getContributorIdByAddress(address account) view public returns (uint32) {
+  function getContributorIdByAddress(address account) public view returns (uint32) {
     return contributorIds[account];
   }
 
-  function getContributorAddressById(uint32 id) view public returns (address) {
+  function getContributorAddressById(uint32 id) public view returns (address) {
     return contributors[id].account;
   }
 
@@ -148,7 +148,7 @@ contract Contributor is Initializable {
     return contributors[id];
   }
 
-  function getContributorById(uint32 _id) view public returns (uint32 id, address account, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize, bool isCore, uint256 balance, uint32 totalKreditsEarned, uint256 contributionsCount, bool exists, uint256 kreditsWithdrawn) {
+  function getContributorById(uint32 _id) public view returns (uint32 id, address account, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize, bool isCore, uint256 balance, uint32 totalKreditsEarned, uint256 contributionsCount, bool exists, uint256 kreditsWithdrawn) {
     id = _id;
     Contributor storage c = contributors[_id];
     account = c.account;

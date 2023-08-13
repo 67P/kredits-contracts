@@ -67,7 +67,7 @@ describe("Contribution contract", async function () {
         500, 1,
         "0xe794f010e617449719c64076546254129f63a6d16cf200031afa646aeb35777f",
         18, 32, 0, false
-      )).to.be.revertedWith("requires kredits or core status");
+      )).to.be.revertedWith("Requires kredits or core status");
       expect(await Contribution.contributionsCount()).to.equal(0);
     });
 
@@ -76,7 +76,7 @@ describe("Contribution contract", async function () {
         500, 1,
         "0xe794f010e617449719c64076546254129f63a6d16cf200031afa646aeb35777f",
         18, 32, 23000, true
-      )).to.be.revertedWith("extra arguments during migration only");
+      )).to.be.revertedWith("Extra arguments not allowed");
       expect(await Contribution.contributionsCount()).to.equal(0);
     });
 
