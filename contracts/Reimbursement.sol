@@ -31,16 +31,33 @@ contract Reimbursement is Initializable {
 
   uint32 public blocksToWait;
 
+  // The address that deployed the contract
+  address public deployer;
+
+  // Data migration flag
+  bool public migrationDone;
+
   event ReimbursementAdded(uint32 id, address indexed addedByAccount, uint256 amount);
   event ReimbursementVetoed(uint32 id, address vetoedByAccount);
-
-  function initialize() public initializer {
-    blocksToWait = 40320; // 7 days; 15 seconds block time
-  }
 
   modifier onlyCore {
     require(contributorContract.addressIsCore(tx.origin), "Core only");
     _;
+  }
+
+  modifier onlyDeployer {
+    require(msg.sender == deployer, "Deployer only");
+    _;
+  }
+
+  function initialize() public initializer {
+    deployer = msg.sender;
+    migrationDone = false;
+    blocksToWait = 40320; // 7 days; 15 seconds block time
+  }
+
+  function finishMigration() public onlyDeployer {
+    migrationDone = true;
   }
 
   function setContributorContract(address contributor) public {
@@ -82,7 +99,8 @@ contract Reimbursement is Initializable {
     );
   }
 
-  function add(uint256 amount, address token, uint32 recipientId, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize) public onlyCore {
+  function add(uint256 amount, address token, uint32 recipientId, bytes32 hashDigest, uint8 hashFunction, uint8 hashSize, uint256 confirmedAtBlock, bool vetoed) public onlyCore {
+    require((confirmedAtBlock == 0 && vetoed == false) || migrationDone == false, "Extra arguments not allowed");
     uint32 reimbursementId = reimbursementsCount + 1;
     ReimbursementData storage r = reimbursements[reimbursementId];
     r.exists = true;
@@ -92,7 +110,14 @@ contract Reimbursement is Initializable {
     r.hashDigest = hashDigest;
     r.hashFunction = hashFunction;
     r.hashSize = hashSize;
-    r.confirmedAtBlock = block.number + blocksToWait;
+
+    if (confirmedAtBlock > 0) {
+      c.confirmedAtBlock = confirmedAtBlock;
+    } else {
+      c.confirmedAtBlock = block.number + 1 + blocksToWait;
+    }
+
+    if (vetoed) { c.vetoed = true; }
 
     reimbursementsCount++;
 
