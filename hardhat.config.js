@@ -62,7 +62,7 @@ task("create-wallet", "Creates a new wallet json", async () => {
  */
 module.exports = {
   solidity: "0.8.2",
-  defaultNetwork: "hardhat",
+  defaultNetwork: "localhost",
   networks: {
     hardhat: {
       chainId: 1337,
