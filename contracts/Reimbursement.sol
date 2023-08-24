@@ -112,12 +112,12 @@ contract Reimbursement is Initializable {
     r.hashSize = hashSize;
 
     if (confirmedAtBlock > 0) {
-      c.confirmedAtBlock = confirmedAtBlock;
+      r.confirmedAtBlock = confirmedAtBlock;
     } else {
-      c.confirmedAtBlock = block.number + 1 + blocksToWait;
+      r.confirmedAtBlock = block.number + 1 + blocksToWait;
     }
 
-    if (vetoed) { c.vetoed = true; }
+    if (vetoed) { r.vetoed = true; }
 
     reimbursementsCount++;
 
