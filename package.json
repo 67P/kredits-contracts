@@ -22,7 +22,9 @@
     "lint:contract-tests": "eslint apps/*/test",
     "lint:wrapper": "eslint lib/",
     "test": "hardhat test",
-    "setup-git-hooks": "sh scripts/git-hooks/install"
+    "setup-git-hooks": "sh scripts/git-hooks/install",
+    "preversion": "npm test && npm run build",
+    "version": "git add lib/abis"
   },
   "repository": {
     "type": "git",
