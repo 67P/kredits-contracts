@@ -70,16 +70,16 @@ const contractCalls = [
   }, { gasLimit: 350000 }]],
 
   ['Reimbursement', 'add', [{ amount: 346800, recipientId: 2, token: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599', expenses: [
-    { title: 'Domain kosmos.social', description: 'Yearly registration fee for domain kosmos.social', amount: 69.00, currency: 'EUR', date: '2020-04-30' },
+    { title: 'Domain kosmos.social', description: 'Yearly registration fee for domain kosmos.social', amount: 69.00, currency: 'EUR', amountSats: 69216, date: '2020-04-30' },
   ], confirmedAtBlock: 1 }, { gasLimit: 300000 }]],
 
   ['Reimbursement', 'add', [{ amount: 1116000, recipientId: 1, token: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599', expenses: [
-    { title: 'Server rent', description: 'Dedicated server: andromeda.kosmos.org, April 2020', amount: 61, currency: 'EUR', date: '2020-05-28' },
-    { title: 'Server rent', description: 'Dedicated server: centaurus.kosmos.org, April 2020', amount: 32, currency: 'EUR', date: '2020-05-28' },
+    { title: 'Server rent', description: 'Dedicated server: andromeda.kosmos.org, April 2020', amount: 61, currency: 'EUR', amountSats: 61191, date: '2020-05-28' },
+    { title: 'Server rent', description: 'Dedicated server: centaurus.kosmos.org, April 2020', amount: 32, currency: 'EUR', amountSats: 32201, date: '2020-05-28' },
   ], confirmedAtBlock: 1 }, { gasLimit: 300000 }]],
 
   ['Reimbursement', 'add', [{ amount: 166800, recipientId: 2, token: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599', expenses: [
-    { title: 'Domain kosmos.chat', description: 'Yearly registration fee for domain kosmos.chat', amount: 13.90, currency: 'EUR', date: '2020-05-30' },
+    { title: 'Domain kosmos.chat', description: 'Yearly registration fee for domain kosmos.chat', amount: 13.90, currency: 'EUR', amountSats: 13944, date: '2020-05-30' },
   ]}, { gasLimit: 300000 }]],
 ];
 
