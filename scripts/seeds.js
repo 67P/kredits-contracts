@@ -39,7 +39,7 @@ async function main() {
                  contractWrapper.contract[method];
 
     try {
-      // console.log('trying', func);
+      // console.log('trying', contractName, method, args);
       const result = await func.apply(contractWrapper, args);
       // console.log('result:', result);
       await result.wait();
