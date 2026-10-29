@@ -2,6 +2,7 @@ name: Release Drafter
 on:
   pull_request:
     types: [closed]
+  workflow_dispatch:
 jobs:
   release_drafter_job:
     name: Update release notes draft
